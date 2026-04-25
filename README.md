@@ -143,8 +143,12 @@ LICENSE                  MIT
 ## See also
 
 - **[PROTOCOL.md](PROTOCOL.md)** — full SysEx protocol + `.ppak` format reference
-- **[phones24](https://github.com/phones24)** — `.ppak` archive parser (recommended for read-side work)
-- **[ep133-krate](https://github.com/icherniukh/ep133-krate)** — live SysEx + sample manager TUI; extensive capture archive
+- **[ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md)** — what each upstream community project contributed and where to use their work today
+
+Brief pointers to upstream / sibling projects (full credit in [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md)):
+
+- **[phones24](https://github.com/phones24)** — original `.ppak` archive parser; canonical for archive shape
+- **[ep133-krate](https://github.com/icherniukh/ep133-krate)** — live SysEx capture-based RE + sample manager TUI; extensive capture archive
 - **[garrettjwilke/ep_133_sysex_thingy](https://github.com/garrettjwilke/ep_133_sysex_thingy)** — pre-FW 2.0 SysEx examples
 - **[benjaminr/mcp-koii](https://github.com/benjaminr/mcp-koii)** — MIDI control + sound-to-pad mapping research
 - **abrilstudios/rcy** — FW 2.0.5 upload reference

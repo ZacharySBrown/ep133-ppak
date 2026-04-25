@@ -634,13 +634,10 @@ Tests: 100+ in `tests/ep133/`, all passing.
 
 ## 15. Acknowledgments
 
-- **phones24** for the foundational protocol RE that bootstrapped this
-  work. Their archive parser is the reason the `.ppak` format was tractable
-  at all. The corrections here are corrections to specific byte offsets,
-  not to the broader work.
-- **Teenage Engineering** for shipping a device whose USB-MIDI implementation
-  is consistent enough to RE without too many corner cases (and whose Sample
-  Tool web UI loads its protocol code unminified-enough to inspect).
+See [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md) for the full upstream-credit
+breakdown — what each project (phones24, ep133-krate, garrettjwilke,
+benjaminr, abrilstudios, Teenage Engineering) contributed, where to use
+their work today, and where this project supplements or corrects.
 
 ---
 
