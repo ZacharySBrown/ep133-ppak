@@ -35,6 +35,7 @@ dev = [
 ppak-writer = "tools.ppak_writer:main"
 ppak-bpm-matrix = "tools.bpm_matrix:main"
 ppak-load-manifest = "tools.load_from_manifest:main"
+ppak-load-one = "tools.load_one:main"
 
 [project.urls]
 Homepage = "https://github.com/zacharysbrown/ep133-ppak"
