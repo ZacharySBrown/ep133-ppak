@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" font-family="Inter, system-ui, sans-serif" text-rendering="optimizeLegibility">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3a85ff"/>
+    </marker>
+    <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#999"/>
+    </marker>
+    <style>
+      .pad-cell { fill: #fafaf7; stroke: #1a1a1a; stroke-width: 1.5; }
+      .pad-cell-accent { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1.5; }
+      .pad-cell-warn { fill: #ffe5dc; stroke: #e85d3a; stroke-width: 1.5; }
+      .label-big { font-size: 28px; font-weight: 600; fill: #1a1a1a; }
+      .label-num { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 13px; fill: #666; }
+      .title { font-size: 28px; font-weight: 600; fill: #1a1a1a; }
+      .panel-title { font-size: 18px; font-weight: 600; fill: #1a1a1a; }
+      .caption { font-size: 14px; fill: #666; }
+      .mono { font-family: "IBM Plex Mono", Menlo, monospace; }
+      .annot { font-family: "Caveat", "Kalam", cursive; font-size: 18px; fill: #3a85ff; }
+      .warn-text { font-size: 13px; fill: #e85d3a; font-weight: 600; }
+    </style>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="760" fill="#fafaf7"/>
+
+  <!-- title -->
+  <text x="60" y="60" class="title">the same 4×3 pad grid, addressed two ways</text>
+  <text x="60" y="88" class="caption">tar uses bottom-up numbering. sysex uses top-down. the trap is conflating them.</text>
+
+  <!-- left panel: TAR pNN -->
+  <g transform="translate(60, 130)">
+    <text x="0" y="0" class="panel-title">in the project tar  <tspan class="mono" fill="#3a85ff">pads/{a,b,c,d}/p<tspan font-weight="700">NN</tspan></tspan></text>
+    <text x="0" y="22" class="caption">numbering counts from the bottom-left, going up</text>
+
+    <!-- 4x3 grid; pad_size 90, gap 10, total = 4*90+3*10 = 390 wide; 4 rows x 3 cols actually for keypad; height 4*90+3*10=390 -->
+    <!-- row 0 (top): p10="7"  p11="8"  p12="9" -->
+    <g transform="translate(0, 50)">
+      <!-- top row -->
+      <g transform="translate(0, 0)">
+        <rect x="0"   y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="45" y="55" text-anchor="middle" class="label-big">7</text>
+        <text x="8" y="20" class="label-num">p10</text>
+
+        <rect x="100" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="145" y="55" text-anchor="middle" class="label-big">8</text>
+        <text x="108" y="20" class="label-num">p11</text>
+
+        <rect x="200" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="245" y="55" text-anchor="middle" class="label-big">9</text>
+        <text x="208" y="20" class="label-num">p12</text>
+      </g>
+      <!-- row 1 -->
+      <g transform="translate(0, 100)">
+        <rect x="0"   y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="45" y="55" text-anchor="middle" class="label-big">4</text>
+        <text x="8" y="20" class="label-num">p07</text>
+
+        <rect x="100" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="145" y="55" text-anchor="middle" class="label-big">5</text>
+        <text x="108" y="20" class="label-num">p08</text>
+
+        <rect x="200" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="245" y="55" text-anchor="middle" class="label-big">6</text>
+        <text x="208" y="20" class="label-num">p09</text>
+      </g>
+      <!-- row 2 -->
+      <g transform="translate(0, 200)">
+        <rect x="0"   y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="45" y="55" text-anchor="middle" class="label-big">1</text>
+        <text x="8" y="20" class="label-num">p04</text>
+
+        <rect x="100" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="145" y="55" text-anchor="middle" class="label-big">2</text>
+        <text x="108" y="20" class="label-num">p05</text>
+
+        <rect x="200" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="245" y="55" text-anchor="middle" class="label-big">3</text>
+        <text x="208" y="20" class="label-num">p06</text>
+      </g>
+      <!-- row 3 (bottom): p01="."  p02="0"  p03="ENTER" -->
+      <g transform="translate(0, 300)">
+        <rect x="0"   y="0" width="90" height="90" rx="12" class="pad-cell-accent"/>
+        <text x="45" y="55" text-anchor="middle" class="label-big">.</text>
+        <text x="8" y="20" class="label-num" fill="#3a85ff" font-weight="700">p01</text>
+
+        <rect x="100" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="145" y="55" text-anchor="middle" class="label-big">0</text>
+        <text x="108" y="20" class="label-num">p02</text>
+
+        <rect x="200" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="245" y="50" text-anchor="middle" class="label-big" font-size="16">ENTER</text>
+        <text x="208" y="20" class="label-num">p03</text>
+      </g>
+    </g>
+
+    <!-- direction arrow on left side, going up -->
+    <line x1="-25" y1="430" x2="-25" y2="60" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="-50" y="245" class="annot" transform="rotate(-90 -50 245)" text-anchor="middle">first pad ↑</text>
+  </g>
+
+  <!-- right panel: sysex pad_num -->
+  <g transform="translate(720, 130)">
+    <text x="0" y="0" class="panel-title">in sysex  <tspan class="mono" fill="#3a85ff">assign_pad(pad_num=<tspan font-weight="700">N</tspan>)</tspan></text>
+    <text x="0" y="22" class="caption">numbering counts from the top-left, going down</text>
+
+    <g transform="translate(0, 50)">
+      <!-- top row -->
+      <g transform="translate(0, 0)">
+        <rect x="0"   y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="45" y="55" text-anchor="middle" class="label-big">7</text>
+        <text x="78" y="84" text-anchor="end" class="label-num">1</text>
+
+        <rect x="100" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="145" y="55" text-anchor="middle" class="label-big">8</text>
+        <text x="178" y="84" text-anchor="end" class="label-num">2</text>
+
+        <rect x="200" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="245" y="55" text-anchor="middle" class="label-big">9</text>
+        <text x="278" y="84" text-anchor="end" class="label-num">3</text>
+      </g>
+      <g transform="translate(0, 100)">
+        <rect x="0"   y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="45" y="55" text-anchor="middle" class="label-big">4</text>
+        <text x="78" y="84" text-anchor="end" class="label-num">4</text>
+
+        <rect x="100" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="145" y="55" text-anchor="middle" class="label-big">5</text>
+        <text x="178" y="84" text-anchor="end" class="label-num">5</text>
+
+        <rect x="200" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="245" y="55" text-anchor="middle" class="label-big">6</text>
+        <text x="278" y="84" text-anchor="end" class="label-num">6</text>
+      </g>
+      <g transform="translate(0, 200)">
+        <rect x="0"   y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="45" y="55" text-anchor="middle" class="label-big">1</text>
+        <text x="78" y="84" text-anchor="end" class="label-num">7</text>
+
+        <rect x="100" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="145" y="55" text-anchor="middle" class="label-big">2</text>
+        <text x="178" y="84" text-anchor="end" class="label-num">8</text>
+
+        <rect x="200" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="245" y="55" text-anchor="middle" class="label-big">3</text>
+        <text x="278" y="84" text-anchor="end" class="label-num">9</text>
+      </g>
+      <g transform="translate(0, 300)">
+        <rect x="0"   y="0" width="90" height="90" rx="12" class="pad-cell-accent"/>
+        <text x="45" y="55" text-anchor="middle" class="label-big">.</text>
+        <text x="78" y="84" text-anchor="end" class="label-num" fill="#3a85ff" font-weight="700">10</text>
+
+        <rect x="100" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="145" y="55" text-anchor="middle" class="label-big">0</text>
+        <text x="178" y="84" text-anchor="end" class="label-num">11</text>
+
+        <rect x="200" y="0" width="90" height="90" rx="12" class="pad-cell"/>
+        <text x="245" y="50" text-anchor="middle" class="label-big" font-size="16">ENTER</text>
+        <text x="278" y="84" text-anchor="end" class="label-num">12</text>
+      </g>
+    </g>
+
+    <!-- direction arrow on right side, going down -->
+    <line x1="315" y1="60" x2="315" y2="430" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="340" y="245" class="annot" transform="rotate(90 340 245)" text-anchor="middle">first pad ↓</text>
+  </g>
+
+  <!-- center: callout connecting the two highlighted cells -->
+  <g>
+    <!-- curved line from p01 cell to pad_num 10 cell -->
+    <path d="M 350 580 Q 600 660 720 580" fill="none" stroke="#3a85ff" stroke-width="2" stroke-dasharray="4 3"/>
+    <text x="535" y="660" text-anchor="middle" class="annot">same physical pad</text>
+  </g>
+
+  <!-- bottom: warn callout -->
+  <g transform="translate(60, 700)">
+    <rect x="0" y="0" width="1080" height="44" rx="8" fill="#ffe5dc"/>
+    <text x="20" y="28" class="warn-text">⚠</text>
+    <text x="44" y="20" font-size="13" fill="#1a1a1a" font-weight="600">when patching pad records in the project tar, you write to <tspan class="mono">pads/c/p01</tspan> for the bottom-left pad.</text>
+    <text x="44" y="36" font-size="13" fill="#1a1a1a">when sending sysex assignments to the same pad, you write <tspan class="mono">pad_num=10</tspan>. mixing them up silently lands on the wrong physical pad.</text>
+  </g>
+
+  <!-- tiny boxing glove nod, bottom-right -->
+  <text x="1170" y="745" font-size="12" fill="#999" text-anchor="end">🥊</text>
+</svg>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" font-family="Inter, system-ui, sans-serif" text-rendering="optimizeLegibility">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3a85ff"/>
+    </marker>
+    <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#999"/>
+    </marker>
+    <marker id="arrow-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e85d3a"/>
+    </marker>
+    <style>
+      .title       { font-size: 28px; font-weight: 600; fill: #1a1a1a; }
+      .subhead     { font-size: 14px; fill: #666; }
+      .panel-title { font-size: 18px; font-weight: 600; fill: #1a1a1a; }
+      .panel-sub   { font-size: 12px; fill: #666; }
+      .body        { font-size: 13px; fill: #1a1a1a; }
+      .muted       { font-size: 12px; fill: #666; }
+      .mono        { font-family: "IBM Plex Mono", Menlo, monospace; }
+      .code        { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 13px; fill: #1a1a1a; }
+      .code-sm     { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 12px; fill: #1a1a1a; }
+      .code-muted  { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 12px; fill: #666; }
+      .code-accent { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 13px; fill: #3a85ff; font-weight: 600; }
+      .code-warn   { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 13px; fill: #e85d3a; font-weight: 600; }
+      .annot       { font-family: "Caveat", "Kalam", cursive; font-size: 18px; fill: #3a85ff; }
+      .annot-warn  { font-family: "Caveat", "Kalam", cursive; font-size: 18px; fill: #e85d3a; }
+      .warn-text   { font-size: 13px; fill: #e85d3a; font-weight: 600; }
+      .panel       { fill: #f0efe9; stroke: #e8e8e3; stroke-width: 1; }
+      .zip-entry   { fill: #fafaf7; stroke: #1a1a1a; stroke-width: 1.5; }
+      .zip-accent  { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1.5; }
+      .zip-ghost   { fill: #ffe5dc; stroke: #e85d3a; stroke-width: 1.5; stroke-dasharray: 5 4; }
+    </style>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="800" fill="#fafaf7"/>
+
+  <!-- title -->
+  <text x="60" y="56" class="title">the .ppak archive, opened</text>
+  <text x="60" y="80" class="subhead">what sample tool emits, what your generator must produce.</text>
+
+  <!-- ========================================================== -->
+  <!-- LEFT: zip layer                                              -->
+  <!-- ========================================================== -->
+  <g transform="translate(60, 120)">
+    <text x="0" y="0" class="panel-title">the outer zip <tspan class="mono code-accent">project.ppak</tspan></text>
+    <text x="0" y="20" class="panel-sub">3 entries. order matters less than presence; paths begin with a leading slash.</text>
+
+    <!-- zip stack: 3 rounded panels -->
+    <!-- entry 1: /projects/PXX.tar -->
+    <g transform="translate(0, 50)">
+      <rect x="0" y="0" width="480" height="100" rx="10" class="zip-entry"/>
+      <text x="20" y="28" class="code">/projects/PXX.tar</text>
+      <text x="20" y="50" class="muted">tar archive  ·  ~53 kb populated  ·  54 entries</text>
+      <text x="20" y="72" class="muted">contains: pad records + empty patterns dir</text>
+      <text x="20" y="90" class="code-muted">mtime: export time</text>
+      <!-- arrow into right panel -->
+      <path d="M 480 50 C 540 50, 540 50, 600 50" fill="none" stroke="#3a85ff" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text x="500" y="42" class="annot">drill in →</text>
+    </g>
+
+    <!-- entry 2: /sounds/... -->
+    <g transform="translate(0, 170)">
+      <rect x="0" y="0" width="480" height="170" rx="10" class="zip-entry"/>
+      <text x="20" y="28" class="code">/sounds/&lt;slot&gt; &lt;name&gt;.wav</text>
+      <text x="20" y="50" class="muted">one wav per referenced slot  ·  sample rows below</text>
+      <!-- sample rows -->
+      <g transform="translate(20, 64)">
+        <text x="0" y="14" class="code-sm">/sounds/100 bar_002.wav</text>
+        <text x="0" y="32" class="code-sm">/sounds/101 bass_004.wav</text>
+        <text x="0" y="50" class="code-sm">/sounds/102 hat_loop.wav</text>
+        <text x="0" y="68" class="code-sm">/sounds/103 vox_tail.wav</text>
+        <text x="0" y="86" class="code-muted">…</text>
+      </g>
+      <!-- wav format note -->
+      <g transform="translate(260, 70)">
+        <rect x="0" y="0" width="200" height="86" rx="6" fill="#dcf2e4" stroke="#3aaa6e" stroke-width="1"/>
+        <text x="10" y="18" class="body" font-weight="600" fill="#3aaa6e">wav format</text>
+        <text x="10" y="36" class="code-sm">44.1 khz · stereo · 16-bit</text>
+        <text x="10" y="56" class="muted">sample tool transcodes to</text>
+        <text x="10" y="72" class="muted">46875 hz mono on upload.</text>
+      </g>
+    </g>
+
+    <!-- entry 3: /meta.json -->
+    <g transform="translate(0, 360)">
+      <rect x="0" y="0" width="480" height="60" rx="10" class="zip-entry"/>
+      <text x="20" y="28" class="code">/meta.json</text>
+      <text x="20" y="48" class="muted">10 fields  ·  describes the pak  ·  see below</text>
+      <!-- arrow down to meta block -->
+      <path d="M 240 60 C 240 80, 240 80, 240 100" fill="none" stroke="#999" stroke-width="1.25" marker-end="url(#arrow-muted)"/>
+    </g>
+
+    <!-- meta.json miniature -->
+    <g transform="translate(0, 460)">
+      <rect x="0" y="0" width="480" height="220" rx="10" class="panel"/>
+      <text x="14" y="22" class="panel-title" font-size="14">meta.json</text>
+      <g transform="translate(14, 38)">
+        <text x="0" y="14" class="code-sm">{</text>
+        <text x="14" y="30" class="code-sm">  "info": "teenage engineering - pak file",</text>
+        <text x="14" y="46" class="code-sm">  "pak_version": 1,</text>
+        <text x="14" y="62" class="code-accent">  "pak_type": "project",</text>
+        <text x="14" y="78" class="code-sm">  "pak_release": "1.2.0",</text>
+        <text x="14" y="94" class="code-sm">  "device_name": "EP-133",</text>
+        <text x="14" y="110" class="code-sm">  "device_sku": "TE032AS001",</text>
+        <text x="14" y="126" class="code-sm">  "device_version": "2.0.5",</text>
+        <text x="14" y="142" class="code-accent">  "generated_at": "2026-04-25T02:31:04.894Z",</text>
+        <text x="14" y="158" class="code-sm">  "author": "computer",</text>
+        <text x="14" y="174" class="code-sm">  "base_sku": "TE032AS001"</text>
+        <text x="0"  y="190" class="code-sm">}</text>
+      </g>
+      <!-- annotations on meta -->
+      <text x="345" y="100" class="annot">← must say "project"</text>
+      <text x="345" y="180" class="annot">← current iso, with ms</text>
+    </g>
+  </g>
+
+  <!-- ========================================================== -->
+  <!-- RIGHT: project tar drilldown                                 -->
+  <!-- ========================================================== -->
+  <g transform="translate(620, 120)">
+    <text x="0" y="0" class="panel-title">inside <tspan class="mono code-accent">/projects/PXX.tar</tspan></text>
+    <text x="0" y="20" class="panel-sub">54 entries · directory entries mode 0755 · all mtimes 0 (unix epoch)</text>
+
+    <!-- tree panel -->
+    <rect x="0" y="36" width="520" height="494" rx="10" class="panel"/>
+
+    <g transform="translate(20, 60)">
+      <!-- pads/ root -->
+      <text x="0"   y="14" class="code">pads/</text>
+
+      <!-- bank a -->
+      <text x="20"  y="36" class="code">a/</text>
+      <text x="40"  y="56" class="code-muted">p01  p02  p03  p04  p05  p06</text>
+      <text x="40"  y="72" class="code-muted">p07  p08  p09  p10  p11  p12</text>
+
+      <!-- bank b -->
+      <text x="20"  y="98" class="code">b/</text>
+      <text x="40"  y="118" class="code-muted">p01  p02  p03  p04  p05  p06</text>
+      <text x="40"  y="134" class="code-muted">p07  p08  p09  p10  p11  p12</text>
+
+      <!-- bank c — highlighted -->
+      <text x="20"  y="160" class="code">c/</text>
+      <!-- highlight pad c/p01 with rect behind it -->
+      <rect x="38" y="170" width="44" height="22" rx="6" class="zip-accent"/>
+      <text x="40"  y="186" class="code-accent">p01</text>
+      <text x="86"  y="186" class="code-muted">p02  p03  p04  p05  p06</text>
+      <text x="40"  y="204" class="code-muted">p07  p08  p09  p10  p11  p12</text>
+
+      <!-- bank d -->
+      <text x="20"  y="230" class="code">d/</text>
+      <text x="40"  y="250" class="code-muted">p01  p02  p03  p04  p05  p06</text>
+      <text x="40"  y="266" class="code-muted">p07  p08  p09  p10  p11  p12</text>
+
+      <!-- ghost settings entry -->
+      <g transform="translate(0, 290)">
+        <rect x="-4" y="0" width="170" height="34" rx="8" class="zip-ghost"/>
+        <text x="6"  y="22" class="code-warn">settings</text>
+        <text x="100" y="22" font-size="18" fill="#e85d3a" font-weight="700">✕</text>
+        <!-- strikethrough -->
+        <line x1="2" y1="17" x2="92" y2="17" stroke="#e85d3a" stroke-width="2"/>
+      </g>
+
+      <!-- patterns/ -->
+      <text x="0" y="354" class="code">patterns/</text>
+      <text x="20" y="372" class="code-muted">(empty dir — present in every export)</text>
+    </g>
+
+    <!-- annotation pointing at highlighted pad -->
+    <g>
+      <path d="M 280 230 C 360 220, 400 215, 440 215" fill="none" stroke="#3a85ff" stroke-width="1.5" marker-start="url(#arrow)"/>
+      <text x="290" y="208" class="annot">27-byte binary record</text>
+      <text x="290" y="226" class="annot">per p__</text>
+    </g>
+
+    <!-- annotation on the ghost settings -->
+    <g transform="translate(180, 380)">
+      <path d="M 0 0 C -30 -30, -50 -50, -55 -65" fill="none" stroke="#e85d3a" stroke-width="1.5" marker-end="url(#arrow-warn)"/>
+      <text x="6" y="10" class="annot-warn">no settings file lives here.</text>
+      <text x="6" y="32" class="annot-warn">adding one →</text>
+      <text x="6" y="52" class="annot-warn">error clock 43</text>
+      <text x="6" y="72" class="annot-warn">→ flash format to recover.</text>
+    </g>
+
+    <!-- pad-numbering footnote -->
+    <g transform="translate(20, 560)">
+      <text x="0" y="0" class="muted">pNN counts bottom-up physically: <tspan class="mono">p01</tspan> = bottom-left, <tspan class="mono">p12</tspan> = top-right. see diagram 01.</text>
+    </g>
+  </g>
+
+  <!-- ========================================================== -->
+  <!-- BOTTOM warn callout                                          -->
+  <!-- ========================================================== -->
+  <g transform="translate(60, 730)">
+    <rect x="0" y="0" width="1080" height="50" rx="8" fill="#ffe5dc"/>
+    <text x="20" y="30" class="warn-text">⚠</text>
+    <text x="44" y="22" font-size="13" fill="#1a1a1a" font-weight="600">do not add a <tspan class="mono">settings</tspan> entry to the project tar — even an empty one. the device throws <tspan class="mono">error clock 43</tspan> on import and refuses further file ops.</text>
+    <text x="44" y="40" font-size="13" fill="#1a1a1a">recovery requires <tspan class="mono">shift+erase</tspan> flash format. easiest safeguard: build .ppak by patching one sample tool emitted, never from scratch.</text>
+  </g>
+
+  <!-- tiny boxing glove nod, bottom-right -->
+  <text x="1170" y="788" font-size="12" fill="#999" text-anchor="end">🥊</text>
+</svg>

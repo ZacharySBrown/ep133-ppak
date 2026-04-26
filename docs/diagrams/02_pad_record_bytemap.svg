@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" font-family="Inter, system-ui, sans-serif" text-rendering="optimizeLegibility">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3a85ff"/>
+    </marker>
+    <marker id="arrow-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e85d3a"/>
+    </marker>
+    <style>
+      .title { font-size: 28px; font-weight: 600; fill: #1a1a1a; }
+      .panel-title { font-size: 18px; font-weight: 600; fill: #1a1a1a; }
+      .caption { font-size: 14px; fill: #666; }
+      .mono { font-family: "IBM Plex Mono", Menlo, monospace; }
+      .annot { font-family: "Caveat", "Kalam", cursive; font-size: 18px; fill: #3a85ff; }
+      .annot-warn { font-family: "Caveat", "Kalam", cursive; font-size: 18px; fill: #e85d3a; }
+      .warn-text { font-size: 13px; fill: #e85d3a; font-weight: 600; }
+
+      /* cell zones */
+      .cell-unknown    { fill: #f0efe9; stroke: #e8e8e3; stroke-width: 1.5; }
+      .cell-id         { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1.5; }
+      .cell-length     { fill: #eaf2ff; stroke: #3a85ff; stroke-width: 1.5; stroke-dasharray: 0; }
+      .cell-bpm        { fill: #ffe5dc; stroke: #e85d3a; stroke-width: 1.5; }
+      .cell-defaults   { fill: #dcf2e4; stroke: #3aaa6e; stroke-width: 1.5; }
+      .cell-inferred   { fill: #f0efe9; stroke: #c7c7c0; stroke-width: 1.5; stroke-dasharray: 3 2; }
+
+      /* labels */
+      .byte-pos { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 10px; fill: #666; }
+      .byte-val { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 13px; fill: #1a1a1a; font-weight: 600; }
+      .byte-val-faded { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 13px; fill: #999; }
+      .field-label { font-size: 11px; fill: #1a1a1a; font-weight: 600; }
+      .field-label-muted { font-size: 11px; fill: #666; }
+      .strip-label { font-size: 14px; font-weight: 600; fill: #1a1a1a; }
+      .strip-sub { font-size: 12px; fill: #666; }
+      .legend-text { font-size: 12px; fill: #1a1a1a; }
+      .legend-text-muted { font-size: 12px; fill: #666; }
+      .diff-mark { font-size: 14px; fill: #e85d3a; font-weight: 700; }
+    </style>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="760" fill="#fafaf7"/>
+
+  <!-- title -->
+  <text x="60" y="56" class="title">the 27-byte pad record</text>
+  <text x="60" y="82" class="caption">color-zoned by field group; verified offsets shown solid, inferred shown faded</text>
+
+  <!-- legend (upper right) -->
+  <g transform="translate(710, 36)">
+    <rect x="0" y="0" width="430" height="60" rx="8" fill="#fafaf7" stroke="#e8e8e3" stroke-width="1"/>
+    <!-- row 1 -->
+    <rect x="14" y="12" width="14" height="14" rx="3" class="cell-id"/>
+    <text x="34" y="23" class="legend-text">id</text>
+
+    <rect x="70" y="12" width="14" height="14" rx="3" class="cell-length"/>
+    <text x="90" y="23" class="legend-text">length</text>
+
+    <rect x="146" y="12" width="14" height="14" rx="3" class="cell-bpm"/>
+    <text x="166" y="23" class="legend-text">bpm</text>
+
+    <rect x="210" y="12" width="14" height="14" rx="3" class="cell-defaults"/>
+    <text x="230" y="23" class="legend-text">defaults</text>
+
+    <rect x="298" y="12" width="14" height="14" rx="3" class="cell-unknown"/>
+    <text x="318" y="23" class="legend-text">unknown</text>
+
+    <!-- row 2: verified vs inferred -->
+    <rect x="14" y="36" width="14" height="14" rx="3" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+    <text x="34" y="47" class="legend-text-muted">solid border = verified by diff</text>
+
+    <rect x="222" y="36" width="14" height="14" rx="3" fill="#fafaf7" stroke="#c7c7c0" stroke-width="1.5" stroke-dasharray="3 2"/>
+    <text x="242" y="47" class="legend-text-muted">dashed = inferred</text>
+  </g>
+
+  <!-- ============================ -->
+  <!-- STRIP 1: default-blank pad   -->
+  <!-- ============================ -->
+  <g transform="translate(0, 150)">
+    <text x="60" y="0" class="strip-label">default-blank pad</text>
+    <text x="60" y="18" class="strip-sub"><tspan class="mono">00 00 00 00 00 00 00 00 00 00 00 00 00 00 f0 42 64 00 00 00 ff 00 00 00 3c 00 00</tspan></text>
+
+    <!-- 27 byte cells; each 36 wide, 4 gap; start x=62 -->
+    <g transform="translate(62, 36)">
+      <!-- byte 0 unknown -->
+      <g transform="translate(0,0)">
+        <rect width="36" height="64" rx="6" class="cell-unknown"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">0</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <!-- byte 1 slot (id, verified) -->
+      <g transform="translate(40,0)">
+        <rect width="36" height="64" rx="6" class="cell-id"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">1</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <!-- byte 2 midiChannel inferred -->
+      <g transform="translate(80,0)">
+        <rect width="36" height="64" rx="6" class="cell-inferred"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">2</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <!-- bytes 3-5 trimLeft inferred (gray dashed) -->
+      <g transform="translate(120,0)">
+        <rect width="36" height="64" rx="6" class="cell-inferred"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">3</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(160,0)">
+        <rect width="36" height="64" rx="6" class="cell-inferred"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">4</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(200,0)">
+        <rect width="36" height="64" rx="6" class="cell-inferred"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">5</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <!-- bytes 6-7 unknown -->
+      <g transform="translate(240,0)">
+        <rect width="36" height="64" rx="6" class="cell-unknown"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">6</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(280,0)">
+        <rect width="36" height="64" rx="6" class="cell-unknown"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">7</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <!-- bytes 8-11 sample length u32 LE (verified) -->
+      <g transform="translate(320,0)">
+        <rect width="36" height="64" rx="6" class="cell-length"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">8</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <g transform="translate(360,0)">
+        <rect width="36" height="64" rx="6" class="cell-length"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">9</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <g transform="translate(400,0)">
+        <rect width="36" height="64" rx="6" class="cell-length"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">10</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <g transform="translate(440,0)">
+        <rect width="36" height="64" rx="6" class="cell-length"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">11</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <!-- bytes 12-15 BPM float32 LE (verified, warn) -->
+      <g transform="translate(480,0)">
+        <rect width="36" height="64" rx="6" class="cell-bpm"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">12</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <g transform="translate(520,0)">
+        <rect width="36" height="64" rx="6" class="cell-bpm"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">13</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <g transform="translate(560,0)">
+        <rect width="36" height="64" rx="6" class="cell-bpm"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">14</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">f0</text>
+      </g>
+      <g transform="translate(600,0)">
+        <rect width="36" height="64" rx="6" class="cell-bpm"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">15</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">42</text>
+      </g>
+      <!-- byte 16 volume (defaults, verified) -->
+      <g transform="translate(640,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">16</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">64</text>
+      </g>
+      <!-- byte 17 pitch (defaults, inferred) -->
+      <g transform="translate(680,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults" stroke-dasharray="3 2"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">17</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <!-- byte 18 pan (defaults, inferred) -->
+      <g transform="translate(720,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults" stroke-dasharray="3 2"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">18</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <!-- byte 19 attack (defaults, inferred) -->
+      <g transform="translate(760,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults" stroke-dasharray="3 2"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">19</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <!-- byte 20 release (defaults, verified) -->
+      <g transform="translate(800,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">20</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">ff</text>
+      </g>
+      <!-- byte 21 time.mode (defaults, verified) -->
+      <g transform="translate(840,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">21</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <!-- byte 22 inChokeGroup (defaults, inferred) -->
+      <g transform="translate(880,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults" stroke-dasharray="3 2"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">22</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <!-- byte 23 playMode (defaults, verified) -->
+      <g transform="translate(920,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">23</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <!-- byte 24 rootNote (defaults, verified) -->
+      <g transform="translate(960,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">24</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">3c</text>
+      </g>
+      <!-- bytes 25-26 unknown -->
+      <g transform="translate(1000,0)">
+        <rect width="36" height="64" rx="6" class="cell-unknown"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">25</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(1040,0)">
+        <rect width="36" height="64" rx="6" class="cell-unknown"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">26</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+    </g>
+
+    <!-- field-name labels under strip 1 -->
+    <g transform="translate(62, 108)">
+      <text x="58" y="0" text-anchor="middle" class="field-label">slot</text>
+      <text x="58" y="14" text-anchor="middle" class="field-label-muted mono">u8</text>
+
+      <text x="180" y="0" text-anchor="middle" class="field-label-muted">trimLeft</text>
+      <text x="180" y="14" text-anchor="middle" class="field-label-muted mono">u24 le</text>
+
+      <text x="398" y="0" text-anchor="middle" class="field-label">sample length</text>
+      <text x="398" y="14" text-anchor="middle" class="field-label-muted mono">u32 le</text>
+
+      <text x="558" y="0" text-anchor="middle" class="field-label">bpm</text>
+      <text x="558" y="14" text-anchor="middle" class="field-label-muted mono">f32 le · 120.0</text>
+
+      <text x="658" y="0" text-anchor="middle" class="field-label">vol</text>
+      <text x="738" y="0" text-anchor="middle" class="field-label-muted">pit/pan/atk</text>
+      <text x="818" y="0" text-anchor="middle" class="field-label">rel</text>
+      <text x="858" y="0" text-anchor="middle" class="field-label">tm</text>
+      <text x="898" y="0" text-anchor="middle" class="field-label-muted">chk</text>
+      <text x="938" y="0" text-anchor="middle" class="field-label">play</text>
+      <text x="978" y="0" text-anchor="middle" class="field-label">root</text>
+    </g>
+  </g>
+
+  <!-- ============================ -->
+  <!-- STRIP 2: configured pad      -->
+  <!-- ============================ -->
+  <g transform="translate(0, 380)">
+    <text x="60" y="0" class="strip-label">configured  <tspan fill="#666" font-weight="400">slot 100, 99,328-frame wav, sample-tool auto-bpm 79.91</tspan></text>
+    <text x="60" y="18" class="strip-sub"><tspan class="mono">00 <tspan fill="#3a85ff" font-weight="700">64</tspan> 00 00 00 00 00 00 00 <tspan fill="#3a85ff" font-weight="700">84 01</tspan> 00 <tspan fill="#e85d3a" font-weight="700">48 d2 9f</tspan> 42 64 00 00 00 ff 00 00 00 3c 00 00</tspan></text>
+
+    <g transform="translate(62, 36)">
+      <!-- byte 0 -->
+      <g transform="translate(0,0)">
+        <rect width="36" height="64" rx="6" class="cell-unknown"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">0</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <!-- byte 1 slot=0x64 (DIFF) -->
+      <g transform="translate(40,0)">
+        <rect width="36" height="64" rx="6" class="cell-id" stroke-width="2.5"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">1</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">64</text>
+        <text x="18" y="-4" text-anchor="middle" class="diff-mark">△</text>
+      </g>
+      <!-- byte 2 -->
+      <g transform="translate(80,0)">
+        <rect width="36" height="64" rx="6" class="cell-inferred"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">2</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(120,0)">
+        <rect width="36" height="64" rx="6" class="cell-inferred"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">3</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(160,0)">
+        <rect width="36" height="64" rx="6" class="cell-inferred"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">4</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(200,0)">
+        <rect width="36" height="64" rx="6" class="cell-inferred"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">5</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(240,0)">
+        <rect width="36" height="64" rx="6" class="cell-unknown"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">6</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(280,0)">
+        <rect width="36" height="64" rx="6" class="cell-unknown"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">7</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <!-- byte 8 length lo -->
+      <g transform="translate(320,0)">
+        <rect width="36" height="64" rx="6" class="cell-length"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">8</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <!-- byte 9 = 0x84 (DIFF) -->
+      <g transform="translate(360,0)">
+        <rect width="36" height="64" rx="6" class="cell-length" stroke-width="2.5"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">9</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">84</text>
+        <text x="18" y="-4" text-anchor="middle" class="diff-mark">△</text>
+      </g>
+      <!-- byte 10 = 0x01 (DIFF) -->
+      <g transform="translate(400,0)">
+        <rect width="36" height="64" rx="6" class="cell-length" stroke-width="2.5"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">10</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">01</text>
+        <text x="18" y="-4" text-anchor="middle" class="diff-mark">△</text>
+      </g>
+      <!-- byte 11 -->
+      <g transform="translate(440,0)">
+        <rect width="36" height="64" rx="6" class="cell-length"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">11</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <!-- byte 12 = 0x48 (DIFF) -->
+      <g transform="translate(480,0)">
+        <rect width="36" height="64" rx="6" class="cell-bpm" stroke-width="2.5"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">12</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">48</text>
+        <text x="18" y="-4" text-anchor="middle" class="diff-mark">△</text>
+      </g>
+      <!-- byte 13 = 0xd2 (DIFF) -->
+      <g transform="translate(520,0)">
+        <rect width="36" height="64" rx="6" class="cell-bpm" stroke-width="2.5"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">13</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">d2</text>
+        <text x="18" y="-4" text-anchor="middle" class="diff-mark">△</text>
+      </g>
+      <!-- byte 14 = 0x9f (DIFF) -->
+      <g transform="translate(560,0)">
+        <rect width="36" height="64" rx="6" class="cell-bpm" stroke-width="2.5"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">14</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">9f</text>
+        <text x="18" y="-4" text-anchor="middle" class="diff-mark">△</text>
+      </g>
+      <!-- byte 15 = 0x42 (unchanged — exponent stays similar) -->
+      <g transform="translate(600,0)">
+        <rect width="36" height="64" rx="6" class="cell-bpm"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">15</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">42</text>
+      </g>
+      <!-- byte 16 -->
+      <g transform="translate(640,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">16</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">64</text>
+      </g>
+      <g transform="translate(680,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults" stroke-dasharray="3 2"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">17</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(720,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults" stroke-dasharray="3 2"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">18</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(760,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults" stroke-dasharray="3 2"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">19</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(800,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">20</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">ff</text>
+      </g>
+      <g transform="translate(840,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">21</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <g transform="translate(880,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults" stroke-dasharray="3 2"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">22</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(920,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">23</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <g transform="translate(960,0)">
+        <rect width="36" height="64" rx="6" class="cell-defaults"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">24</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">3c</text>
+      </g>
+      <g transform="translate(1000,0)">
+        <rect width="36" height="64" rx="6" class="cell-unknown"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">25</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(1040,0)">
+        <rect width="36" height="64" rx="6" class="cell-unknown"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">26</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+    </g>
+
+    <!-- decoded-value annotations under the configured strip -->
+    <g transform="translate(62, 116)">
+      <!-- slot=100 callout -->
+      <path d="M 58 -8 Q 58 14 68 28" fill="none" stroke="#3a85ff" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <text x="74" y="32" class="annot">slot 100</text>
+
+      <!-- length=99,328 -->
+      <path d="M 398 -8 Q 398 14 408 28" fill="none" stroke="#3a85ff" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <text x="414" y="32" class="annot">length = 0x000184 = 99,328 frames</text>
+
+      <!-- bpm=79.91 -->
+      <path d="M 558 -8 Q 558 18 600 36" fill="none" stroke="#e85d3a" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <text x="608" y="40" class="annot-warn">f32(0x429fd248) = 79.91</text>
+    </g>
+
+    <!-- hand-feel diff callout below strip 2 -->
+    <g transform="translate(62, 180)">
+      <text x="0" y="0" class="annot-warn">6 bytes change when sample tool assigns a pad — the rest hold defaults.</text>
+    </g>
+  </g>
+
+  <!-- bottom warn callout -->
+  <g transform="translate(60, 690)">
+    <rect x="0" y="0" width="1080" height="50" rx="8" fill="#ffe5dc"/>
+    <text x="20" y="22" class="warn-text">⚠</text>
+    <text x="44" y="22" font-size="13" fill="#1a1a1a" font-weight="600">our offsets correct phones24's prior table — earlier reverse-eng work shifted slot/length/bpm by 1-2 bytes.</text>
+    <text x="44" y="40" font-size="13" fill="#1a1a1a">method: byte-diff a blank pad against a single sample-tool assignment, then identity-check decoded values against the device ui.</text>
+  </g>
+
+  <!-- tiny boxing glove nod -->
+  <text x="1170" y="745" font-size="12" fill="#999" text-anchor="end">🥊</text>
+</svg>

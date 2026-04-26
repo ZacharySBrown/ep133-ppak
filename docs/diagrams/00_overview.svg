@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 720" font-family="Inter, system-ui, sans-serif" text-rendering="optimizeLegibility">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3a85ff"/>
+    </marker>
+    <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#999999"/>
+    </marker>
+    <style>
+      .title { font-size: 28px; font-weight: 600; fill: #1a1a1a; }
+      .subtitle { font-size: 14px; fill: #666666; }
+      .col-label { font-size: 12px; fill: #666666; letter-spacing: 0.5px; }
+      .box-title { font-size: 14px; font-weight: 600; fill: #1a1a1a; }
+      .box-sub { font-size: 12px; fill: #666666; }
+      .caption { font-size: 13px; fill: #666666; }
+      .annot { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #666666; }
+      .mono { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+      .mono-cli { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 14px; fill: #1a1a1a; font-weight: 500; }
+      .mono-mod { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 13px; fill: #1a1a1a; }
+      .mono-mod-note { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #666666; }
+      .lib-heading { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 16px; fill: #3a85ff; font-weight: 600; }
+      .code { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 13px; fill: #1a1a1a; }
+      .code-kw { fill: #3a85ff; }
+      .code-str { fill: #3aaa6e; }
+    </style>
+  </defs>
+
+  <!-- background -->
+  <rect width="1400" height="720" fill="#fafaf7"/>
+
+  <!-- title block -->
+  <text x="60" y="58" class="title">ep133-ppak</text>
+  <text x="60" y="82" class="subtitle">put things on the ep-133, programmatically</text>
+
+  <!-- column labels -->
+  <text x="60" y="120" class="col-label">what you have</text>
+  <text x="500" y="120" class="col-label">ep133-ppak</text>
+  <text x="1100" y="120" class="col-label">the device</text>
+
+  <!-- ====================================================== -->
+  <!-- LEFT COLUMN: inputs (300px wide, x=60..360)              -->
+  <!-- ====================================================== -->
+
+  <!-- input 1: a single wav  (smallest, y=140..192) -->
+  <g transform="translate(60, 140)">
+    <rect width="300" height="56" rx="10" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+    <text x="20" y="26" class="box-title">a single wav</text>
+    <text x="20" y="44" class="box-sub">one file, one pad</text>
+  </g>
+
+  <!-- input 2: manifest of wavs (medium, y=224..304) -->
+  <g transform="translate(60, 224)">
+    <rect width="300" height="80" rx="10" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+    <text x="20" y="28" class="box-title">a manifest of wavs</text>
+    <text x="20" y="48" class="box-sub">json list, many pads, one project</text>
+    <text x="20" y="68" class="box-sub mono">pad, slot, bpm, playmode</text>
+  </g>
+
+  <!-- input 3: a real .ppak base (y=336..416) -->
+  <g transform="translate(60, 336)">
+    <rect width="300" height="80" rx="10" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+    <text x="20" y="28" class="box-title">a real .ppak from sample tool</text>
+    <text x="20" y="48" class="box-sub">use as base, then patch</text>
+    <text x="20" y="68" class="box-sub">per-pad bpm, presets, full projects</text>
+  </g>
+
+  <!-- manifest sources cluster (y=460..580) -->
+  <g transform="translate(60, 460)">
+    <rect width="300" height="120" rx="10" fill="#f0efe9" stroke="#e8e8e3" stroke-width="1"/>
+    <text x="20" y="24" class="box-title">manifest sources</text>
+    <text x="20" y="46" class="box-sub">— stemforge curation</text>
+    <text x="20" y="64" class="box-sub">— daw exports (ableton, logic)</text>
+    <text x="20" y="82" class="box-sub">— your own python script</text>
+    <text x="20" y="100" class="box-sub">— anything that emits a json list</text>
+  </g>
+
+  <!-- soft curved arrow on the LEFT side of the boxes, from manifest-sources cluster up around the .ppak box, into the manifest box -->
+  <path d="M 60 470 C 32 450, 32 300, 60 282" fill="none" stroke="#999999" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow-muted)"/>
+  <text x="22" y="380" class="annot" transform="rotate(-90 22 380)">feeds into</text>
+
+  <!-- ====================================================== -->
+  <!-- MIDDLE COLUMN: library box + 3 CLI rows                 -->
+  <!-- middle x=440..960 (520 wide)                            -->
+  <!-- ====================================================== -->
+
+  <!-- CLI rows aligned vertically with their input on the left -->
+
+  <!-- cli 1: ppak-load-one — center y matches input 1 (y=140..196 → mid 168) -->
+  <g transform="translate(440, 145)">
+    <rect width="520" height="46" rx="9" fill="#fafaf7" stroke="#e8e8e3" stroke-width="1"/>
+    <circle cx="22" cy="23" r="4" fill="#3a85ff"/>
+    <text x="42" y="28" class="mono-cli">ppak-load-one</text>
+    <text x="240" y="28" class="caption">single wav, one pad, fast</text>
+  </g>
+
+  <!-- cli 2: ppak-load-manifest — center y matches input 2 (y=224..304 → mid 264) -->
+  <g transform="translate(440, 241)">
+    <rect width="520" height="46" rx="9" fill="#fafaf7" stroke="#e8e8e3" stroke-width="1"/>
+    <circle cx="22" cy="23" r="4" fill="#3a85ff"/>
+    <text x="42" y="28" class="mono-cli">ppak-load-manifest</text>
+    <text x="240" y="28" class="caption">batch upload, many pads at once</text>
+  </g>
+
+  <!-- cli 3: ppak-writer — center y matches input 3 (y=336..416 → mid 376) -->
+  <g transform="translate(440, 353)">
+    <rect width="520" height="46" rx="9" fill="#fafaf7" stroke="#e8e8e3" stroke-width="1"/>
+    <circle cx="22" cy="23" r="4" fill="#3a85ff"/>
+    <text x="42" y="28" class="mono-cli">ppak-writer</text>
+    <text x="240" y="28" class="caption">author whole projects offline</text>
+  </g>
+
+  <!-- LIBRARY BOX (under the three CLI rows) -->
+  <g transform="translate(440, 425)">
+    <rect width="520" height="156" rx="12" fill="#dbeaff" opacity="0.4"/>
+    <rect width="520" height="156" rx="12" fill="none" stroke="#3a85ff" stroke-width="1.5"/>
+    <text x="24" y="32" class="lib-heading">ep133</text>
+    <text x="24" y="52" class="caption">handles sysex framing, 7-bit packing, .ppak archives, pad-record bytes</text>
+
+    <g transform="translate(24, 80)">
+      <text x="0" y="0" class="mono-mod">ep133.client</text>
+      <text x="180" y="0" class="mono-mod-note">— high-level sysex</text>
+    </g>
+    <g transform="translate(24, 108)">
+      <text x="0" y="0" class="mono-mod">ep133.payloads</text>
+      <text x="180" y="0" class="mono-mod-note">— PadParams, SampleParams</text>
+    </g>
+    <g transform="translate(24, 136)">
+      <text x="0" y="0" class="mono-mod">ep133.ppak</text>
+      <text x="180" y="0" class="mono-mod-note">— archive reader / writer</text>
+    </g>
+  </g>
+
+  <!-- ====================================================== -->
+  <!-- FLOW ARROWS                                              -->
+  <!-- ====================================================== -->
+
+  <!-- input 1 (right edge x=360, mid y=168) → cli 1 left (x=440, y=168) -->
+  <path d="M 360 168 C 395 168, 405 168, 440 168" fill="none" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- input 2 (right edge x=360, mid y=264) → cli 2 left (x=440, y=264) -->
+  <path d="M 360 264 C 395 264, 405 264, 440 264" fill="none" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- input 3 (right edge x=360, mid y=376) → cli 3 left (x=440, y=376) -->
+  <path d="M 360 376 C 395 376, 405 376, 440 376" fill="none" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- cli → device arrows: from right edge of cli (x=960) into left edge of grid -->
+  <!-- grid is at translate(1080,150), pads at translate(40,24) inside that -->
+  <!-- so pads start at absolute x=1120, y=174 -->
+  <!-- center of grid: x=(1120 + 156/2)=1198, y=(174 + 212/2)=280 -->
+
+  <!-- cli 1 (x=960, y=168) → grid top-left area (x=1120, y=200) -->
+  <path d="M 960 168 C 1020 168, 1060 200, 1120 210" fill="none" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- cli 2 (x=960, y=264) → grid middle (x=1120, y=275) -->
+  <path d="M 960 264 C 1020 264, 1060 270, 1120 275" fill="none" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- cli 3 (x=960, y=376) → grid bottom-left (x=1120, y=350) -->
+  <path d="M 960 376 C 1020 376, 1060 360, 1120 350" fill="none" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ====================================================== -->
+  <!-- RIGHT COLUMN: the device                                -->
+  <!-- ====================================================== -->
+
+  <g transform="translate(1080, 150)">
+    <text x="110" y="0" text-anchor="middle" class="box-sub">ep-133 k.o. ii</text>
+
+    <!-- 4 rows × 3 cols, pad 44×44, gap 12, total = 3*44+2*12 = 156 wide; 4*44+3*12 = 212 tall -->
+    <g transform="translate(40, 24)">
+      <!-- row 0 -->
+      <rect x="0"   y="0"   width="44" height="44" rx="9" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+      <rect x="56"  y="0"   width="44" height="44" rx="9" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+      <rect x="112" y="0"   width="44" height="44" rx="9" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+      <!-- row 1 (one pad accent-filled) -->
+      <rect x="0"   y="56"  width="44" height="44" rx="9" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+      <rect x="56"  y="56"  width="44" height="44" rx="9" fill="#dbeaff" stroke="#3a85ff" stroke-width="1.5"/>
+      <rect x="112" y="56"  width="44" height="44" rx="9" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+      <!-- row 2 -->
+      <rect x="0"   y="112" width="44" height="44" rx="9" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+      <rect x="56"  y="112" width="44" height="44" rx="9" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+      <rect x="112" y="112" width="44" height="44" rx="9" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+      <!-- row 3 -->
+      <rect x="0"   y="168" width="44" height="44" rx="9" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+      <rect x="56"  y="168" width="44" height="44" rx="9" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+      <rect x="112" y="168" width="44" height="44" rx="9" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+    </g>
+
+    <text x="110" y="262" text-anchor="middle" class="box-sub mono">12 pads × 4 groups × 999 slots</text>
+    <text x="110" y="282" text-anchor="middle" class="caption">usb-midi sysex</text>
+  </g>
+
+  <!-- ====================================================== -->
+  <!-- BOTTOM: python snippet panel                            -->
+  <!-- ====================================================== -->
+
+  <text x="60" y="614" class="annot">or skip the cli — the python api is one-liner-callable</text>
+
+  <g transform="translate(60, 626)">
+    <rect width="1280" height="74" rx="10" fill="#f0efe9" stroke="#e8e8e3" stroke-width="1"/>
+    <text x="20" y="26" class="code"><tspan class="code-kw">from</tspan> ep133 <tspan class="code-kw">import</tspan> EP133Client</text>
+    <text x="20" y="46" class="code"><tspan class="code-kw">with</tspan> EP133Client.open() <tspan class="code-kw">as</tspan> c:</text>
+    <text x="20" y="66" class="code">    c.upload_sample(<tspan class="code-str">"kick.wav"</tspan>, slot=100)</text>
+    <text x="640" y="66" class="code">c.assign_pad(project=1, group=<tspan class="code-str">"A"</tspan>, pad_num=10, slot=100)</text>
+  </g>
+
+  <!-- tiny boxing glove nod, bottom-right -->
+  <text x="1370" y="710" font-size="12" fill="#999999" text-anchor="end">🥊</text>
+</svg>
