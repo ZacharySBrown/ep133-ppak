@@ -63,6 +63,7 @@ from ep133.manifest import BatchManifest, SampleMeta
 # Bar 0 lands at the bottom-left "." pad; bar 11 at the top-right "9" pad.
 BAR_INDEX_TO_PAD_NUM = [10, 11, 12, 7, 8, 9, 4, 5, 6, 1, 2, 3]
 BAR_INDEX_TO_LABEL   = [".", "0", "ENTER", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+BAR_LABEL_TO_INDEX   = {label: idx for idx, label in enumerate(BAR_INDEX_TO_LABEL)}
 
 
 def parse_groups(group_args):
@@ -101,26 +102,108 @@ def get_loops_old(manifest, stem_name):
     return val.get("loops", [])
 
 
-def get_loops_new(batch: BatchManifest, stem_name: str, manifest_dir: Path):
-    """Return entries from a BatchManifest matching `stem_name`, ordered.
+def _route_to_group(s: SampleMeta, stem_to_group: dict[str, str], requested: set[str]) -> str | None:
+    """Resolve which group a sample lands in.
 
-    Each entry is a dict shaped like a legacy loop (position + file) plus
-    a `_meta: SampleMeta` carrying per-sample bpm/playmode/name/etc.
+    `suggested_group` wins when set. Otherwise we route by stem via
+    `--groups`. Samples that can't be routed (no suggested_group, no
+    matching --groups entry) return None and are skipped.
     """
-    matches = [s for s in batch.samples if s.stem == stem_name]
-    if not matches:
-        available = sorted({s.stem for s in batch.samples if s.stem})
-        raise KeyError(f"stem {stem_name!r} not in manifest (available: {available})")
+    if s.suggested_group is not None:
+        return s.suggested_group if s.suggested_group in requested else None
+    if s.stem and s.stem in stem_to_group:
+        return stem_to_group[s.stem]
+    return None
 
-    loops = []
-    for i, s in enumerate(matches):
+
+def build_ops_new(batch: BatchManifest, groups, start_slot: int, n_pads: int,
+                  manifest_dir: Path) -> list[dict]:
+    """Build ops from a `BatchManifest`, two-pass placement.
+
+    Per-group placement:
+      Pass 1 — every sample with `suggested_pad` claims its bar-index.
+               Two samples claiming the same pad → ValueError.
+      Pass 2 — samples without `suggested_pad` fill the unclaimed bar-indices
+               in ascending order (bar 0 = '.', bar 1 = '0', ...).
+
+    Group routing per sample:
+      `suggested_group` (if set and in --groups) > stem→group via --groups.
+      Samples that route to a group not requested via --groups are skipped.
+    """
+    stem_to_group = {stem: g for g, stem in groups}
+    requested = {g for g, _ in groups}
+
+    buckets: dict[str, list[SampleMeta]] = {g: [] for g in requested}
+    for s in batch.samples:
         if not s.file:
-            raise ValueError(f"sample with stem={stem_name!r} is missing 'file' field")
-        wav_path = Path(s.file)
-        if not wav_path.is_absolute():
-            wav_path = manifest_dir / wav_path
-        loops.append({"position": i + 1, "file": str(wav_path), "_meta": s})
-    return loops
+            continue
+        g = _route_to_group(s, stem_to_group, requested)
+        if g is not None:
+            buckets[g].append(s)
+
+    ops: list[dict] = []
+    for g_idx, (group, default_stem) in enumerate(groups):
+        bucket = buckets[group]
+        if len(bucket) > n_pads:
+            raise ValueError(
+                f"group {group}: too many samples ({len(bucket)}) for --pads {n_pads}"
+            )
+        if not bucket:
+            continue
+
+        claimed: dict[int, SampleMeta] = {}
+        unclaimed: list[SampleMeta] = []
+        for s in bucket:
+            if s.suggested_pad is not None:
+                bar_idx = BAR_LABEL_TO_INDEX.get(s.suggested_pad)
+                if bar_idx is None:
+                    raise ValueError(
+                        f"group {group}: invalid suggested_pad={s.suggested_pad!r}"
+                    )
+                if bar_idx >= n_pads:
+                    raise ValueError(
+                        f"group {group}: suggested_pad={s.suggested_pad!r} "
+                        f"(bar {bar_idx}) exceeds --pads {n_pads}"
+                    )
+                if bar_idx in claimed:
+                    raise ValueError(
+                        f"group {group}: suggested_pad={s.suggested_pad!r} "
+                        f"claimed twice (by {claimed[bar_idx].file!r} and {s.file!r})"
+                    )
+                claimed[bar_idx] = s
+            else:
+                unclaimed.append(s)
+
+        next_bar = 0
+        for s in unclaimed:
+            while next_bar < n_pads and next_bar in claimed:
+                next_bar += 1
+            if next_bar >= n_pads:
+                raise ValueError(
+                    f"group {group}: too many samples for --pads {n_pads} after "
+                    f"honoring explicit suggested_pad claims"
+                )
+            claimed[next_bar] = s
+            next_bar += 1
+
+        for bar_idx in sorted(claimed):
+            s = claimed[bar_idx]
+            wav_path = Path(s.file)
+            if not wav_path.is_absolute():
+                wav_path = manifest_dir / wav_path
+            slot = start_slot + g_idx * n_pads + bar_idx
+            ops.append({
+                "group": group,
+                "stem": s.stem or default_stem,
+                "bar_index": bar_idx,
+                "pad_num": BAR_INDEX_TO_PAD_NUM[bar_idx],
+                "pad_label": BAR_INDEX_TO_LABEL[bar_idx],
+                "slot": slot,
+                "wav_path": wav_path,
+                "meta": s,
+            })
+
+    return ops
 
 
 def plan(loops_by_stem, groups, start_slot, n_pads):
@@ -240,21 +323,16 @@ def run_load(ops, project, delay_ms, batch_bpm=None, no_bpm=False):
             print(f"done ({time.monotonic()-t2:.2f}s)", flush=True)
 
 
-def load_loops_by_stem(raw, stems_needed, manifest_dir: Path):
-    """Return {stem_name: [loop_dict, ...]} for the requested stems.
-
-    Dispatches to old- or new-schema readers based on `raw`.
-    """
+def build_ops(raw, groups, start_slot: int, n_pads: int, manifest_dir: Path):
+    """Dispatch to old- or new-schema op-builder. Returns (ops, schema)."""
     schema = detect_schema(raw)
-    out = {}
     if schema == "old":
-        for stem in stems_needed:
-            out[stem] = get_loops_old(raw, stem)
-    else:
-        batch = BatchManifest.model_validate(raw)
-        for stem in stems_needed:
-            out[stem] = get_loops_new(batch, stem, manifest_dir)
-    return out, schema
+        loops_by_stem = {}
+        for _, stem in groups:
+            loops_by_stem[stem] = get_loops_old(raw, stem)
+        return plan(loops_by_stem, groups, start_slot, n_pads), schema
+    batch = BatchManifest.model_validate(raw)
+    return build_ops_new(batch, groups, start_slot, n_pads, manifest_dir), schema
 
 
 def main():
@@ -291,16 +369,9 @@ def main():
     except ValueError as e:
         parser.error(str(e))
 
-    stems_needed = [stem for _, stem in groups]
     try:
-        loops_by_stem, schema = load_loops_by_stem(raw, stems_needed, manifest_dir)
+        ops, schema = build_ops(raw, groups, args.start_slot, args.pads, manifest_dir)
     except (KeyError, ValueError) as e:
-        print(f"ERROR: {e}", file=sys.stderr)
-        sys.exit(1)
-
-    try:
-        ops = plan(loops_by_stem, groups, args.start_slot, args.pads)
-    except KeyError as e:
         print(f"ERROR: {e}", file=sys.stderr)
         sys.exit(1)
 
