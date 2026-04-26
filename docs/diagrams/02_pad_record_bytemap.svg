@@ -447,7 +447,7 @@
   <g transform="translate(60, 690)">
     <rect x="0" y="0" width="1080" height="50" rx="8" fill="#ffe5dc"/>
     <text x="20" y="22" class="warn-text">⚠</text>
-    <text x="44" y="22" font-size="13" fill="#1a1a1a" font-weight="600">our offsets correct phones24's prior table — earlier reverse-eng work shifted slot/length/bpm by 1-2 bytes.</text>
+    <text x="44" y="22" font-size="13" fill="#1a1a1a" font-weight="600">offsets verified by diffing two real sample tool backups — extends earlier community work; cross-checking welcome.</text>
     <text x="44" y="40" font-size="13" fill="#1a1a1a">method: byte-diff a blank pad against a single sample-tool assignment, then identity-check decoded values against the device ui.</text>
   </g>
 

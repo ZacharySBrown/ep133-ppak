@@ -14,15 +14,17 @@ the field groups color-zoned: **id** (the slot pointer), **length**
 The two strips show the same record in two states. The top strip is a
 default-blank pad pulled verbatim from a Sample Tool backup. The bottom
 strip is the same pad after Sample Tool assigns a 99,328-frame WAV at
-auto-detected 79.91 BPM. Diffing them reveals the offsets: exactly six
-bytes change — one in the slot field, three in the sample-length u32 LE,
-and three in the BPM float32 LE. Solid borders mark offsets verified by
-this diff plus identity checks against the device UI; dashed borders
-mark fields whose names we inherit from prior reverse-engineering work
-(notably phones24) but have not yet independently verified.
+auto-detected 79.91 BPM. Diffing them surfaces the offsets directly:
+exactly six bytes change — one in the slot field, three in the
+sample-length u32 LE, and three in the BPM float32 LE. Solid borders
+mark offsets verified by this diff plus identity checks against the
+device UI; dashed borders mark fields we've inherited by name from prior
+community RE work and not yet independently verified here.
 
-These corrected offsets supersede the prior phones24 table, which had
-slot, length, and BPM each shifted by 1-2 bytes. For the full
-verification status table — what's confirmed, what's inferred, and what
-test produced each result — see
-[PROTOCOL.md §7](../../PROTOCOL.md#7-pad-binary-record).
+The diff above places several offsets a few bytes apart from earlier
+published tables (notably phones24's archive parser). More captures
+across more devices and firmware versions would help reconcile;
+[PROTOCOL.md §7](../../PROTOCOL.md#7-pad-binary-record-27-bytes-in-project-tar)
+documents the verification status field-by-field, and
+[the diff procedure](../verifying-byte-offsets.md) is fully reproducible
+if you'd like to run your own checks.

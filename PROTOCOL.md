@@ -7,22 +7,24 @@
 A reverse-engineered specification of the Teenage Engineering EP-133 K.O. II's
 SysEx protocol, internal `.ppak` archive format, and on-disk binary pad-record
 layout. Compiled from live USB-MIDI device probing, EP Sample Tool emit
-diffs, and cross-checks against [phones24's open-source archive parser](https://github.com/phones24).
+diffs, and cross-checks against the broader community RE — most directly
+[phones24's open-source archive parser](https://github.com/phones24) and
+[ep133-krate](https://github.com/icherniukh/ep133-krate)'s live-SysEx
+captures (see [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md)).
 
-This document was distilled from a 2-day RE session inside the StemForge project; an earlier draft
-(2026-04-24) — the older draft inherited several incorrect byte offsets from
-phones24's notes and from corrupted live-SysEx reads. Today's findings come
-from byte-level diffing of two real Sample Tool backups (empty device vs.
-post-pad-assignment), which is the cleanest source available for the binary
-formats.
+The byte layout in §7 was derived primarily by diffing two real Sample
+Tool backups (empty device vs. post-pad-assignment), which gave a very
+clean signal for the pad-record fields. Some offsets here come out a few
+bytes different from earlier published tables; this document tracks
+verification status field-by-field so anyone can reconcile.
 
 ---
 
 ## TL;DR — what's verified, what's not
 
-This is a community RE document. Prior public sources got some details
-wrong; we got some details wrong before today; **this document marks
-verification status field-by-field**. Use accordingly.
+This is community RE; everything here is provisional. **This document
+marks verification status field-by-field** — use accordingly, and please
+file PRs when you find something we got wrong.
 
 **What's verified by direct byte-level testing:**
 - All wire framing (manufacturer ID, command bytes, request-id flags, 7-bit packing)
@@ -45,12 +47,17 @@ verification status field-by-field**. Use accordingly.
 - Project-file write path (write sub-command unmapped, probing wedges device)
 - Pattern/scene storage location
 
-**What's a published correction vs. existing public sources:**
-- phones24's pad-record offset table is **shifted by 1-2 bytes** vs. real format
-- phones24's `pads/x/pNN` numbering convention isn't documented but is **bottom-up
-  (p01 = "."), not top-down**
-- Sample Tool's `.ppak` format has **no separate `settings` file** in the project TAR;
-  trying to add one triggers ERROR CLOCK 43 on import (recovered only by SHIFT+ERASE format)
+**Where this complements / refines earlier work:**
+- The pad-record offsets here came out a few bytes different from the
+  table in phones24's archive parser, after the diff-based testing
+  in §7.3. We've flagged this for cross-project reconciliation.
+- The `pads/x/pNN` numbering convention isn't widely documented; it's
+  bottom-up (p01 = "."), which is the opposite of the SysEx `pad_num`
+  convention. §3.1 has the full translation table.
+- Sample Tool's `.ppak` format has no separate `settings` file in the
+  project TAR; adding one triggers ERROR CLOCK 43 on import (recovered
+  via SHIFT+ERASE flash format). §9 documents the format details we
+  observed in real Sample Tool backups.
 
 ---
 
@@ -283,10 +290,12 @@ No per-pad BPM in this schema — that lives in the binary record (§7).
 
 ## 7. Pad Binary Record (27 bytes, in project TAR)
 
-**This section supersedes prior published research.** phones24's offset
-table is shifted by 1-2 bytes vs. the actual format; this layout was
-verified 2026-04-25 by diffing the same project on the same device, before
-and after a single sample assignment via Sample Tool's UI.
+The byte layout below was verified 2026-04-25 by diffing the same project
+on the same device, before and after a single sample assignment via
+Sample Tool's UI (see §7.3 for the procedure). The phones24 archive
+parser maps the same fields but with offsets that came out a few bytes
+different from what the diff produced here — worth cross-checking
+against more captures and reconciling between projects.
 
 Default-blank pad (verbatim from real backup, 48 of these in any project):
 
@@ -306,7 +315,7 @@ Field layout (0-indexed, relative to record start):
 | 6 | (unknown) | `0x00` | ⬜ |
 | 7-9 | trimRight u24 LE | zeros | ⚠️ phones24, untested |
 | 10-11 | (unknown) | `0x00` | ⬜ |
-| **8-11** | **sample length frames u32 LE** (overrides phones24's interpretation of bytes 7-9) | zeros | ✅ verified by diff (99,328 frames for 8.916s @ 44.1kHz native = match) |
+| **8-11** | **sample length frames u32 LE** (the diff places the length here; earlier tables had it overlapping bytes 7-9 — worth cross-checking) | zeros | ✅ verified by diff (99,328 frames for 8.916s @ 44.1kHz native = match) |
 | **12-15** | **BPM float32 LE** (when override flag at +13 ≠ 0x80) | `00 00 f0 42` = 120.0 | ✅ verified |
 | **13-15** | **OVERRIDE BPM** (when byte +13 = 0x80) | (none in default) | ✅ verified |
 | 16 | volume u8 | `0x64` = 100 | ✅ verified by diff |
@@ -545,57 +554,69 @@ Hard-won from two ERROR 8200 incidents (device wedge requiring power cycle):
    cycles and required SHIFT+ERASE flash format. Patch from real exports
    instead.
 
-## 12. Comparison vs. existing public sources
+## 12. How this fits with related projects
+
+Several community projects have done the heavy lifting that made this one
+possible. This section maps how the work overlaps so readers can find the
+right tool for what they need. [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md)
+has the full credit breakdown.
 
 ### phones24
 
-The most comprehensive public source as of writing
-([github.com/phones24](https://github.com/phones24)). Covers:
-- Wire framing, manufacturer ID, command byte map
-- 7-bit packing
-- FileId structure (samples and projects)
-- Initial pad-record byte interpretation
-- `.ppak` ZIP overview
+[github.com/phones24](https://github.com/phones24) — the foundational
+`.ppak` archive parser. Covers wire framing, the TE manufacturer ID,
+command byte map, 7-bit packing, fileId structure for samples and
+projects, the initial pad-record field interpretation, and the broad
+`.ppak` ZIP shape.
 
-**Where this document supplements / corrects:**
-- **Pad-record byte offsets**: phones24's table places `slot` at bytes 0-1
-  LE, `volume` at 15, `release` at 19, `time.mode` at 20, `playMode` at 22.
-  Real format (verified by diff): slot at byte **1** (u8 — not LE u16),
-  length at **8-11**, volume at **16**, release at **20**, time.mode at
-  **21**, playMode at **23**. All offsets shifted by 1-2 bytes.
-- **`pads/x/pNN` numbering**: phones24 doesn't document the bottom-up
-  convention vs. SysEx top-down convention (§3.1).
-- **`.ppak` Sample Tool emit format**: phones24 has the ZIP shell but not
-  the `meta.json` field list, the timestamp requirements, the absent-on-
-  purpose `settings` file (CLOCK 43 trigger), or the WAV format
-  requirement (44.1 kHz stereo, not the device's internal 46875 mono).
-- **Behavioral gotchas**: integer-vs-string accept on writes, playmode/
-  release coupling, and the partial-write clobber risk are documented
-  here for the first time we know of.
-- **Time-stretch math** for `time.mode=bpm` and the consequence that
-  `sound.bpm` should match the loop's true recorded tempo (not be
-  invented as a "play faster" knob).
+This project is in many ways a deeper dive into the file-format side
+that phones24 opened up. Where the two tables differ (pad-record byte
+offsets, in particular) is a good cross-check opportunity — diffing
+more Sample Tool backups (see §7.3) on more devices would help
+reconcile, and either project's parser can pick up the result.
+
+### ep133-krate (icherniukh)
+
+[github.com/icherniukh/ep133-krate](https://github.com/icherniukh/ep133-krate)
+— extensive live-SysEx capture-based protocol RE plus a polished
+sample-manager TUI. Their work on the live wire protocol is notably
+deeper than this project's: they have a large captured-traffic archive,
+a documented confidence matrix per operation, and several findings this
+project doesn't cover (the project-switch command at byte 6 = `0x7C`,
+the `{"active": <node>}` UI navigation field, GET_META unreliability
+in OS 2.0+, the WAV RIFF chunk requirements, and a confirmed 430-entry
+BE16 sweep for node IDs).
+
+This project's emphasis is the on-disk `.ppak` archive layer and the
+binary pad record inside the project TAR — which krate explicitly
+notes as out of their scope. The two repos line up well as
+complements; cross-referencing a reader between them gets you the
+fullest picture.
 
 ### TE official docs
 
-The user-facing manual covers playback, sequencing, and FX, but does not
-expose the SysEx protocol or `.ppak` format. The Sample Tool web app's
-JavaScript bundle has the protocol details obfuscated; phones24 reverse-
-engineered most of it from there.
+The user-facing K.O. II guide covers playback, sequencing, and FX, but
+not the SysEx protocol or `.ppak` format. The Sample Tool web app's
+JavaScript bundle is where most community RE has rooted. None of this
+work would exist without TE shipping a device whose protocol is
+consistent enough to learn this way.
 
-### Recommendation for publishing this work
+### Working with all of these together
 
-Publishing as a complementary doc with credit to phones24 is the cleanest
-move:
+If you're starting a new EP-133 project, the practical path is:
 
-1. Lead with what's new/corrected in this doc (the diff-method + corrected
-   pad-record offsets are the most valuable contributions)
-2. Direct readers to phones24 for the parts of the protocol both repos
-   cover, to avoid duplicate maintenance burden
-3. Encourage cross-pollination — phones24's archive parser can be patched
-   with the corrected offsets here
+1. **Read traffic** — start with ep133-krate for the live SysEx wire
+   layer. Their captures + confidence matrix are the best reference.
+2. **Read archives** — phones24 for the broad `.ppak` shape; this
+   repo for the binary pad record and the Sample-Tool emit conventions.
+3. **Verify locally** — use the diff method (§7.3) for any byte-level
+   field you depend on. Two backups + `cmp -l` resolves a lot of
+   ambiguity quickly.
+4. **Reconcile** — open issues / PRs across projects when fields
+   disagree. Community RE wins from multiple data points and shared
+   verification artifacts.
 
-## 13. Implementation map (StemForge Python lib)
+## 13. Implementation map (this repo's Python lib)
 
 | Module | Purpose |
 |---|---|

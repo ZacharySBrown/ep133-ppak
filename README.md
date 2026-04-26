@@ -7,36 +7,53 @@ Write valid `.ppak` archives from Python. Decode the EP-133's binary pad
 record. Read project files live via SysEx. Upload samples and assign pads
 without touching Sample Tool.
 
-## What's unique here
+## What this gives you
 
-This work complements two earlier community efforts:
-- [phones24](https://github.com/phones24) — `.ppak` archive parser
-- [ep133-krate](https://github.com/icherniukh/ep133-krate) — live SysEx
-  capture-based protocol RE + sample-management TUI
+- **A `.ppak` writer that loads cleanly into Sample Tool.** Patches a real
+  Sample Tool backup as a base and modifies only the bytes that need to
+  change — guarantees format conformance. See
+  [`ep133/ppak/writer.py`](ep133/ppak/writer.py).
+- **Sample Tool emit format documented end-to-end** — `meta.json` schema,
+  ZIP entry conventions, the absent-on-purpose `settings` file (a footgun:
+  adding one triggers ERROR CLOCK 43 and a flash-format recovery), WAV
+  format requirements (44.1 kHz stereo for `.ppak`; the device transcodes
+  to 46875 mono internally).
+- **The diff method** — a reproducible procedure for verifying pad-record
+  byte offsets via two Sample Tool backups, before and after one UI
+  change. Anyone with the device can confirm or extend the byte layout
+  in this repo. See [docs/verifying-byte-offsets.md](docs/verifying-byte-offsets.md).
+- **Diff-verified pad-record byte layout** — the 27-byte record gets a
+  field-by-field verification status; offsets that came out a bit
+  different from earlier published tables are flagged so future work can
+  reconcile them. See [PROTOCOL.md §7](PROTOCOL.md#7-pad-binary-record-27-bytes-in-project-tar).
+- **Two pad-numbering conventions, called out** — the TAR's `pNN` counts
+  bottom-up; the SysEx `pad_num` counts top-down. Same physical pad,
+  different numbers. Easy to conflate; harder once you've seen the
+  diagram.
+- **Time-stretch math** for `time.mode=bpm` with the practical
+  implication: set each loop's `sound.bpm` to its true recorded tempo,
+  and the device's bar inference works cleanly at any project tempo.
 
-`ep133-ppak` adds:
+## Building on prior work
 
-- **Verified pad-record byte offsets** — phones24's table has the right
-  fields but wrong offsets (shifted by 1-2 bytes). Decoded by diffing
-  two real Sample Tool backups; documented with verification status
-  field-by-field. See [PROTOCOL.md §7](PROTOCOL.md#7-pad-binary-record-27-bytes-in-project-tar).
-- **`.ppak` writer that actually loads** — generates Sample-Tool-compatible
-  archives by patching a real backup as a base. Build-from-scratch
-  attempts get silently rejected; patch-from-real works on the first try.
-  See [`ep133/ppak/writer.py`](ep133/ppak/writer.py).
-- **Sample Tool emit format details** — `meta.json` schema, ZIP entry
-  conventions, the absent-on-purpose `settings` file (adding one triggers
-  ERROR CLOCK 43 + flash-format recovery), WAV format (44.1kHz stereo, NOT
-  the device's internal 46875 mono).
-- **Two pad-numbering conventions** explicitly documented — the TAR's
-  `pNN` is bottom-up, the SysEx `pad_num` is top-down. Easy footgun,
-  not previously called out.
-- **Time-stretch math** for `time.mode=bpm` and the practical implication:
-  set each loop's `sound.bpm` to its true recorded tempo, and the device's
-  bar inference Just Works at any project tempo.
-- **The diff method** — reproducible byte-offset verification via two
-  Sample Tool backups, before and after one UI change. See
-  [docs/verifying-byte-offsets.md](docs/verifying-byte-offsets.md).
+This project stands on a chain of community reverse-engineering:
+
+- [**phones24**](https://github.com/phones24) — the original `.ppak`
+  archive parser. Their work is the reason any of this was tractable;
+  their RE bootstrapped the broad protocol shape, including the
+  pad-record fields.
+- [**ep133-krate**](https://github.com/icherniukh/ep133-krate) — extensive
+  live SysEx capture-based protocol RE + a polished sample-manager TUI.
+  Complementary surface area to this project: krate covers the live
+  SysEx path with capture-backed depth; this repo covers the on-disk
+  `.ppak` archive format and the in-TAR binary pad record.
+- [**garrettjwilke/ep_133_sysex_thingy**](https://github.com/garrettjwilke/ep_133_sysex_thingy),
+  [**benjaminr/mcp-koii**](https://github.com/benjaminr/mcp-koii), and
+  **abrilstudios/rcy** — earlier or adjacent community efforts cited by
+  the projects above.
+
+[ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md) has the full breakdown of what
+each project contributed and where to use their work today.
 
 ## Install
 
@@ -142,16 +159,8 @@ LICENSE                  MIT
 
 ## See also
 
-- **[PROTOCOL.md](PROTOCOL.md)** — full SysEx protocol + `.ppak` format reference
-- **[ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md)** — what each upstream community project contributed and where to use their work today
-
-Brief pointers to upstream / sibling projects (full credit in [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md)):
-
-- **[phones24](https://github.com/phones24)** — original `.ppak` archive parser; canonical for archive shape
-- **[ep133-krate](https://github.com/icherniukh/ep133-krate)** — live SysEx capture-based RE + sample manager TUI; extensive capture archive
-- **[garrettjwilke/ep_133_sysex_thingy](https://github.com/garrettjwilke/ep_133_sysex_thingy)** — pre-FW 2.0 SysEx examples
-- **[benjaminr/mcp-koii](https://github.com/benjaminr/mcp-koii)** — MIDI control + sound-to-pad mapping research
-- **abrilstudios/rcy** — FW 2.0.5 upload reference
+- **[PROTOCOL.md](PROTOCOL.md)** — full SysEx + `.ppak` format reference
+- **[ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md)** — what each upstream project contributed and where their work shines today
 
 ## Status
 

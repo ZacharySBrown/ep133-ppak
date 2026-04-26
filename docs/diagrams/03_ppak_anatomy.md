@@ -23,9 +23,9 @@ for the full failure mode and observed device state.
 The safest generator strategy is **patch-from-real**: take a `.ppak`
 that Sample Tool actually emitted, swap the WAV payloads and patch
 the pad records you need to change, and re-zip. This sidesteps almost
-every format pitfall — you inherit the correct entry order, the
-epoch mtimes inside the TAR, the directory mode bits, the pNN
-ordering, and (critically) the absence of a `settings` entry. Building
-a `.ppak` from scratch is possible but requires byte-for-byte
-discipline, and the device gives you no useful diagnostics when you
-get it wrong.
+every format pitfall — you inherit the correct entry order, the epoch
+mtimes inside the TAR, the directory mode bits, the pNN ordering, and
+(critically) the absence of a `settings` entry. Building a `.ppak` from
+scratch is possible but requires byte-for-byte discipline, and the
+device offers no useful diagnostics when something's off — which is
+why this repo's writer leans on the patch-from-real path.
