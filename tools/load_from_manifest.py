@@ -1,31 +1,43 @@
 #!/usr/bin/env python3
 """
-load_from_manifest — bulk-load a list of WAV loops to consecutive EP-133 slots
-and assign them to pads in a project, with per-slot sound.bpm tagging.
+load_from_manifest — bulk-load WAVs into EP-133 slots and assign pads.
 
-Manifest format (JSON):
+Accepts two manifest schemas:
+
+A) **Legacy stems-grouped** (back-compat):
 
     {
       "track": "my_track",
       "bpm": 107.666,
       "stems": {
-        "drums": {
-          "loops": [
-            {"position": 1, "file": "/abs/path/to/loop_001.wav"},
-            {"position": 2, "file": "/abs/path/to/loop_002.wav"},
-            ...
-          ]
-        },
-        "bass":   {"loops": [...]},
-        "vocals": {"loops": [...]},
-        "other":  {"loops": [...]}
+        "drums": {"loops": [{"position": 1, "file": "/abs/path"}, ...]},
+        "bass":  {"loops": [...]},
+        ...
       }
     }
 
+B) **StemForge `BatchManifest`** (new — see `ep133.manifest`):
+
+    {
+      "version": 1,
+      "track": "my_track",
+      "bpm": 107.666,
+      "samples": [
+        {"file": "drums_001.wav", "stem": "drums", "bpm": 107.666,
+         "playmode": "oneshot", "name": "drums 1"},
+        ...
+      ]
+    }
+
+  Each sample's `stem` field routes it to a group (via `--groups`).
+  Per-sample `bpm` / `time_mode` / `playmode` / `name` override the
+  batch-level defaults. `file` paths are resolved relative to the
+  manifest's directory if not absolute.
+
 Each stem maps to one of the 4 pad groups (A/B/C/D). Each loop becomes a
-sample slot + a pad assignment. The manifest's `bpm` is written to every
-slot's `sound.bpm` along with `time.mode = "bpm"` so the device's stretch
-engine plays each loop at its true tempo regardless of project tempo.
+sample slot + a pad assignment. Slots are tagged with `sound.bpm` +
+`time.mode = "bpm"` so the device's stretch engine plays each loop at
+its true tempo regardless of project tempo.
 
 Pad placement: bottom-up, left-right (label "." first, "9" last) — matches
 the user-facing pad order on the device.
@@ -44,6 +56,8 @@ import json
 import sys
 import time
 from pathlib import Path
+
+from ep133.manifest import BatchManifest, SampleMeta
 
 # Bar index (0-based) → SysEx pad_num (top-down convention).
 # Bar 0 lands at the bottom-left "." pad; bar 11 at the top-right "9" pad.
@@ -65,7 +79,19 @@ def parse_groups(group_args):
     return result
 
 
-def get_loops(manifest, stem_name):
+def detect_schema(raw: dict) -> str:
+    """Return "new" for BatchManifest, "old" for legacy stems-grouped."""
+    if isinstance(raw.get("samples"), list):
+        return "new"
+    if isinstance(raw.get("stems"), dict):
+        return "old"
+    raise ValueError(
+        "manifest is neither a BatchManifest (has 'samples' list) nor "
+        "legacy stems-grouped (has 'stems' object)"
+    )
+
+
+def get_loops_old(manifest, stem_name):
     stems = manifest.get("stems", {})
     if stem_name not in stems:
         raise KeyError(f"stem {stem_name!r} not in manifest (available: {list(stems.keys())})")
@@ -75,12 +101,36 @@ def get_loops(manifest, stem_name):
     return val.get("loops", [])
 
 
-def plan(manifest, groups, start_slot, n_pads):
+def get_loops_new(batch: BatchManifest, stem_name: str, manifest_dir: Path):
+    """Return entries from a BatchManifest matching `stem_name`, ordered.
+
+    Each entry is a dict shaped like a legacy loop (position + file) plus
+    a `_meta: SampleMeta` carrying per-sample bpm/playmode/name/etc.
+    """
+    matches = [s for s in batch.samples if s.stem == stem_name]
+    if not matches:
+        available = sorted({s.stem for s in batch.samples if s.stem})
+        raise KeyError(f"stem {stem_name!r} not in manifest (available: {available})")
+
+    loops = []
+    for i, s in enumerate(matches):
+        if not s.file:
+            raise ValueError(f"sample with stem={stem_name!r} is missing 'file' field")
+        wav_path = Path(s.file)
+        if not wav_path.is_absolute():
+            wav_path = manifest_dir / wav_path
+        loops.append({"position": i + 1, "file": str(wav_path), "_meta": s})
+    return loops
+
+
+def plan(loops_by_stem, groups, start_slot, n_pads):
+    """Build ops from per-stem loop lists."""
     ops = []
     for g_idx, (group, stem) in enumerate(groups):
-        loops = get_loops(manifest, stem)
-        loops_sorted = sorted(loops, key=lambda l: l["position"])[:n_pads]
-        for bar_i, loop in enumerate(loops_sorted):
+        if stem not in loops_by_stem:
+            raise KeyError(f"stem {stem!r} not loaded")
+        loops = sorted(loops_by_stem[stem], key=lambda l: l["position"])[:n_pads]
+        for bar_i, loop in enumerate(loops):
             slot = start_slot + g_idx * n_pads + bar_i
             ops.append({
                 "group": group,
@@ -90,6 +140,7 @@ def plan(manifest, groups, start_slot, n_pads):
                 "pad_label": BAR_INDEX_TO_LABEL[bar_i],
                 "slot": slot,
                 "wav_path": Path(loop["file"]),
+                "meta": loop.get("_meta"),  # SampleMeta or None
             })
     return ops
 
@@ -104,8 +155,53 @@ def print_plan(ops, project, track):
     print()
 
 
-def run_load(ops, project, delay_ms, source_bpm=None):
-    """Execute uploads + per-slot bpm tagging + pad assignments."""
+def _slot_meta_for_op(op, batch_bpm: float | None, no_bpm: bool):
+    """Return (slot_kwargs, pad_kwargs, name) for one op.
+
+    Per-sample meta overrides batch-level bpm. If `no_bpm` is set, BPM
+    tagging is suppressed entirely (matching the legacy --no-bpm flag).
+    """
+    meta: SampleMeta | None = op.get("meta")
+
+    bpm = None
+    time_mode = None
+    playmode = None
+    name = None
+
+    if meta is not None:
+        bpm = meta.bpm
+        time_mode = meta.time_mode
+        playmode = meta.playmode
+        name = meta.name
+
+    if bpm is None and batch_bpm is not None:
+        bpm = batch_bpm
+    if no_bpm:
+        bpm = None
+        if time_mode == "bpm":
+            time_mode = None
+    if time_mode is None and bpm is not None:
+        time_mode = "bpm"
+
+    slot_kwargs = {}
+    if bpm is not None:
+        slot_kwargs["bpm"] = bpm
+    if time_mode is not None:
+        slot_kwargs["time_mode"] = time_mode
+    if playmode is not None:
+        slot_kwargs["playmode"] = playmode
+
+    pad_kwargs = {}
+    if time_mode is not None:
+        pad_kwargs["time_mode"] = time_mode
+    if playmode is not None:
+        pad_kwargs["playmode"] = playmode
+
+    return slot_kwargs, pad_kwargs, name
+
+
+def run_load(ops, project, delay_ms, batch_bpm=None, no_bpm=False):
+    """Execute uploads + per-slot metadata + pad assignments."""
     from ep133 import EP133Client
     from ep133.commands import TE_SYSEX_FILE
     from ep133.payloads import PadParams, SampleParams, build_slot_metadata_set
@@ -117,29 +213,48 @@ def run_load(ops, project, delay_ms, source_bpm=None):
             group = op["group"]
             pad_num = op["pad_num"]
 
+            slot_kwargs, pad_kwargs, name = _slot_meta_for_op(op, batch_bpm, no_bpm)
+
             t0 = time.monotonic()
             print(f"  [{i+1:>2}/{len(ops)}] uploading {wav.name} → slot {slot} ...",
                   end=" ", flush=True)
-            client.upload_sample(wav, slot=slot)
+            client.upload_sample(wav, slot=slot, name=name)
             print(f"done ({time.monotonic()-t0:.1f}s)", flush=True)
 
-            if source_bpm is not None:
+            if slot_kwargs:
                 t1 = time.monotonic()
-                print(f"           sound.bpm={source_bpm:.2f}, time.mode=bpm ...",
-                      end=" ", flush=True)
-                params = SampleParams(bpm=source_bpm, time_mode="bpm")
+                desc = ", ".join(f"{k}={v}" for k, v in slot_kwargs.items())
+                print(f"           slot meta ({desc}) ...", end=" ", flush=True)
+                params = SampleParams(**slot_kwargs)
                 payload = build_slot_metadata_set(slot, params)
                 request_id = client._send(TE_SYSEX_FILE, payload)
                 client._await_response(request_id, timeout=5.0)
                 print(f"done ({time.monotonic()-t1:.2f}s)", flush=True)
 
             t2 = time.monotonic()
+            pad_params = PadParams(**pad_kwargs) if pad_kwargs else None
             print(f"           assign P{project} {group}-{op['pad_label']} → slot {slot}",
                   end=" ", flush=True)
-            pad_params = PadParams(time_mode="bpm") if source_bpm is not None else None
             client.assign_pad(project=project, group=group, pad_num=pad_num,
                               slot=slot, params=pad_params)
             print(f"done ({time.monotonic()-t2:.2f}s)", flush=True)
+
+
+def load_loops_by_stem(raw, stems_needed, manifest_dir: Path):
+    """Return {stem_name: [loop_dict, ...]} for the requested stems.
+
+    Dispatches to old- or new-schema readers based on `raw`.
+    """
+    schema = detect_schema(raw)
+    out = {}
+    if schema == "old":
+        for stem in stems_needed:
+            out[stem] = get_loops_old(raw, stem)
+    else:
+        batch = BatchManifest.model_validate(raw)
+        for stem in stems_needed:
+            out[stem] = get_loops_new(batch, stem, manifest_dir)
+    return out, schema
 
 
 def main():
@@ -166,32 +281,42 @@ def main():
         parser.error(f"manifest not found: {args.manifest}")
 
     with args.manifest.open() as f:
-        manifest = json.load(f)
-    track = manifest.get("track", args.manifest.parent.name)
+        raw = json.load(f)
+
+    manifest_dir = args.manifest.parent.resolve()
+    track = raw.get("track", args.manifest.parent.name)
 
     try:
         groups = parse_groups(args.groups)
     except ValueError as e:
         parser.error(str(e))
 
+    stems_needed = [stem for _, stem in groups]
     try:
-        ops = plan(manifest, groups, args.start_slot, args.pads)
+        loops_by_stem, schema = load_loops_by_stem(raw, stems_needed, manifest_dir)
+    except (KeyError, ValueError) as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    try:
+        ops = plan(loops_by_stem, groups, args.start_slot, args.pads)
     except KeyError as e:
         print(f"ERROR: {e}", file=sys.stderr)
         sys.exit(1)
 
+    print(f"  (manifest schema: {schema})")
     print_plan(ops, args.project, track)
 
-    bpm = manifest.get("bpm")
-    source_bpm = None if args.no_bpm else bpm
-    if source_bpm is not None:
-        print(f"  Tagging slots with sound.bpm={source_bpm:.2f} + time.mode=bpm\n")
+    batch_bpm = raw.get("bpm")
+    if batch_bpm is not None and not args.no_bpm:
+        print(f"  Default sound.bpm={batch_bpm:.2f} + time.mode=bpm "
+              f"(per-sample values override)\n")
 
     if args.dry_run:
         print("  DRY RUN — no device I/O\n")
         return
 
-    run_load(ops, args.project, args.delay_ms, source_bpm=source_bpm)
+    run_load(ops, args.project, args.delay_ms, batch_bpm=batch_bpm, no_bpm=args.no_bpm)
     print(f"\n  Done. {len(ops)} ops complete.")
 
 
