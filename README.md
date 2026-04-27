@@ -1,7 +1,18 @@
 # ep133-ppak
 
+```
+            _ __________                         _    
+  ___ _ __ / |___ /___ /       _ __  _ __   __ _| | __
+ / _ \ '_ \| | |_ \ |_ \ ____| '_ \| '_ \ / _` | |/ /
+|  __/ |_) | |___) |__) |____| |_) | |_) | (_| |   < 
+ \___| .__/|_|____/____/     | .__/| .__/ \__,_|_|\_\
+     |_|                     |_|   |_|               
+```
+
 Reverse-engineered SysEx + `.ppak` protocol library for the
 [Teenage Engineering EP-133 K.O. II](https://teenage.engineering/products/ep-133).
+
+![ep133-ppak overview](docs/diagrams/00_overview.svg)
 
 Write valid `.ppak` archives from Python. Decode the EP-133's binary pad
 record. Read project files live via SysEx. Upload samples and assign pads
