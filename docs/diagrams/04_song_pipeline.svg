@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 720" font-family="Inter, system-ui, sans-serif" text-rendering="optimizeLegibility">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3a85ff"/>
+    </marker>
+    <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#999999"/>
+    </marker>
+    <marker id="arrow-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e85d3a"/>
+    </marker>
+    <style>
+      .title       { font-size: 28px; font-weight: 600; fill: #1a1a1a; }
+      .subhead     { font-size: 14px; fill: #666666; }
+      .col-label   { font-size: 12px; fill: #666666; letter-spacing: 0.5px; }
+      .stage-title { font-size: 16px; font-weight: 600; fill: #1a1a1a; }
+      .box-title   { font-size: 14px; font-weight: 600; fill: #1a1a1a; }
+      .box-sub     { font-size: 12px; fill: #666666; }
+      .caption     { font-size: 12px; fill: #666666; }
+      .body        { font-size: 13px; fill: #1a1a1a; }
+      .muted       { font-size: 12px; fill: #666666; }
+      .mono        { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+      .code        { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 13px; fill: #1a1a1a; }
+      .code-sm     { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #1a1a1a; }
+      .code-muted  { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #666666; }
+      .code-accent { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 14px; fill: #3a85ff; font-weight: 600; }
+      .code-warn   { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #e85d3a; font-weight: 600; }
+      .annot       { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #3a85ff; }
+      .annot-muted { font-family: "Caveat", "Kalam", cursive; font-size: 15px; fill: #666666; }
+      .annot-warn  { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #e85d3a; }
+      .input-box   { fill: #fafaf7; stroke: #1a1a1a; stroke-width: 1.5; }
+      .stage-box   { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1.5; }
+      .out-box     { fill: #f0efe9; stroke: #1a1a1a; stroke-width: 1.5; }
+      .child-box   { fill: #fafaf7; stroke: #e8e8e3; stroke-width: 1; }
+      .warn-box    { fill: #ffe5dc; stroke: #e85d3a; stroke-width: 1.5; }
+    </style>
+  </defs>
+
+  <!-- background -->
+  <rect width="1400" height="720" fill="#fafaf7"/>
+
+  <!-- title block -->
+  <text x="60" y="58" class="title">song-mode pipeline</text>
+  <text x="60" y="82" class="subhead">what <tspan class="mono">ppak-export-song</tspan> actually does — locators in, .ppak out.</text>
+
+  <!-- column labels -->
+  <text x="60"   y="120" class="col-label">inputs</text>
+  <text x="430"  y="120" class="col-label">pipeline (ep133.song / ep133.ppak)</text>
+  <text x="1180" y="120" class="col-label">output</text>
+
+  <!-- ====================================================== -->
+  <!-- LEFT: inputs (x=60..360, three boxes)                   -->
+  <!-- ====================================================== -->
+
+  <!-- arrangement.json -->
+  <g transform="translate(60, 140)">
+    <rect width="300" height="116" rx="10" class="input-box"/>
+    <text x="20" y="26" class="box-title">arrangement.json</text>
+    <text x="20" y="44" class="box-sub">snapshot from the m4l reader</text>
+    <text x="20" y="68" class="code-sm">{ tempo, time_sig,</text>
+    <text x="20" y="86" class="code-sm">  locators[ {time_sec, name} ],</text>
+    <text x="20" y="104" class="code-sm">  tracks: { a, b, c, d } }</text>
+  </g>
+
+  <!-- manifest.json -->
+  <g transform="translate(60, 280)">
+    <rect width="300" height="116" rx="10" class="input-box"/>
+    <text x="20" y="26" class="box-title">manifest.json</text>
+    <text x="20" y="44" class="box-sub">stem-curation output</text>
+    <text x="20" y="68" class="code-sm">{ session_tracks: {</text>
+    <text x="20" y="86" class="code-sm">    a: [{slot, file, ...}], b, c, d</text>
+    <text x="20" y="104" class="code-sm">  }, bpm? }</text>
+  </g>
+
+  <!-- reference.ppak (optional) -->
+  <g transform="translate(60, 420)">
+    <rect width="300" height="100" rx="10" class="input-box" stroke-dasharray="5 4"/>
+    <text x="20" y="26" class="box-title">reference.ppak <tspan class="box-sub">(optional)</tspan></text>
+    <text x="20" y="44" class="box-sub">device capture, ~177 kb</text>
+    <text x="20" y="68" class="code-sm">settings + per-pad templates</text>
+    <text x="20" y="86" class="code-muted">— synthesized fallback if absent</text>
+  </g>
+
+  <!-- ====================================================== -->
+  <!-- MIDDLE: pipeline stages                                 -->
+  <!-- stage boxes ~220 wide, x ranges:                        -->
+  <!--   resolve_scenes:  430..650                             -->
+  <!--   synthesize:      720..940                             -->
+  <!--   build_ppak:     1010..1230... but output is 1180+;    -->
+  <!--   shift writer to keep clean separation:                -->
+  <!--   resolve_scenes:  430..650                             -->
+  <!--   synthesize:      720..940                             -->
+  <!--   build_ppak:      980..1140  (a touch narrower)        -->
+  <!-- ====================================================== -->
+
+  <!-- stage 1: resolve_scenes -->
+  <g transform="translate(420, 280)">
+    <rect width="220" height="120" rx="12" class="stage-box"/>
+    <text x="20" y="30" class="code-accent">resolve_scenes()</text>
+    <text x="20" y="50" class="box-sub">ep133.song.resolver</text>
+    <text x="20" y="76" class="code-sm">arrangement + manifest</text>
+    <text x="20" y="92" class="code-sm">→ Snapshot[]</text>
+    <text x="20" y="110" class="caption">one per locator, with</text>
+  </g>
+  <text x="440" y="416" class="caption">which clip is active on a/b/c/d</text>
+
+  <!-- stage 2: synthesize -->
+  <g transform="translate(700, 280)">
+    <rect width="220" height="120" rx="12" class="stage-box"/>
+    <text x="20" y="30" class="code-accent">synthesize()</text>
+    <text x="20" y="50" class="box-sub">ep133.song.synthesizer</text>
+    <text x="20" y="76" class="code-sm">Snapshot[]</text>
+    <text x="20" y="92" class="code-sm">→ PpakSpec</text>
+    <text x="20" y="110" class="caption">patterns, scenes, pads,</text>
+  </g>
+  <text x="720" y="416" class="caption">sounds, song_positions, slot_slices</text>
+
+  <!-- stage 3: build_ppak -->
+  <g transform="translate(980, 280)">
+    <rect width="220" height="120" rx="12" class="stage-box"/>
+    <text x="20" y="30" class="code-accent">build_ppak()</text>
+    <text x="20" y="50" class="box-sub">ep133.ppak.song_writer</text>
+    <text x="20" y="76" class="code-sm">PpakSpec + template</text>
+    <text x="20" y="92" class="code-sm">→ .ppak bytes</text>
+    <text x="20" y="110" class="caption">zip(meta + projects/PXX.tar</text>
+  </g>
+  <text x="1000" y="416" class="caption">+ sounds/{slot} {slot}_{name}.wav)</text>
+
+  <!-- ====================================================== -->
+  <!-- RIGHT: output                                           -->
+  <!-- ====================================================== -->
+
+  <!-- song.ppak header box -->
+  <g transform="translate(1240, 140)">
+    <rect width="140" height="56" rx="10" class="out-box"/>
+    <text x="14" y="24" class="box-title">song.ppak</text>
+    <text x="14" y="42" class="box-sub mono">~50–250 kb</text>
+  </g>
+
+  <!-- contents stack: meta.json, projects/PXX.tar, sounds/*.wav -->
+  <g transform="translate(1240, 220)">
+    <text x="0" y="0" class="caption">contains:</text>
+
+    <!-- meta.json -->
+    <g transform="translate(0, 14)">
+      <rect width="140" height="46" rx="8" class="child-box"/>
+      <text x="12" y="20" class="code-sm">/meta.json</text>
+      <text x="12" y="36" class="code-muted">10 fields</text>
+    </g>
+
+    <!-- projects/PXX.tar with nested rows -->
+    <g transform="translate(0, 76)">
+      <rect width="140" height="142" rx="8" class="child-box"/>
+      <text x="12" y="20" class="code-sm">/projects/PXX.tar</text>
+      <text x="12" y="40" class="code-muted">pads/{a..d}/p01..</text>
+      <text x="12" y="56" class="code-muted">patterns/{a..d}/NN</text>
+      <text x="12" y="72" class="code-muted">scenes</text>
+      <text x="12" y="92" class="code-muted">— no settings file</text>
+      <text x="12" y="108" class="code-muted">  (err 82 trap)</text>
+      <text x="12" y="128" class="code-muted">— d05: empty marker</text>
+    </g>
+
+    <!-- sounds/*.wav -->
+    <g transform="translate(0, 234)">
+      <rect width="140" height="92" rx="8" class="child-box"/>
+      <text x="12" y="20" class="code-sm">/sounds/...</text>
+      <text x="12" y="40" class="code-muted">{slot}_{name}.wav</text>
+      <text x="12" y="56" class="code-muted">mono 16-bit</text>
+      <text x="12" y="72" class="code-muted">46875 hz</text>
+      <text x="12" y="86" class="code-muted">+ tnge metadata</text>
+    </g>
+  </g>
+
+  <!-- ====================================================== -->
+  <!-- INPUT → STAGE 1 ARROWS                                  -->
+  <!-- ====================================================== -->
+
+  <!-- arrangement.json (right edge x=360, y=198) → resolve_scenes (x=420, y=320) -->
+  <path d="M 360 198 C 392 198, 396 320, 420 320" fill="none" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- manifest.json (right edge x=360, y=338) → resolve_scenes (x=420, y=345) -->
+  <path d="M 360 338 C 388 338, 396 345, 420 345" fill="none" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- manifest also feeds synthesize (long curve under stage 1) -->
+  <path d="M 360 360 C 540 480, 660 480, 700 380" fill="none" stroke="#999999" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow-muted)"/>
+  <text x="500" y="500" class="annot-muted">manifest feeds synthesize too — slot/pad/wav lookup</text>
+
+  <!-- reference.ppak (right edge x=360, y=470) feeds build_ppak (long muted curve) -->
+  <path d="M 360 470 C 700 600, 940 600, 1000 400" fill="none" stroke="#999999" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow-muted)"/>
+  <text x="640" y="620" class="annot-muted">reference.ppak feeds the writer — settings + per-pad bytes</text>
+
+  <!-- ====================================================== -->
+  <!-- STAGE → STAGE ARROWS (with hand-feel callouts)          -->
+  <!-- ====================================================== -->
+
+  <!-- resolve_scenes → synthesize -->
+  <path d="M 640 340 C 670 340, 680 340, 700 340" fill="none" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="650" y="328" class="code-muted">Snapshot[]</text>
+
+  <!-- callout above the resolve→synth arrow: scene length comes from locator gaps -->
+  <g transform="translate(550, 200)">
+    <rect width="240" height="56" rx="8" fill="#dbeaff" stroke="#3a85ff" stroke-width="1" opacity="0.5"/>
+    <rect width="240" height="56" rx="8" fill="none" stroke="#3a85ff" stroke-width="1"/>
+    <text x="14" y="22" class="annot">scene length comes from</text>
+    <text x="14" y="42" class="annot">locator gaps, not slice length</text>
+  </g>
+  <path d="M 670 256 C 670 280, 670 300, 670 320" fill="none" stroke="#3a85ff" stroke-width="1" stroke-dasharray="3 3"/>
+
+  <!-- synthesize → build_ppak -->
+  <path d="M 920 340 C 950 340, 960 340, 980 340" fill="none" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="930" y="328" class="code-muted">PpakSpec</text>
+
+  <!-- callout BELOW synth→writer arrow: empty pattern at idx 99 -->
+  <g transform="translate(810, 460)">
+    <rect width="280" height="76" rx="8" class="warn-box"/>
+    <text x="14" y="22" class="annot-warn">silent groups → empty pattern</text>
+    <text x="14" y="42" class="annot-warn">at idx 99 (NOT 0 — would trigger</text>
+    <text x="14" y="62" class="code-warn">err pattern 189)</text>
+  </g>
+  <path d="M 950 460 C 950 420, 950 380, 950 360" fill="none" stroke="#e85d3a" stroke-width="1" stroke-dasharray="3 3"/>
+
+  <!-- callout ABOVE the writer: patches template's meta + pad bytes -->
+  <g transform="translate(960, 160)">
+    <rect width="260" height="76" rx="8" fill="#f0efe9" stroke="#1a1a1a" stroke-width="1"/>
+    <text x="14" y="22" class="annot-muted">patches template's meta.json</text>
+    <text x="14" y="42" class="annot-muted">+ per-pad bytes; authors fresh</text>
+    <text x="14" y="62" class="annot-muted">patterns / scenes / sounds</text>
+  </g>
+  <path d="M 1090 236 C 1090 256, 1090 270, 1090 280" fill="none" stroke="#666666" stroke-width="1" stroke-dasharray="3 3"/>
+
+  <!-- ====================================================== -->
+  <!-- STAGE 3 → OUTPUT ARROW                                  -->
+  <!-- ====================================================== -->
+
+  <!-- build_ppak (right edge x=1200, mid y=340) → song.ppak header (x=1240, y=168) -->
+  <path d="M 1200 320 C 1220 280, 1230 220, 1240 180" fill="none" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ====================================================== -->
+  <!-- BOTTOM: tiny CLI line                                   -->
+  <!-- ====================================================== -->
+  <g transform="translate(60, 660)">
+    <text x="0" y="0" class="caption">cli wrapper:</text>
+    <text x="84" y="0" class="code"><tspan class="mono" fill="#3a85ff">ppak-export-song</tspan> --arrangement a.json --manifest m.json --reference-template ref.ppak --project 1 --out song.ppak</text>
+  </g>
+
+  <!-- tiny boxing glove nod -->
+  <text x="1370" y="708" font-size="12" fill="#999999" text-anchor="end">🥊</text>
+</svg>

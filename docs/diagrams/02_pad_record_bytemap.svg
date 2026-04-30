@@ -42,8 +42,8 @@
   <rect width="1200" height="760" fill="#fafaf7"/>
 
   <!-- title -->
-  <text x="60" y="56" class="title">the 27-byte pad record</text>
-  <text x="60" y="82" class="caption">color-zoned by field group; verified offsets shown solid, inferred shown faded</text>
+  <text x="60" y="56" class="title">the 26-byte pad record</text>
+  <text x="60" y="82" class="caption">factory native (sample tool emits 27 with trailing 0x00 — non-canonical, corrupts scene transitions); color-zoned by field group, verified offsets solid, inferred faded</text>
 
   <!-- legend (upper right) -->
   <g transform="translate(710, 36)">
@@ -77,9 +77,9 @@
   <!-- ============================ -->
   <g transform="translate(0, 150)">
     <text x="60" y="0" class="strip-label">default-blank pad</text>
-    <text x="60" y="18" class="strip-sub"><tspan class="mono">00 00 00 00 00 00 00 00 00 00 00 00 00 00 f0 42 64 00 00 00 ff 00 00 00 3c 00 00</tspan></text>
+    <text x="60" y="18" class="strip-sub"><tspan class="mono">00 00 00 00 00 00 00 00 00 00 00 00 00 00 f0 42 64 00 00 00 ff 00 00 00 3c 00</tspan></text>
 
-    <!-- 27 byte cells; each 36 wide, 4 gap; start x=62 -->
+    <!-- 26 byte cells; each 36 wide, 4 gap; start x=62 -->
     <g transform="translate(62, 36)">
       <!-- byte 0 unknown -->
       <g transform="translate(0,0)">
@@ -222,15 +222,10 @@
         <text x="18" y="11" text-anchor="middle" class="byte-pos">24</text>
         <text x="18" y="38" text-anchor="middle" class="byte-val">3c</text>
       </g>
-      <!-- bytes 25-26 unknown -->
+      <!-- byte 25 unknown -->
       <g transform="translate(1000,0)">
         <rect width="36" height="64" rx="6" class="cell-unknown"/>
         <text x="18" y="11" text-anchor="middle" class="byte-pos">25</text>
-        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
-      </g>
-      <g transform="translate(1040,0)">
-        <rect width="36" height="64" rx="6" class="cell-unknown"/>
-        <text x="18" y="11" text-anchor="middle" class="byte-pos">26</text>
         <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
       </g>
     </g>
@@ -264,7 +259,7 @@
   <!-- ============================ -->
   <g transform="translate(0, 380)">
     <text x="60" y="0" class="strip-label">configured  <tspan fill="#666" font-weight="400">slot 100, 99,328-frame wav, sample-tool auto-bpm 79.91</tspan></text>
-    <text x="60" y="18" class="strip-sub"><tspan class="mono">00 <tspan fill="#3a85ff" font-weight="700">64</tspan> 00 00 00 00 00 00 00 <tspan fill="#3a85ff" font-weight="700">84 01</tspan> 00 <tspan fill="#e85d3a" font-weight="700">48 d2 9f</tspan> 42 64 00 00 00 ff 00 00 00 3c 00 00</tspan></text>
+    <text x="60" y="18" class="strip-sub"><tspan class="mono">00 <tspan fill="#3a85ff" font-weight="700">64</tspan> 00 00 00 00 00 00 00 <tspan fill="#3a85ff" font-weight="700">84 01</tspan> 00 <tspan fill="#e85d3a" font-weight="700">48 d2 9f</tspan> 42 64 00 00 00 ff 00 00 00 3c 00</tspan></text>
 
     <g transform="translate(62, 36)">
       <!-- byte 0 -->
@@ -415,11 +410,6 @@
         <text x="18" y="11" text-anchor="middle" class="byte-pos">25</text>
         <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
       </g>
-      <g transform="translate(1040,0)">
-        <rect width="36" height="64" rx="6" class="cell-unknown"/>
-        <text x="18" y="11" text-anchor="middle" class="byte-pos">26</text>
-        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
-      </g>
     </g>
 
     <!-- decoded-value annotations under the configured strip -->
@@ -447,7 +437,7 @@
   <g transform="translate(60, 690)">
     <rect x="0" y="0" width="1080" height="50" rx="8" fill="#ffe5dc"/>
     <text x="20" y="22" class="warn-text">⚠</text>
-    <text x="44" y="22" font-size="13" fill="#1a1a1a" font-weight="600">offsets verified by diffing two real sample tool backups — extends earlier community work; cross-checking welcome.</text>
+    <text x="44" y="22" font-size="13" fill="#1a1a1a" font-weight="600">offsets and size verified by diffing real backups + factory_default.pak. previous tables (and earlier versions of this doc) said 27 bytes — see protocol.md §7.0 erratum.</text>
     <text x="44" y="40" font-size="13" fill="#1a1a1a">method: byte-diff a blank pad against a single sample-tool assignment, then identity-check decoded values against the device ui.</text>
   </g>
 

@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" font-family="Inter, system-ui, sans-serif" text-rendering="optimizeLegibility">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3a85ff"/>
+    </marker>
+    <marker id="arrow-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e85d3a"/>
+    </marker>
+    <style>
+      .title { font-size: 28px; font-weight: 600; fill: #1a1a1a; }
+      .panel-title { font-size: 18px; font-weight: 600; fill: #1a1a1a; }
+      .caption { font-size: 14px; fill: #666; }
+      .mono { font-family: "IBM Plex Mono", Menlo, monospace; }
+      .annot { font-family: "Caveat", "Kalam", cursive; font-size: 18px; fill: #3a85ff; }
+      .annot-warn { font-family: "Caveat", "Kalam", cursive; font-size: 18px; fill: #e85d3a; }
+      .warn-text { font-size: 13px; fill: #e85d3a; font-weight: 600; }
+
+      /* cell zones — same palette tokens as 02_pad_record_bytemap */
+      .cell-unknown    { fill: #f0efe9; stroke: #e8e8e3; stroke-width: 1.5; }
+      .cell-id         { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1.5; }
+      .cell-bpm        { fill: #ffe5dc; stroke: #e85d3a; stroke-width: 1.5; }
+      .cell-defaults   { fill: #dcf2e4; stroke: #3aaa6e; stroke-width: 1.5; }
+      .cell-header     { fill: #eaf2ff; stroke: #3a85ff; stroke-width: 1.5; }
+
+      /* labels */
+      .byte-pos { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 10px; fill: #666; }
+      .byte-val { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 13px; fill: #1a1a1a; font-weight: 600; }
+      .byte-val-faded { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 13px; fill: #999; }
+      .field-label { font-size: 11px; fill: #1a1a1a; font-weight: 600; }
+      .field-label-muted { font-size: 11px; fill: #666; }
+      .strip-label { font-size: 14px; font-weight: 600; fill: #1a1a1a; }
+      .strip-sub { font-size: 12px; fill: #666; }
+      .legend-text { font-size: 12px; fill: #1a1a1a; }
+      .legend-text-muted { font-size: 12px; fill: #666; }
+      .row-label { font-size: 12px; fill: #666; font-weight: 600; }
+      .row-label-mono { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 11px; fill: #666; }
+    </style>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="720" fill="#fafaf7"/>
+
+  <!-- title -->
+  <text x="60" y="56" class="title">the pattern file</text>
+  <text x="60" y="82" class="caption">patterns/{group}{nn} — 4-byte header + n × 8-byte event records, sorted by position_ticks ascending</text>
+
+  <!-- legend (upper right) -->
+  <g transform="translate(820, 36)">
+    <rect x="0" y="0" width="320" height="60" rx="8" fill="#fafaf7" stroke="#e8e8e3" stroke-width="1"/>
+    <rect x="14" y="12" width="14" height="14" rx="3" class="cell-id"/>
+    <text x="34" y="23" class="legend-text">position / pad</text>
+
+    <rect x="14" y="36" width="14" height="14" rx="3" class="cell-defaults"/>
+    <text x="34" y="47" class="legend-text">note / velocity</text>
+
+    <rect x="160" y="12" width="14" height="14" rx="3" class="cell-bpm"/>
+    <text x="180" y="23" class="legend-text">duration (not flag!)</text>
+
+    <rect x="160" y="36" width="14" height="14" rx="3" class="cell-unknown"/>
+    <text x="180" y="47" class="legend-text">flag / unknown</text>
+  </g>
+
+  <!-- ============================ -->
+  <!-- TOP: full pattern with header + 4 events -->
+  <!-- ============================ -->
+  <g transform="translate(0, 130)">
+    <text x="60" y="0" class="strip-label">patterns/a01  <tspan fill="#666" font-weight="400">— 1-bar pattern, 4 events on pad 1, captured-style values</tspan></text>
+    <text x="60" y="18" class="strip-sub"><tspan class="mono">00 01 04 00 | 00 00 08 3c 64 60 00 00 | 60 00 08 3c 64 60 00 00 | c0 00 08 3c 64 60 00 00 | 20 01 08 3c 64 60 00 08</tspan></text>
+
+    <!-- HEADER: 4 cells -->
+    <g transform="translate(62, 38)">
+      <text x="-2" y="-6" class="row-label">header (4 bytes)</text>
+
+      <!-- byte 0: 0x00 -->
+      <g transform="translate(0,0)">
+        <rect width="36" height="64" rx="6" class="cell-unknown"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">0</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <!-- byte 1: bars (REGRESSION) -->
+      <g transform="translate(40,0)">
+        <rect width="36" height="64" rx="6" class="cell-header" stroke-width="2.5"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">1</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">01</text>
+      </g>
+      <!-- byte 2: event_count -->
+      <g transform="translate(80,0)">
+        <rect width="36" height="64" rx="6" class="cell-header"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">2</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val">04</text>
+      </g>
+      <!-- byte 3: 0x00 -->
+      <g transform="translate(120,0)">
+        <rect width="36" height="64" rx="6" class="cell-unknown"/>
+        <text x="18" y="11" text-anchor="middle" class="byte-pos">3</text>
+        <text x="18" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+
+      <!-- header field labels -->
+      <g transform="translate(0, 74)">
+        <text x="18" y="0" text-anchor="middle" class="field-label-muted">pad</text>
+        <text x="58" y="0" text-anchor="middle" class="field-label">bars</text>
+        <text x="58" y="14" text-anchor="middle" class="field-label-muted mono">u8</text>
+        <text x="98" y="0" text-anchor="middle" class="field-label">event_count</text>
+        <text x="98" y="14" text-anchor="middle" class="field-label-muted mono">u8 ≤ 255</text>
+        <text x="138" y="0" text-anchor="middle" class="field-label-muted">pad</text>
+      </g>
+    </g>
+
+    <!-- divider between header and events -->
+    <line x1="220" y1="38" x2="220" y2="118" stroke="#666" stroke-width="1" stroke-dasharray="2 3"/>
+
+    <!-- EVENTS: 4 × 8 bytes, each 8 cells wide -->
+    <g transform="translate(232, 38)">
+      <text x="-2" y="-6" class="row-label">4 events × 8 bytes (sorted by position_ticks ascending)</text>
+
+      <!-- helper: each event is 8 cells wide. cell width 28, gap 2; event = 8*28 + 7*2 = 238; gap-between-events = 14. actually let's keep cell=28, gap=2 within event, event-gap=12 -->
+
+      <!-- EVENT 1: pos=0, pad=1, note=60, vel=100, dur=96, flag=0 -->
+      <g transform="translate(0, 0)">
+        <text x="115" y="-22" text-anchor="middle" class="row-label-mono">event[0]  pos=0</text>
+        <!-- byte 0: pos_lo -->
+        <g transform="translate(0,0)">
+          <rect width="28" height="64" rx="6" class="cell-id"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">0</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">00</text>
+        </g>
+        <!-- byte 1: pos_hi -->
+        <g transform="translate(30,0)">
+          <rect width="28" height="64" rx="6" class="cell-id"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">1</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">00</text>
+        </g>
+        <!-- byte 2: pad*8 -->
+        <g transform="translate(60,0)">
+          <rect width="28" height="64" rx="6" class="cell-id" stroke-width="2.5"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">2</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">08</text>
+        </g>
+        <!-- byte 3: note -->
+        <g transform="translate(90,0)">
+          <rect width="28" height="64" rx="6" class="cell-defaults"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">3</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">3c</text>
+        </g>
+        <!-- byte 4: vel -->
+        <g transform="translate(120,0)">
+          <rect width="28" height="64" rx="6" class="cell-defaults"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">4</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">64</text>
+        </g>
+        <!-- byte 5: dur_lo -->
+        <g transform="translate(150,0)">
+          <rect width="28" height="64" rx="6" class="cell-bpm" stroke-width="2.5"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">5</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">60</text>
+        </g>
+        <!-- byte 6: dur_hi -->
+        <g transform="translate(180,0)">
+          <rect width="28" height="64" rx="6" class="cell-bpm" stroke-width="2.5"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">6</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">00</text>
+        </g>
+        <!-- byte 7: flag -->
+        <g transform="translate(210,0)">
+          <rect width="28" height="64" rx="6" class="cell-unknown"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">7</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+        </g>
+      </g>
+
+      <!-- EVENT 2: pos=96 -->
+      <g transform="translate(252, 0)">
+        <text x="115" y="-22" text-anchor="middle" class="row-label-mono">event[1]  pos=96</text>
+        <g transform="translate(0,0)">
+          <rect width="28" height="64" rx="6" class="cell-id"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">0</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">60</text>
+        </g>
+        <g transform="translate(30,0)">
+          <rect width="28" height="64" rx="6" class="cell-id"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">1</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">00</text>
+        </g>
+        <g transform="translate(60,0)">
+          <rect width="28" height="64" rx="6" class="cell-id"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">2</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">08</text>
+        </g>
+        <g transform="translate(90,0)">
+          <rect width="28" height="64" rx="6" class="cell-defaults"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">3</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">3c</text>
+        </g>
+        <g transform="translate(120,0)">
+          <rect width="28" height="64" rx="6" class="cell-defaults"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">4</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">64</text>
+        </g>
+        <g transform="translate(150,0)">
+          <rect width="28" height="64" rx="6" class="cell-bpm"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">5</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">60</text>
+        </g>
+        <g transform="translate(180,0)">
+          <rect width="28" height="64" rx="6" class="cell-bpm"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">6</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">00</text>
+        </g>
+        <g transform="translate(210,0)">
+          <rect width="28" height="64" rx="6" class="cell-unknown"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">7</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+        </g>
+      </g>
+
+      <!-- EVENT 3: pos=192 -->
+      <g transform="translate(504, 0)">
+        <text x="115" y="-22" text-anchor="middle" class="row-label-mono">event[2]  pos=192</text>
+        <g transform="translate(0,0)">
+          <rect width="28" height="64" rx="6" class="cell-id"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">0</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">c0</text>
+        </g>
+        <g transform="translate(30,0)">
+          <rect width="28" height="64" rx="6" class="cell-id"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">1</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">00</text>
+        </g>
+        <g transform="translate(60,0)">
+          <rect width="28" height="64" rx="6" class="cell-id"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">2</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">08</text>
+        </g>
+        <g transform="translate(90,0)">
+          <rect width="28" height="64" rx="6" class="cell-defaults"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">3</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">3c</text>
+        </g>
+        <g transform="translate(120,0)">
+          <rect width="28" height="64" rx="6" class="cell-defaults"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">4</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">64</text>
+        </g>
+        <g transform="translate(150,0)">
+          <rect width="28" height="64" rx="6" class="cell-bpm"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">5</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">60</text>
+        </g>
+        <g transform="translate(180,0)">
+          <rect width="28" height="64" rx="6" class="cell-bpm"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">6</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">00</text>
+        </g>
+        <g transform="translate(210,0)">
+          <rect width="28" height="64" rx="6" class="cell-unknown"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">7</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val-faded">00</text>
+        </g>
+      </g>
+
+      <!-- EVENT 4: pos=288, flag=0x08 -->
+      <g transform="translate(756, 0)">
+        <text x="115" y="-22" text-anchor="middle" class="row-label-mono">event[3]  pos=288  (last)</text>
+        <g transform="translate(0,0)">
+          <rect width="28" height="64" rx="6" class="cell-id"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">0</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">20</text>
+        </g>
+        <g transform="translate(30,0)">
+          <rect width="28" height="64" rx="6" class="cell-id"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">1</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">01</text>
+        </g>
+        <g transform="translate(60,0)">
+          <rect width="28" height="64" rx="6" class="cell-id"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">2</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">08</text>
+        </g>
+        <g transform="translate(90,0)">
+          <rect width="28" height="64" rx="6" class="cell-defaults"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">3</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">3c</text>
+        </g>
+        <g transform="translate(120,0)">
+          <rect width="28" height="64" rx="6" class="cell-defaults"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">4</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">64</text>
+        </g>
+        <g transform="translate(150,0)">
+          <rect width="28" height="64" rx="6" class="cell-bpm"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">5</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">60</text>
+        </g>
+        <g transform="translate(180,0)">
+          <rect width="28" height="64" rx="6" class="cell-bpm"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">6</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">00</text>
+        </g>
+        <g transform="translate(210,0)">
+          <rect width="28" height="64" rx="6" class="cell-unknown" stroke-width="2"/>
+          <text x="14" y="11" text-anchor="middle" class="byte-pos">7</text>
+          <text x="14" y="38" text-anchor="middle" class="byte-val">08</text>
+        </g>
+      </g>
+
+      <!-- field-name labels under event[0] -->
+      <g transform="translate(0, 74)">
+        <text x="29" y="0" text-anchor="middle" class="field-label">position_ticks</text>
+        <text x="29" y="14" text-anchor="middle" class="field-label-muted mono">u16 le</text>
+        <text x="74" y="0" text-anchor="middle" class="field-label">pad×8</text>
+        <text x="74" y="14" text-anchor="middle" class="field-label-muted mono">u8</text>
+        <text x="104" y="0" text-anchor="middle" class="field-label">note</text>
+        <text x="104" y="14" text-anchor="middle" class="field-label-muted mono">u8</text>
+        <text x="134" y="0" text-anchor="middle" class="field-label">vel</text>
+        <text x="134" y="14" text-anchor="middle" class="field-label-muted mono">u8</text>
+        <text x="179" y="0" text-anchor="middle" class="field-label">duration_ticks</text>
+        <text x="179" y="14" text-anchor="middle" class="field-label-muted mono">u16 le</text>
+        <text x="224" y="0" text-anchor="middle" class="field-label">flag</text>
+        <text x="224" y="14" text-anchor="middle" class="field-label-muted mono">u8</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ============================ -->
+  <!-- CALLOUTS region              -->
+  <!-- ============================ -->
+
+  <!-- callout: header[1] = bars (regression) -->
+  <g transform="translate(0, 0)">
+    <path d="M 120 268 Q 110 320 220 360" fill="none" stroke="#e85d3a" stroke-width="1.5" stroke-dasharray="3 2" marker-start="url(#arrow-warn)"/>
+    <text x="60" y="378" class="annot-warn">header[1] = bars (uint8). not a constant 0x01 —</text>
+    <text x="60" y="396" class="annot-warn">was a real regression bug in early ports. must</text>
+    <text x="60" y="414" class="annot-warn">equal scene length, or playback skews mid-song.</text>
+  </g>
+
+  <!-- callout: pad indicator = (pad-1)*8 -->
+  <g transform="translate(0, 0)">
+    <path d="M 304 222 Q 320 320 440 360" fill="none" stroke="#3a85ff" stroke-width="1.5" stroke-dasharray="3 2" marker-start="url(#arrow)"/>
+    <text x="380" y="378" class="annot">pad indicator = (pad − 1) × 8.</text>
+    <text x="380" y="396" class="annot">pad 1 → 0x08, pad 12 → 0x58.</text>
+    <text x="380" y="414" class="annot">file paths are 1-indexed; events 0-indexed × 8.</text>
+  </g>
+
+  <!-- callout: bytes 5..6 duration (warn — was wrong upstream) -->
+  <g transform="translate(0, 0)">
+    <path d="M 412 222 Q 500 300 760 360" fill="none" stroke="#e85d3a" stroke-width="1.5" stroke-dasharray="3 2" marker-start="url(#arrow-warn)"/>
+    <text x="700" y="378" class="annot-warn">duration_ticks (uint16 le).</text>
+    <text x="700" y="396" class="annot-warn">not "flag bytes" — danny desert's ppak.py</text>
+    <text x="700" y="414" class="annot-warn">had this wrong; tests/test_song_format.py guards it.</text>
+  </g>
+
+  <!-- callout: byte 7 flag -->
+  <g transform="translate(0, 0)">
+    <path d="M 1180 222 Q 1130 300 1080 360" fill="none" stroke="#3a85ff" stroke-width="1.5" stroke-dasharray="3 2" marker-start="url(#arrow)"/>
+    <text x="980" y="378" class="annot">flag byte. usually 0x00;</text>
+    <text x="980" y="396" class="annot">0x08 has been observed on last events</text>
+    <text x="980" y="414" class="annot">but its exact meaning isn't fully understood.</text>
+  </g>
+
+  <!-- ============================ -->
+  <!-- BOTTOM LEFT: position math panel -->
+  <!-- ============================ -->
+  <g transform="translate(60, 460)">
+    <rect x="0" y="0" width="600" height="170" rx="12" fill="#f0efe9" stroke="#e8e8e3" stroke-width="1"/>
+    <text x="20" y="28" class="panel-title">position math</text>
+    <text x="20" y="50" class="caption">384 ticks per bar; position_ticks ranges 0..bars×384 − 1</text>
+
+    <g transform="translate(20, 70)">
+      <text x="0" y="0" class="strip-label">1-bar pattern</text>
+      <text x="0" y="20" class="caption mono">384 ticks total · position 0..383 · 16th-note grid = 24 ticks</text>
+
+      <text x="0" y="48" class="strip-label">4-bar pattern</text>
+      <text x="0" y="68" class="caption mono">1536 ticks total · header[1] = 0x04 · scene length must match</text>
+
+      <text x="0" y="96" class="strip-sub">captured patterns use note=60 (0x3c), vel=100 (0x64),</text>
+      <text x="0" y="112" class="strip-sub">duration=96 (0x0060) — a short trigger; in bpm mode the</text>
+      <text x="0" y="128" class="strip-sub">slice plays its own length regardless of duration_ticks.</text>
+    </g>
+  </g>
+
+  <!-- ============================ -->
+  <!-- BOTTOM RIGHT: decoded values legend -->
+  <!-- ============================ -->
+  <g transform="translate(680, 460)">
+    <rect x="0" y="0" width="460" height="170" rx="12" fill="#f0efe9" stroke="#e8e8e3" stroke-width="1"/>
+    <text x="20" y="28" class="panel-title">decoded event[0]</text>
+    <text x="20" y="50" class="caption mono">00 00 08 3c 64 60 00 00</text>
+
+    <g transform="translate(20, 78)" font-size="13" fill="#1a1a1a">
+      <text x="0" y="0"><tspan class="mono" fill="#3a85ff">00 00</tspan>  →  position_ticks = 0  (downbeat)</text>
+      <text x="0" y="20"><tspan class="mono" fill="#3a85ff">08</tspan>     →  pad × 8 = 8  →  pad 1</text>
+      <text x="0" y="40"><tspan class="mono" fill="#3aaa6e">3c 64</tspan>  →  note 60 (c4), velocity 100</text>
+      <text x="0" y="60"><tspan class="mono" fill="#e85d3a">60 00</tspan>  →  duration_ticks = 96  (¼-note-ish)</text>
+      <text x="0" y="80"><tspan class="mono" fill="#999">00</tspan>     →  flag = 0x00  (typical)</text>
+    </g>
+  </g>
+
+  <!-- ============================ -->
+  <!-- BOTTOM warn callout (sort)   -->
+  <!-- ============================ -->
+  <g transform="translate(60, 650)">
+    <rect x="0" y="0" width="1080" height="50" rx="8" fill="#ffe5dc"/>
+    <text x="20" y="22" class="warn-text">⚠</text>
+    <text x="44" y="22" font-size="13" fill="#1a1a1a" font-weight="600">events MUST be sorted by position_ticks ascending. build_pattern auto-sorts; raw writers must too — out-of-order events corrupt playback.</text>
+    <text x="44" y="40" font-size="13" fill="#1a1a1a">source: ep133/song/format.py:build_pattern · regression guards: tests/test_song_format.py</text>
+  </g>
+
+  <!-- tiny boxing glove nod -->
+  <text x="1170" y="708" font-size="12" fill="#999" text-anchor="end">🥊</text>
+</svg>

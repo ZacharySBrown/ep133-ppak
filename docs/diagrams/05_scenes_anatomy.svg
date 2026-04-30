@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 880" font-family="Inter, system-ui, sans-serif" text-rendering="optimizeLegibility">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3a85ff"/>
+    </marker>
+    <marker id="arrow-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e85d3a"/>
+    </marker>
+    <style>
+      .title { font-size: 28px; font-weight: 600; fill: #1a1a1a; }
+      .panel-title { font-size: 18px; font-weight: 600; fill: #1a1a1a; }
+      .caption { font-size: 14px; fill: #666; }
+      .mono { font-family: "IBM Plex Mono", Menlo, monospace; }
+      .annot { font-family: "Caveat", "Kalam", cursive; font-size: 18px; fill: #3a85ff; }
+      .annot-warn { font-family: "Caveat", "Kalam", cursive; font-size: 18px; fill: #e85d3a; }
+      .annot-ok { font-family: "Caveat", "Kalam", cursive; font-size: 18px; fill: #3aaa6e; }
+      .warn-text { font-size: 13px; fill: #e85d3a; font-weight: 600; }
+
+      /* zone fills for the overview strip */
+      .zone-header   { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1.5; }
+      .zone-scenes   { fill: #dcf2e4; stroke: #3aaa6e; stroke-width: 1.5; }
+      .zone-trailer  { fill: #ffe5dc; stroke: #e85d3a; stroke-width: 1.5; }
+
+      /* cell zones */
+      .cell-zero      { fill: #f0efe9; stroke: #c7c7c0; stroke-width: 1.5; stroke-dasharray: 3 2; }
+      .cell-timesig   { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1.5; }
+      .cell-pat       { fill: #dcf2e4; stroke: #3aaa6e; stroke-width: 1.5; }
+      .cell-slot-num  { fill: #eaf2ff; stroke: #3a85ff; stroke-width: 1.5; }
+      .cell-count     { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1.5; }
+      .cell-songlen   { fill: #ffe5dc; stroke: #e85d3a; stroke-width: 1.5; }
+      .cell-songpos   { fill: #ffe5dc; stroke: #e85d3a; stroke-width: 1.5; }
+      .cell-trailer-zero { fill: #f0efe9; stroke: #c7c7c0; stroke-width: 1.5; stroke-dasharray: 3 2; }
+
+      /* labels */
+      .byte-pos { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 10px; fill: #666; }
+      .byte-val { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 13px; fill: #1a1a1a; font-weight: 600; }
+      .byte-val-faded { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 13px; fill: #999; }
+      .field-label { font-size: 11px; fill: #1a1a1a; font-weight: 600; }
+      .field-label-muted { font-size: 11px; fill: #666; }
+      .strip-label { font-size: 14px; font-weight: 600; fill: #1a1a1a; }
+      .strip-sub { font-size: 12px; fill: #666; }
+      .legend-text { font-size: 12px; fill: #1a1a1a; }
+      .legend-text-muted { font-size: 12px; fill: #666; }
+      .offset-mark { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 11px; fill: #666; }
+      .offset-mark-strong { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 12px; fill: #1a1a1a; font-weight: 600; }
+    </style>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="880" fill="#fafaf7"/>
+
+  <!-- title -->
+  <text x="60" y="56" class="title">the 712-byte scenes file</text>
+  <text x="60" y="82" class="caption">song-mode scene list · fixed total size · 7-byte header + 99×6-byte scene slots + 111-byte trailer (song-position state)</text>
+
+  <!-- legend (upper right) -->
+  <g transform="translate(740, 36)">
+    <rect x="0" y="0" width="400" height="60" rx="8" fill="#fafaf7" stroke="#e8e8e3" stroke-width="1"/>
+    <rect x="14" y="12" width="14" height="14" rx="3" class="zone-header"/>
+    <text x="34" y="23" class="legend-text">header</text>
+
+    <rect x="100" y="12" width="14" height="14" rx="3" class="zone-scenes"/>
+    <text x="120" y="23" class="legend-text">scene slots</text>
+
+    <rect x="218" y="12" width="14" height="14" rx="3" class="zone-trailer"/>
+    <text x="238" y="23" class="legend-text">trailer (song state)</text>
+
+    <rect x="14" y="36" width="14" height="14" rx="3" fill="#fafaf7" stroke="#c7c7c0" stroke-width="1.5" stroke-dasharray="3 2"/>
+    <text x="34" y="47" class="legend-text-muted">dashed = zero-fill</text>
+
+    <rect x="180" y="36" width="14" height="14" rx="3" fill="#fafaf7" stroke="#1a1a1a" stroke-width="1.5"/>
+    <text x="200" y="47" class="legend-text-muted">solid = meaningful byte</text>
+  </g>
+
+  <!-- ============================ -->
+  <!-- ZOOM 1: full-file overview   -->
+  <!-- ============================ -->
+  <g transform="translate(60, 130)">
+    <text x="0" y="0" class="panel-title">whole file · 712 bytes</text>
+    <text x="0" y="20" class="caption">three zones; widths drawn proportional to byte count.</text>
+
+    <!-- bar geometry: 1080 wide. header=7, scenes=594, trailer=111. total=712. -->
+    <!-- header width  ≈ 7/712 * 1080 ≈ 10.6 -->
+    <!-- scenes width  ≈ 594/712 * 1080 ≈ 901.3 -->
+    <!-- trailer width ≈ 111/712 * 1080 ≈ 168.4 -->
+    <g transform="translate(0, 40)">
+      <!-- header -->
+      <rect x="0" y="0" width="10.6" height="60" rx="6" class="zone-header"/>
+      <!-- scenes -->
+      <rect x="11.6" y="0" width="901.3" height="60" rx="6" class="zone-scenes"/>
+      <!-- trailer -->
+      <rect x="913.9" y="0" width="166.1" height="60" rx="6" class="zone-trailer"/>
+
+      <!-- inline labels -->
+      <text x="462.25" y="28" text-anchor="middle" class="strip-label">99 × 6-byte scene slots · 594 bytes</text>
+      <text x="462.25" y="46" text-anchor="middle" class="strip-sub">populated first, then zero-filled (num/denom preserved on every slot)</text>
+
+      <text x="996.95" y="28" text-anchor="middle" class="strip-label">trailer · 111 bytes</text>
+      <text x="996.95" y="46" text-anchor="middle" class="strip-sub">scene count + song positions</text>
+
+      <!-- offsets under the bar -->
+      <line x1="0" y1="60" x2="0" y2="74" stroke="#666" stroke-width="1"/>
+      <text x="0" y="88" text-anchor="middle" class="offset-mark-strong">0</text>
+
+      <line x1="11.6" y1="60" x2="11.6" y2="74" stroke="#666" stroke-width="1"/>
+      <text x="11.6" y="88" text-anchor="middle" class="offset-mark-strong">7</text>
+
+      <line x1="913.9" y1="60" x2="913.9" y2="74" stroke="#666" stroke-width="1"/>
+      <text x="913.9" y="88" text-anchor="middle" class="offset-mark-strong">601</text>
+
+      <line x1="1080" y1="60" x2="1080" y2="74" stroke="#666" stroke-width="1"/>
+      <text x="1080" y="88" text-anchor="middle" class="offset-mark-strong">712</text>
+
+      <!-- header callout -->
+      <path d="M 5 -8 Q 5 -22 30 -28" fill="none" stroke="#3a85ff" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <text x="34" y="-26" class="annot">header (7 bytes)</text>
+    </g>
+  </g>
+
+  <!-- ============================ -->
+  <!-- ZOOM 2: header (7 bytes)     -->
+  <!-- ============================ -->
+  <g transform="translate(60, 290)">
+    <text x="0" y="0" class="panel-title">zoom · header · bytes 0..6</text>
+    <text x="0" y="20" class="caption">bytes 0..4 zero · byte 5 = numerator · byte 6 = denominator. <tspan class="mono">3 4</tspan> = ¾.</text>
+
+    <!-- 7 cells, 56 wide, 8 gap, start x=2 -->
+    <g transform="translate(2, 40)">
+      <!-- byte 0..4 zero -->
+      <g transform="translate(0,0)">
+        <rect width="56" height="64" rx="6" class="cell-zero"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">0</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(64,0)">
+        <rect width="56" height="64" rx="6" class="cell-zero"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">1</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(128,0)">
+        <rect width="56" height="64" rx="6" class="cell-zero"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">2</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(192,0)">
+        <rect width="56" height="64" rx="6" class="cell-zero"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">3</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(256,0)">
+        <rect width="56" height="64" rx="6" class="cell-zero"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">4</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <!-- byte 5 numerator -->
+      <g transform="translate(320,0)">
+        <rect width="56" height="64" rx="6" class="cell-timesig"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">5</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val">04</text>
+      </g>
+      <!-- byte 6 denominator -->
+      <g transform="translate(384,0)">
+        <rect width="56" height="64" rx="6" class="cell-timesig"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">6</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val">04</text>
+      </g>
+    </g>
+
+    <!-- field labels under header -->
+    <g transform="translate(2, 116)">
+      <text x="160" y="0" text-anchor="middle" class="field-label-muted">zero-fill (5 bytes)</text>
+
+      <text x="348" y="0" text-anchor="middle" class="field-label">num</text>
+      <text x="348" y="14" text-anchor="middle" class="field-label-muted mono">u8</text>
+
+      <text x="412" y="0" text-anchor="middle" class="field-label">denom</text>
+      <text x="412" y="14" text-anchor="middle" class="field-label-muted mono">u8</text>
+    </g>
+
+    <!-- hand-feel callout to the right of header -->
+    <g transform="translate(470, 40)">
+      <text x="0" y="22" class="annot-warn">device reads num/denom from bytes 11/12 of the file</text>
+      <text x="0" y="44" class="annot-warn">(= chunk 0's last 2 bytes), not these header bytes.</text>
+      <text x="0" y="66" class="annot-warn">we mirror the value here for safety.</text>
+    </g>
+  </g>
+
+  <!-- ============================ -->
+  <!-- ZOOM 3: one scene slot       -->
+  <!-- ============================ -->
+  <g transform="translate(60, 470)">
+    <text x="0" y="0" class="panel-title">zoom · one scene slot · 6 bytes</text>
+    <text x="0" y="20" class="caption">one slot per scene · 99 slots total · populated first, then zero-filled. each slot still carries num/denom.</text>
+
+    <!-- 6 cells, 70 wide, 10 gap, start x=2 -->
+    <g transform="translate(2, 40)">
+      <g transform="translate(0,0)">
+        <rect width="70" height="64" rx="6" class="cell-pat"/>
+        <text x="35" y="13" text-anchor="middle" class="byte-pos">0</text>
+        <text x="35" y="40" text-anchor="middle" class="byte-val">01</text>
+      </g>
+      <g transform="translate(80,0)">
+        <rect width="70" height="64" rx="6" class="cell-pat"/>
+        <text x="35" y="13" text-anchor="middle" class="byte-pos">1</text>
+        <text x="35" y="40" text-anchor="middle" class="byte-val">02</text>
+      </g>
+      <g transform="translate(160,0)">
+        <rect width="70" height="64" rx="6" class="cell-pat"/>
+        <text x="35" y="13" text-anchor="middle" class="byte-pos">2</text>
+        <text x="35" y="40" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <g transform="translate(240,0)">
+        <rect width="70" height="64" rx="6" class="cell-pat"/>
+        <text x="35" y="13" text-anchor="middle" class="byte-pos">3</text>
+        <text x="35" y="40" text-anchor="middle" class="byte-val">03</text>
+      </g>
+      <g transform="translate(320,0)">
+        <rect width="70" height="64" rx="6" class="cell-timesig"/>
+        <text x="35" y="13" text-anchor="middle" class="byte-pos">4</text>
+        <text x="35" y="40" text-anchor="middle" class="byte-val">04</text>
+      </g>
+      <g transform="translate(400,0)">
+        <rect width="70" height="64" rx="6" class="cell-timesig"/>
+        <text x="35" y="13" text-anchor="middle" class="byte-pos">5</text>
+        <text x="35" y="40" text-anchor="middle" class="byte-val">04</text>
+      </g>
+    </g>
+
+    <!-- field labels under slot -->
+    <g transform="translate(2, 116)">
+      <text x="35" y="0" text-anchor="middle" class="field-label">pat_a</text>
+      <text x="35" y="14" text-anchor="middle" class="field-label-muted mono">u8 0..99</text>
+
+      <text x="115" y="0" text-anchor="middle" class="field-label">pat_b</text>
+      <text x="115" y="14" text-anchor="middle" class="field-label-muted mono">u8 0..99</text>
+
+      <text x="195" y="0" text-anchor="middle" class="field-label">pat_c</text>
+      <text x="195" y="14" text-anchor="middle" class="field-label-muted mono">u8 0..99</text>
+
+      <text x="275" y="0" text-anchor="middle" class="field-label">pat_d</text>
+      <text x="275" y="14" text-anchor="middle" class="field-label-muted mono">u8 0..99</text>
+
+      <text x="355" y="0" text-anchor="middle" class="field-label">num</text>
+      <text x="355" y="14" text-anchor="middle" class="field-label-muted mono">u8</text>
+
+      <text x="435" y="0" text-anchor="middle" class="field-label">denom</text>
+      <text x="435" y="14" text-anchor="middle" class="field-label-muted mono">u8</text>
+    </g>
+
+    <!-- silent-group warn callout -->
+    <g transform="translate(500, 36)">
+      <rect x="0" y="0" width="580" height="84" rx="8" fill="#ffe5dc"/>
+      <text x="20" y="22" class="warn-text">⚠</text>
+      <text x="44" y="22" font-size="13" fill="#1a1a1a" font-weight="600">silent groups must point at an empty pattern, not 0.</text>
+      <text x="44" y="42" font-size="13" fill="#1a1a1a">pat = 0 reads pattern slot 0; an unallocated slot triggers <tspan class="mono">err pattern 189</tspan> on load.</text>
+      <text x="44" y="62" font-size="13" fill="#1a1a1a">see <tspan class="mono">04_song_pipeline.svg</tspan> for the silent-pattern allocation pass.</text>
+    </g>
+
+    <!-- repeating slots indicator -->
+    <g transform="translate(2, 36)">
+      <text x="488" y="20" class="annot">×99</text>
+      <text x="488" y="40" class="annot">slots</text>
+    </g>
+  </g>
+
+  <!-- ============================ -->
+  <!-- ZOOM 4: trailer (first 16)   -->
+  <!-- ============================ -->
+  <g transform="translate(60, 660)">
+    <text x="0" y="0" class="panel-title">zoom · trailer · file bytes 601..711 (111 bytes)</text>
+    <text x="0" y="20" class="caption">first 16 bytes shown; positions continue at trailer[12..] for as many bytes as <tspan class="mono">song length</tspan> (max 99).</text>
+
+    <!-- 16 cells, 56 wide, 6 gap, start x=2. cells fit in 1080 area: 16*56 + 15*6 = 986. -->
+    <g transform="translate(2, 40)">
+      <!-- trailer[0..3] = scene count BE u32 -->
+      <g transform="translate(0,0)">
+        <rect width="56" height="64" rx="6" class="cell-count"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t0</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <g transform="translate(62,0)">
+        <rect width="56" height="64" rx="6" class="cell-count"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t1</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <g transform="translate(124,0)">
+        <rect width="56" height="64" rx="6" class="cell-count"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t2</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val">00</text>
+      </g>
+      <g transform="translate(186,0)">
+        <rect width="56" height="64" rx="6" class="cell-count" stroke-width="2.5"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t3</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val">05</text>
+      </g>
+      <!-- trailer[4..10] = zero -->
+      <g transform="translate(248,0)">
+        <rect width="56" height="64" rx="6" class="cell-trailer-zero"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t4</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(310,0)">
+        <rect width="56" height="64" rx="6" class="cell-trailer-zero"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t5</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(372,0)">
+        <rect width="56" height="64" rx="6" class="cell-trailer-zero"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t6</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(434,0)">
+        <rect width="56" height="64" rx="6" class="cell-trailer-zero"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t7</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(496,0)">
+        <rect width="56" height="64" rx="6" class="cell-trailer-zero"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t8</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(558,0)">
+        <rect width="56" height="64" rx="6" class="cell-trailer-zero"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t9</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <g transform="translate(620,0)">
+        <rect width="56" height="64" rx="6" class="cell-trailer-zero"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t10</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val-faded">00</text>
+      </g>
+      <!-- trailer[11] = song length -->
+      <g transform="translate(682,0)">
+        <rect width="56" height="64" rx="6" class="cell-songlen" stroke-width="2.5"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t11</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val">05</text>
+      </g>
+      <!-- trailer[12..] = song positions -->
+      <g transform="translate(744,0)">
+        <rect width="56" height="64" rx="6" class="cell-songpos"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t12</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val">01</text>
+      </g>
+      <g transform="translate(806,0)">
+        <rect width="56" height="64" rx="6" class="cell-songpos"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t13</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val">02</text>
+      </g>
+      <g transform="translate(868,0)">
+        <rect width="56" height="64" rx="6" class="cell-songpos"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t14</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val">03</text>
+      </g>
+      <g transform="translate(930,0)">
+        <rect width="56" height="64" rx="6" class="cell-songpos"/>
+        <text x="28" y="13" text-anchor="middle" class="byte-pos">t15</text>
+        <text x="28" y="40" text-anchor="middle" class="byte-val">02</text>
+      </g>
+
+      <!-- truncation marker -->
+      <text x="1006" y="40" class="byte-val-faded" font-size="20">…</text>
+      <text x="1006" y="60" text-anchor="end" class="offset-mark">to t110</text>
+    </g>
+
+    <!-- field labels under trailer -->
+    <g transform="translate(2, 116)">
+      <text x="124" y="0" text-anchor="middle" class="field-label">scene count</text>
+      <text x="124" y="14" text-anchor="middle" class="field-label-muted mono">be u32 · effectively t3</text>
+
+      <text x="403" y="0" text-anchor="middle" class="field-label-muted">zero-fill (t4..t10)</text>
+
+      <text x="710" y="0" text-anchor="middle" class="field-label">song length</text>
+      <text x="710" y="14" text-anchor="middle" class="field-label-muted mono">u8 0..99</text>
+
+      <text x="884" y="0" text-anchor="middle" class="field-label">song positions</text>
+      <text x="884" y="14" text-anchor="middle" class="field-label-muted mono">u8 each · scene index 1..99</text>
+    </g>
+
+    <!-- hand-feel callout above trailer -->
+    <g transform="translate(2, -10)">
+      <path d="M 700 0 Q 700 16 720 28" fill="none" stroke="#e85d3a" stroke-width="1.5" stroke-dasharray="3 2"/>
+    </g>
+  </g>
+
+  <!-- bottom warn callout -->
+  <g transform="translate(60, 820)">
+    <rect x="0" y="0" width="1080" height="44" rx="8" fill="#ffe5dc"/>
+    <text x="20" y="20" class="warn-text">⚠</text>
+    <text x="44" y="20" font-size="13" fill="#1a1a1a" font-weight="600">scenes file size is fixed at 712 bytes. short or oversized files cause the device to error on load.</text>
+    <text x="44" y="36" font-size="13" fill="#1a1a1a">zero-filling the trailer (treating it as padding) caused <tspan class="mono">err scene 146</tspan> — trailer holds song-position state, not just padding.</text>
+  </g>
+
+  <!-- tiny boxing glove nod -->
+  <text x="1170" y="868" font-size="12" fill="#999" text-anchor="end">🥊</text>
+</svg>
