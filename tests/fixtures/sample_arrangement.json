@@ -1,0 +1,25 @@
+{
+  "tempo": 120.0,
+  "time_sig": [4, 4],
+  "arrangement_length_sec": 24.0,
+  "locators": [
+    {"time_sec": 0.0, "name": "Verse"},
+    {"time_sec": 8.0, "name": "Chorus"},
+    {"time_sec": 16.0, "name": "Outro"}
+  ],
+  "tracks": {
+    "A": [
+      {"file_path": "/songs/test/A/loop_a1.wav", "start_time_sec": 0.0, "length_sec": 8.0, "warping": 1},
+      {"file_path": "/songs/test/A/loop_a2.wav", "start_time_sec": 4.0, "length_sec": 12.0, "warping": 1},
+      {"file_path": "/songs/test/A/loop_a3.wav", "start_time_sec": 16.0, "length_sec": 8.0, "warping": 1}
+    ],
+    "B": [
+      {"file_path": "/songs/test/B/bass_b1.wav", "start_time_sec": 0.0, "length_sec": 16.0, "warping": 1},
+      {"file_path": "/songs/test/B/bass_b2.wav", "start_time_sec": 16.0, "length_sec": 4.0, "warping": 1}
+    ],
+    "C": [
+      {"file_path": "/songs/test/C/vox_c1.wav", "start_time_sec": 8.0, "length_sec": 8.0, "warping": 1}
+    ],
+    "D": []
+  }
+}

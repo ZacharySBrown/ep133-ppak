@@ -1,0 +1,19 @@
+{
+  "track": "test_song",
+  "source_audio": "/songs/test/source.wav",
+  "session_tracks": {
+    "A": [
+      {"slot": 0, "file": "/songs/test/A/loop_a1.wav", "clip_length_sec": 8.0, "mode": "trim"},
+      {"slot": 1, "file": "/songs/test/A/loop_a2.wav", "clip_length_sec": 4.0, "mode": "trim"},
+      {"slot": 2, "file": "/songs/test/A/loop_a3.wav", "clip_length_sec": 8.0, "mode": "trim"}
+    ],
+    "B": [
+      {"slot": 0, "file": "/songs/test/B/bass_b1.wav", "clip_length_sec": 8.0, "mode": "trim"},
+      {"slot": 1, "file": "/songs/test/B/bass_b2.wav", "clip_length_sec": 4.0, "mode": "trim"}
+    ],
+    "C": [
+      {"slot": 0, "file": "/songs/test/C/vox_c1.wav", "clip_length_sec": 8.0, "mode": "trim"}
+    ],
+    "D": []
+  }
+}

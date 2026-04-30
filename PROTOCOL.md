@@ -33,7 +33,7 @@ file PRs when you find something we got wrong.
 - The complete 17-field sample-slot JSON metadata schema (paginated `FILE_METADATA_GET`)
 - The 12-field pad JSON metadata schema
 - `.ppak` ZIP structure, internal TAR layout, `meta.json` field list
-- Pad binary record byte layout for offsets 1, 8-11, 12-15, 16, 20, 21, 23, 24
+- Pad binary record is 26 bytes (factory native, not Sample Tool's 27 — see §7.0 erratum); byte layout for offsets 1, 8-11, 12-15, 16, 20, 21, 23, 24
   (verified by diffing two real Sample Tool backups)
 - BPM override encoding at bytes 13-15 (3 distinct on-device captures)
 - Playmode ↔ envelope.release coupling
@@ -288,7 +288,26 @@ Accessed at a pad's fileId (§3). Same `FILE_METADATA_GET`/`SET` interface.
 
 No per-pad BPM in this schema — that lives in the binary record (§7).
 
-## 7. Pad Binary Record (27 bytes, in project TAR)
+## 7. Pad Binary Record (26 bytes, in project TAR — see §7.0 erratum)
+
+### 7.0 Erratum (2026-04-29): pad records are 26 bytes, not 27
+
+Earlier versions of this document — and phones24's archive parser —
+describe pad records as 27 bytes. **They are 26 bytes in the
+factory-native format**, verified against `factory_default.pak` (a
+freshly factory-reset device backup): every pad record in factory
+projects P01-P05 is exactly 26 bytes.
+
+The 27-byte form is what Sample Tool emits when it round-trips a
+project. The device tolerates 27-byte records on import but **the
+off-by-one stride corrupts scene-switch iteration**, producing
+`ERR PATTERN 189` at runtime. The byte layouts at offsets 1, 8-11,
+12-15, 16, 20, 21, 23, 24, 25 are all correct as documented; the
+change is purely the absence of the trailing 0x00.
+
+This library writes 26-byte records. When reading a 27-byte record
+from a Sample Tool backup, truncate to 26 bytes (drop the trailing
+0x00) before re-emitting.
 
 The byte layout below was verified 2026-04-25 by diffing the same project
 on the same device, before and after a single sample assignment via
@@ -376,7 +395,7 @@ Each project is a TAR archive (~53 KB for a populated project):
 ```
 pads/                 (dir, mode 0755, mtime 0)
 pads/a/               (dir)
-pads/a/p01            (file, 27 bytes — pad binary record §7)
+pads/a/p01            (file, 26 bytes — pad binary record §7; see §7.0 erratum re: Sample Tool's 27-byte form)
 pads/a/p02
 ... pads/a/p12
 pads/b/p01..p12       (same)

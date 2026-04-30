@@ -148,3 +148,82 @@ def test_find_pad_records_skips_non_pad_blocks():
     tar[0:10] = b"random/hdr"
     tar[512 : 512 + 32] = b"\xff" * 32
     assert PR.find_pad_records(bytes(tar)) == []
+
+
+# ── builder × decoder round-trip ──────────────────────────────────────
+# These tests pin the contract between the new song-mode builder
+# (ep133.song.format.build_pad) and the existing decoder
+# (ep133.pad_record.decode_bpm).
+#
+# **Known disagreement (xfail until hardware-resolved):**
+#
+# decode_bpm's float32 branch returns ``2.0 * float32_le(bytes[12:16])``,
+# justified by ONE captured data point (pad 6 at BPM=70, bytes encoding
+# 35.001 as float32). The decoder's own docstring marks this rule as
+# "tentative — needs more test points to confirm".
+#
+# build_pad (ported from StemForge) writes BPM as RAW float32 LE at
+# +12..+15. Hardware-validated through StemForge's song-export pipeline,
+# which produces .ppak files that play at correct tempo.
+#
+# The two views can't both be right for arbitrary pads. Possible
+# explanations:
+#   1. The /2 rule applies only to pads that were toggled BAR→BPM
+#      multiple times before save (pad 6's case) — distinguishable by
+#      something else in the record (byte 21 mode flag, byte 23 play
+#      mode).
+#   2. The captured pad 6's "BPM=70" claim was wrong — actual BPM=35.
+#   3. The device interprets the float32 differently in different modes.
+#
+# Resolving requires more device captures across mode combinations.
+# Until then, the round-trip tests below are marked xfail so CI flags
+# the moment someone fixes either side.
+
+
+@pytest.mark.xfail(
+    reason="decode_bpm's *2 rule conflicts with build_pad's raw-float32 write; "
+    "needs hardware capture across mode combinations to resolve"
+)
+def test_song_format_build_pad_decodes_as_float32():
+    """build_pad in BARS mode writes BPM as float32 LE at +12..+15.
+    decode_bpm should report enc='float32' and the same BPM value."""
+    from ep133.song.format import build_pad
+
+    blob = build_pad(
+        sample_slot=42,
+        play_mode="oneshot",
+        time_stretch_bars=1,
+        project_bpm=120.0,
+        stretch_mode="bars",
+    )
+    bpm, enc = PR.decode_bpm(blob)
+    assert enc == "float32"
+    assert bpm == pytest.approx(120.0)
+
+
+@pytest.mark.xfail(
+    reason="decode_bpm's *2 rule conflicts with build_pad's raw-float32 write; "
+    "needs hardware capture across mode combinations to resolve"
+)
+def test_song_format_build_pad_in_bpm_mode_decodes_as_float32():
+    """BPM-stretch mode writes source BPM as float32 LE at +12..+15."""
+    from ep133.song.format import build_pad
+
+    blob = build_pad(
+        sample_slot=42,
+        play_mode="oneshot",
+        time_stretch_bars=1,
+        stretch_mode="bpm",
+        sound_bpm=135.99,
+    )
+    bpm, enc = PR.decode_bpm(blob)
+    assert enc == "float32"
+    assert bpm == pytest.approx(135.99, abs=0.01)
+
+
+def test_song_format_pad_record_size_constant_is_26():
+    """Factory native pad records are 26 bytes. Sample Tool's 27-byte
+    form is non-canonical (corrupts during scene-switch iteration)."""
+    from ep133.song.format import PAD_RECORD_SIZE
+
+    assert PAD_RECORD_SIZE == 26
