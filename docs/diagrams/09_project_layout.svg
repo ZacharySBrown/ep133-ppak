@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" font-family="Inter, system-ui, sans-serif" text-rendering="optimizeLegibility">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3a85ff"/>
+    </marker>
+    <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#999999"/>
+    </marker>
+    <marker id="arrow-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3aaa6e"/>
+    </marker>
+    <style>
+      .title       { font-size: 28px; font-weight: 600; fill: #1a1a1a; }
+      .subhead     { font-size: 14px; fill: #666666; }
+      .col-label   { font-size: 12px; fill: #666666; letter-spacing: 0.5px; }
+      .panel-title { font-size: 18px; font-weight: 600; fill: #1a1a1a; }
+      .box-title   { font-size: 14px; font-weight: 600; fill: #1a1a1a; }
+      .caption     { font-size: 12px; fill: #666666; }
+      .body        { font-size: 13px; fill: #1a1a1a; }
+      .muted       { font-size: 12px; fill: #666666; }
+
+      .mono        { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+      .code        { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 13px; fill: #1a1a1a; }
+      .code-sm     { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 11px; fill: #1a1a1a; }
+      .code-xs     { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 10px; fill: #1a1a1a; }
+      .code-muted  { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #666666; }
+      .code-key    { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 11px; fill: #1a1a1a; font-weight: 600; }
+      .code-key-md { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #1a1a1a; font-weight: 600; }
+
+      .annot       { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #3a85ff; }
+      .annot-muted { font-family: "Caveat", "Kalam", cursive; font-size: 15px; fill: #666666; }
+      .annot-ok    { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #3aaa6e; }
+
+      .json-outer  { fill: #fafaf7; stroke: #1a1a1a; stroke-width: 1.5; }
+      .json-array  { fill: #fafaf7; stroke: #c7c7c0; stroke-width: 1; }
+
+      /* category fills (color-coded field groups) — match 08 */
+      .cat-identity { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1; }
+      .cat-timing   { fill: #ffe5dc; stroke: #e85d3a; stroke-width: 1; }
+      .cat-playback { fill: #dcf2e4; stroke: #3aaa6e; stroke-width: 1; }
+      .cat-routing  { fill: #f0efe9; stroke: #c7c7c0; stroke-width: 1; }
+
+      /* legend swatches */
+      .swatch-i { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1; }
+      .swatch-t { fill: #ffe5dc; stroke: #e85d3a; stroke-width: 1; }
+      .swatch-p { fill: #dcf2e4; stroke: #3aaa6e; stroke-width: 1; }
+      .swatch-r { fill: #f0efe9; stroke: #c7c7c0; stroke-width: 1; }
+
+      /* device pad cells */
+      .pad-empty   { fill: #fafaf7; stroke: #c7c7c0; stroke-width: 1; }
+      .pad-drums   { fill: #ffe5dc; stroke: #e85d3a; stroke-width: 1.5; }
+      .pad-bass    { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1.5; }
+      .pad-melodic { fill: #dcf2e4; stroke: #3aaa6e; stroke-width: 1.5; }
+      .pad-vox     { fill: #ece2f4; stroke: #7a4fb0; stroke-width: 1.5; }
+
+      .bank-frame  { fill: #f0efe9; stroke: #c7c7c0; stroke-width: 1; }
+      .bank-letter { font-size: 22px; font-weight: 700; fill: #1a1a1a; }
+
+      .pad-label   { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 9px; fill: #666666; }
+      .pad-name    { font-size: 11px; font-weight: 600; fill: #1a1a1a; }
+      .pad-bpm     { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 9px; fill: #1a1a1a; }
+      .pad-stretch { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 9px; fill: #3a85ff; font-weight: 700; }
+    </style>
+  </defs>
+
+  <!-- background -->
+  <rect width="1400" height="900" fill="#fafaf7"/>
+
+  <!-- title block -->
+  <text x="40" y="50" class="title">sample-mode: manifest → project</text>
+  <text x="40" y="74" class="subhead">a <tspan class="mono">BatchManifest</tspan> describes pad assignments. <tspan class="mono">ppak-load-manifest</tspan> writes a populated <tspan class="mono">.ppak</tspan>.</text>
+
+  <!-- legend (top-right) -->
+  <g transform="translate(1000, 28)">
+    <rect x="0" y="0" width="360" height="60" rx="8" fill="#fafaf7" stroke="#e8e8e3" stroke-width="1"/>
+    <text x="14" y="20" class="caption">stem tint on pads</text>
+
+    <rect x="14" y="32" width="14" height="14" rx="3" class="pad-drums"/>
+    <text x="34" y="44" class="caption">drums</text>
+
+    <rect x="86" y="32" width="14" height="14" rx="3" class="pad-bass"/>
+    <text x="106" y="44" class="caption">bass</text>
+
+    <rect x="150" y="32" width="14" height="14" rx="3" class="pad-melodic"/>
+    <text x="170" y="44" class="caption">melodic</text>
+
+    <rect x="226" y="32" width="14" height="14" rx="3" class="pad-vox"/>
+    <text x="246" y="44" class="caption">vocals</text>
+
+    <rect x="294" y="32" width="14" height="14" rx="3" class="pad-empty"/>
+    <text x="314" y="44" class="caption">empty</text>
+  </g>
+
+  <!-- column labels -->
+  <text x="40"  y="116" class="col-label">input</text>
+  <text x="780" y="116" class="col-label">output</text>
+
+  <!-- ====================================================== -->
+  <!-- LEFT COLUMN: BatchManifest (windowlicker)               -->
+  <!-- ====================================================== -->
+  <g transform="translate(40, 134)">
+    <text x="0" y="0" class="panel-title"><tspan class="mono">windowlicker.manifest.json</tspan></text>
+    <text x="0" y="20" class="caption">7 samples · top-level bpm + per-sample overrides · suggested pad placement</text>
+
+    <!-- outer json box -->
+    <g transform="translate(0, 38)">
+      <rect width="640" height="666" rx="12" class="json-outer"/>
+
+      <text x="20" y="26" class="code-muted">{</text>
+
+      <!-- version -->
+      <g transform="translate(40, 38)">
+        <rect width="580" height="24" rx="6" class="cat-identity"/>
+        <text x="12" y="17" class="code-key">"version"</text>
+        <text x="86" y="17" class="code-sm">: 1</text>
+      </g>
+
+      <!-- track -->
+      <g transform="translate(40, 68)">
+        <rect width="580" height="24" rx="6" class="cat-identity"/>
+        <text x="12" y="17" class="code-key">"track"</text>
+        <text x="74" y="17" class="code-sm">: "windowlicker"</text>
+      </g>
+
+      <!-- bpm -->
+      <g transform="translate(40, 98)">
+        <rect width="580" height="24" rx="6" class="cat-timing"/>
+        <text x="12" y="17" class="code-key">"bpm"</text>
+        <text x="62" y="17" class="code-sm">: 134.0</text>
+      </g>
+
+      <!-- samples header -->
+      <text x="40" y="146" class="code-key-md">"samples": [</text>
+
+      <!-- sample 1: kick -->
+      <g transform="translate(56, 156)">
+        <rect width="568" height="62" rx="8" class="json-array"/>
+        <text x="12" y="18" class="code-sm" fill="#666">{</text>
+        <g transform="translate(22, 6)">
+          <rect width="220" height="20" rx="4" class="cat-identity"/>
+          <text x="8" y="14" class="code-key">"file"</text>
+          <text x="46" y="14" class="code-sm">: "windowlicker_kick.wav"</text>
+        </g>
+        <g transform="translate(252, 6)">
+          <rect width="142" height="20" rx="4" class="cat-playback"/>
+          <text x="8" y="14" class="code-key">"playmode"</text>
+          <text x="76" y="14" class="code-sm">: "oneshot"</text>
+        </g>
+        <g transform="translate(404, 6)">
+          <rect width="148" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"stem"</text>
+          <text x="50" y="14" class="code-sm">: "drums"</text>
+        </g>
+        <g transform="translate(22, 32)">
+          <rect width="172" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"suggested_group"</text>
+          <text x="128" y="14" class="code-sm">: "A"</text>
+        </g>
+        <g transform="translate(204, 32)">
+          <rect width="148" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"suggested_pad"</text>
+          <text x="124" y="14" class="code-sm">: "7"</text>
+        </g>
+        <g transform="translate(362, 32)">
+          <rect width="120" height="20" rx="4" class="cat-timing"/>
+          <text x="8" y="14" class="code-key">"time_mode"</text>
+          <text x="84" y="14" class="code-sm">: "off"</text>
+        </g>
+        <text x="556" y="56" class="code-sm" fill="#666">},</text>
+      </g>
+
+      <!-- sample 2: snare -->
+      <g transform="translate(56, 226)">
+        <rect width="568" height="62" rx="8" class="json-array"/>
+        <text x="12" y="18" class="code-sm" fill="#666">{</text>
+        <g transform="translate(22, 6)">
+          <rect width="220" height="20" rx="4" class="cat-identity"/>
+          <text x="8" y="14" class="code-key">"file"</text>
+          <text x="46" y="14" class="code-sm">: "windowlicker_snare.wav"</text>
+        </g>
+        <g transform="translate(252, 6)">
+          <rect width="142" height="20" rx="4" class="cat-playback"/>
+          <text x="8" y="14" class="code-key">"playmode"</text>
+          <text x="76" y="14" class="code-sm">: "oneshot"</text>
+        </g>
+        <g transform="translate(404, 6)">
+          <rect width="148" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"stem"</text>
+          <text x="50" y="14" class="code-sm">: "drums"</text>
+        </g>
+        <g transform="translate(22, 32)">
+          <rect width="172" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"suggested_group"</text>
+          <text x="128" y="14" class="code-sm">: "A"</text>
+        </g>
+        <g transform="translate(204, 32)">
+          <rect width="148" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"suggested_pad"</text>
+          <text x="124" y="14" class="code-sm">: "8"</text>
+        </g>
+        <g transform="translate(362, 32)">
+          <rect width="120" height="20" rx="4" class="cat-timing"/>
+          <text x="8" y="14" class="code-key">"time_mode"</text>
+          <text x="84" y="14" class="code-sm">: "off"</text>
+        </g>
+        <text x="556" y="56" class="code-sm" fill="#666">},</text>
+      </g>
+
+      <!-- sample 3: perc_glitch -->
+      <g transform="translate(56, 296)">
+        <rect width="568" height="62" rx="8" class="json-array"/>
+        <text x="12" y="18" class="code-sm" fill="#666">{</text>
+        <g transform="translate(22, 6)">
+          <rect width="220" height="20" rx="4" class="cat-identity"/>
+          <text x="8" y="14" class="code-key">"file"</text>
+          <text x="46" y="14" class="code-sm">: "windowlicker_perc_glitch.wav"</text>
+        </g>
+        <g transform="translate(252, 6)">
+          <rect width="142" height="20" rx="4" class="cat-playback"/>
+          <text x="8" y="14" class="code-key">"playmode"</text>
+          <text x="76" y="14" class="code-sm">: "oneshot"</text>
+        </g>
+        <g transform="translate(404, 6)">
+          <rect width="148" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"stem"</text>
+          <text x="50" y="14" class="code-sm">: "drums"</text>
+        </g>
+        <g transform="translate(22, 32)">
+          <rect width="172" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"suggested_group"</text>
+          <text x="128" y="14" class="code-sm">: "A"</text>
+        </g>
+        <g transform="translate(204, 32)">
+          <rect width="148" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"suggested_pad"</text>
+          <text x="124" y="14" class="code-sm">: "9"</text>
+        </g>
+        <g transform="translate(362, 32)">
+          <rect width="120" height="20" rx="4" class="cat-timing"/>
+          <text x="8" y="14" class="code-key">"time_mode"</text>
+          <text x="84" y="14" class="code-sm">: "bpm"</text>
+        </g>
+        <text x="556" y="56" class="code-sm" fill="#666">},</text>
+      </g>
+
+      <!-- sample 4: bass_sub -->
+      <g transform="translate(56, 366)">
+        <rect width="568" height="62" rx="8" class="json-array"/>
+        <text x="12" y="18" class="code-sm" fill="#666">{</text>
+        <g transform="translate(22, 6)">
+          <rect width="220" height="20" rx="4" class="cat-identity"/>
+          <text x="8" y="14" class="code-key">"file"</text>
+          <text x="46" y="14" class="code-sm">: "windowlicker_bass_sub.wav"</text>
+        </g>
+        <g transform="translate(252, 6)">
+          <rect width="142" height="20" rx="4" class="cat-playback"/>
+          <text x="8" y="14" class="code-key">"playmode"</text>
+          <text x="76" y="14" class="code-sm">: "key"</text>
+        </g>
+        <g transform="translate(404, 6)">
+          <rect width="148" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"stem"</text>
+          <text x="50" y="14" class="code-sm">: "bass"</text>
+        </g>
+        <g transform="translate(22, 32)">
+          <rect width="172" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"suggested_group"</text>
+          <text x="128" y="14" class="code-sm">: "B"</text>
+        </g>
+        <g transform="translate(204, 32)">
+          <rect width="148" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"suggested_pad"</text>
+          <text x="124" y="14" class="code-sm">: "7"</text>
+        </g>
+        <g transform="translate(362, 32)">
+          <rect width="120" height="20" rx="4" class="cat-timing"/>
+          <text x="8" y="14" class="code-key">"time_mode"</text>
+          <text x="84" y="14" class="code-sm">: "off"</text>
+        </g>
+        <text x="556" y="56" class="code-sm" fill="#666">},</text>
+      </g>
+
+      <!-- sample 5: bass_lead (with bpm override) -->
+      <g transform="translate(56, 436)">
+        <rect width="568" height="62" rx="8" class="json-array"/>
+        <text x="12" y="18" class="code-sm" fill="#666">{</text>
+        <g transform="translate(22, 6)">
+          <rect width="220" height="20" rx="4" class="cat-identity"/>
+          <text x="8" y="14" class="code-key">"file"</text>
+          <text x="46" y="14" class="code-sm">: "windowlicker_bass_lead.wav"</text>
+        </g>
+        <g transform="translate(252, 6)">
+          <rect width="142" height="20" rx="4" class="cat-playback"/>
+          <text x="8" y="14" class="code-key">"playmode"</text>
+          <text x="76" y="14" class="code-sm">: "legato"</text>
+        </g>
+        <g transform="translate(404, 6)">
+          <rect width="148" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"stem"</text>
+          <text x="50" y="14" class="code-sm">: "bass"</text>
+        </g>
+        <g transform="translate(22, 32)">
+          <rect width="172" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"suggested_group"</text>
+          <text x="128" y="14" class="code-sm">: "B"</text>
+        </g>
+        <g transform="translate(204, 32)">
+          <rect width="148" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"suggested_pad"</text>
+          <text x="124" y="14" class="code-sm">: "4"</text>
+        </g>
+        <g transform="translate(362, 32)">
+          <rect width="120" height="20" rx="4" class="cat-timing"/>
+          <text x="8" y="14" class="code-key">"time_mode"</text>
+          <text x="84" y="14" class="code-sm">: "bpm"</text>
+        </g>
+        <text x="556" y="56" class="code-sm" fill="#666">},</text>
+      </g>
+
+      <!-- sample 6: pad_chord -->
+      <g transform="translate(56, 506)">
+        <rect width="568" height="62" rx="8" class="json-array"/>
+        <text x="12" y="18" class="code-sm" fill="#666">{</text>
+        <g transform="translate(22, 6)">
+          <rect width="220" height="20" rx="4" class="cat-identity"/>
+          <text x="8" y="14" class="code-key">"file"</text>
+          <text x="46" y="14" class="code-sm">: "windowlicker_pad_chord.wav"</text>
+        </g>
+        <g transform="translate(252, 6)">
+          <rect width="142" height="20" rx="4" class="cat-playback"/>
+          <text x="8" y="14" class="code-key">"playmode"</text>
+          <text x="76" y="14" class="code-sm">: "key"</text>
+        </g>
+        <g transform="translate(404, 6)">
+          <rect width="148" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"stem"</text>
+          <text x="50" y="14" class="code-sm">: "other"</text>
+        </g>
+        <g transform="translate(22, 32)">
+          <rect width="172" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"suggested_group"</text>
+          <text x="128" y="14" class="code-sm">: "C"</text>
+        </g>
+        <g transform="translate(204, 32)">
+          <rect width="148" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"suggested_pad"</text>
+          <text x="124" y="14" class="code-sm">: "7"</text>
+        </g>
+        <g transform="translate(362, 32)">
+          <rect width="120" height="20" rx="4" class="cat-timing"/>
+          <text x="8" y="14" class="code-key">"time_mode"</text>
+          <text x="84" y="14" class="code-sm">: "bpm"</text>
+        </g>
+        <text x="556" y="56" class="code-sm" fill="#666">},</text>
+      </g>
+
+      <!-- sample 7: vox_lick (per-sample bpm override) -->
+      <g transform="translate(56, 576)">
+        <rect width="568" height="62" rx="8" class="json-array"/>
+        <text x="12" y="18" class="code-sm" fill="#666">{</text>
+        <g transform="translate(22, 6)">
+          <rect width="220" height="20" rx="4" class="cat-identity"/>
+          <text x="8" y="14" class="code-key">"file"</text>
+          <text x="46" y="14" class="code-sm">: "windowlicker_vox_lick.wav"</text>
+        </g>
+        <g transform="translate(252, 6)">
+          <rect width="142" height="20" rx="4" class="cat-timing"/>
+          <text x="8" y="14" class="code-key">"bpm"</text>
+          <text x="42" y="14" class="code-sm">: 67.0</text>
+        </g>
+        <g transform="translate(404, 6)">
+          <rect width="148" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"stem"</text>
+          <text x="50" y="14" class="code-sm">: "vocals"</text>
+        </g>
+        <g transform="translate(22, 32)">
+          <rect width="172" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"suggested_group"</text>
+          <text x="128" y="14" class="code-sm">: "D"</text>
+        </g>
+        <g transform="translate(204, 32)">
+          <rect width="148" height="20" rx="4" class="cat-routing"/>
+          <text x="8" y="14" class="code-key">"suggested_pad"</text>
+          <text x="124" y="14" class="code-sm">: "7"</text>
+        </g>
+        <g transform="translate(362, 32)">
+          <rect width="120" height="20" rx="4" class="cat-timing"/>
+          <text x="8" y="14" class="code-key">"time_mode"</text>
+          <text x="84" y="14" class="code-sm">: "off"</text>
+        </g>
+        <text x="556" y="56" class="code-sm" fill="#666">}</text>
+      </g>
+
+      <text x="40" y="652" class="code-muted">]</text>
+    </g>
+
+    <text x="20" y="722" class="code-muted">}</text>
+  </g>
+
+  <!-- callouts on the manifest side -->
+  <!-- bpm 134 callout -->
+  <g transform="translate(682, 240)">
+    <path d="M 0 0 C -10 0, -28 0, -38 -2" fill="none" stroke="#3a85ff" stroke-width="1.5" stroke-dasharray="3 2"/>
+    <text x="6" y="-16" class="annot">track-level default —</text>
+    <text x="6" y="2" class="annot">per-sample bpm overrides</text>
+  </g>
+
+  <!-- time_mode bpm callout -->
+  <g transform="translate(682, 504)">
+    <path d="M 0 0 C -10 0, -28 0, -38 -2" fill="none" stroke="#3a85ff" stroke-width="1.5" stroke-dasharray="3 2"/>
+    <text x="6" y="-16" class="annot">time_mode: bpm →</text>
+    <text x="6" y="2" class="annot">device stretches to project tempo</text>
+  </g>
+
+  <!-- ====================================================== -->
+  <!-- CENTER: flow arrow                                      -->
+  <!-- ====================================================== -->
+  <g>
+    <path d="M 720 430 C 745 430, 755 430, 778 430" fill="none" stroke="#3a85ff" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="749" y="418" text-anchor="middle" class="annot">load</text>
+  </g>
+
+  <!-- ====================================================== -->
+  <!-- RIGHT COLUMN: populated EP-133 project (4 banks)        -->
+  <!-- ====================================================== -->
+  <g transform="translate(786, 134)">
+    <text x="0" y="0" class="panel-title">populated <tspan class="mono">.ppak</tspan> · 4 banks × 12 pads</text>
+    <text x="0" y="20" class="caption">samples land on suggested pads · stretch tag set when <tspan class="mono">time_mode=bpm</tspan></text>
+
+    <!-- 4-bank layout: A top-left, B top-right, C bottom-left, D bottom-right -->
+    <!-- each bank is 4 rows × 3 cols of pads at 64x52 with 4px gap; bank w = 3*64+2*4 = 200, h = 4*52+3*4 = 220 -->
+    <!-- bank gap: 32px horizontal, 36px vertical -->
+    <!-- bank header strip 32px on top -->
+
+    <g transform="translate(0, 38)">
+
+      <!-- ============= BANK A (top-left) ============= -->
+      <g transform="translate(0, 0)">
+        <!-- bank frame -->
+        <rect x="-12" y="-10" width="244" height="276" rx="14" class="bank-frame"/>
+        <text x="0" y="8" class="bank-letter">A</text>
+        <text x="22" y="6" class="caption" font-size="11">drums</text>
+
+        <!-- pads: row 0 = 7,8,9 (kick, snare, perc) -->
+        <g transform="translate(0, 16)">
+          <!-- pad 7 = kick -->
+          <g transform="translate(0, 0)">
+            <rect width="68" height="56" rx="8" class="pad-drums"/>
+            <text x="6" y="13" class="pad-label">7</text>
+            <text x="6" y="30" class="pad-name">kick</text>
+            <text x="6" y="46" class="pad-bpm">134</text>
+          </g>
+          <!-- pad 8 = snare -->
+          <g transform="translate(74, 0)">
+            <rect width="68" height="56" rx="8" class="pad-drums"/>
+            <text x="6" y="13" class="pad-label">8</text>
+            <text x="6" y="30" class="pad-name">snare</text>
+            <text x="6" y="46" class="pad-bpm">134</text>
+          </g>
+          <!-- pad 9 = perc_glitch (bpm stretch) -->
+          <g transform="translate(148, 0)">
+            <rect width="68" height="56" rx="8" class="pad-drums"/>
+            <text x="6" y="13" class="pad-label">9</text>
+            <text x="6" y="30" class="pad-name">perc</text>
+            <text x="6" y="46" class="pad-bpm">134</text>
+            <text x="60" y="13" class="pad-stretch" text-anchor="end">∿</text>
+          </g>
+        </g>
+
+        <!-- row 1: 4,5,6 empty -->
+        <g transform="translate(0, 78)">
+          <rect x="0" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="6" y="13" class="pad-label">4</text>
+          <rect x="74" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="80" y="13" class="pad-label">5</text>
+          <rect x="148" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="154" y="13" class="pad-label">6</text>
+        </g>
+
+        <!-- row 2: 1,2,3 empty -->
+        <g transform="translate(0, 140)">
+          <rect x="0" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="6" y="13" class="pad-label">1</text>
+          <rect x="74" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="80" y="13" class="pad-label">2</text>
+          <rect x="148" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="154" y="13" class="pad-label">3</text>
+        </g>
+
+        <!-- row 3: . , 0 , ENTER  empty -->
+        <g transform="translate(0, 202)">
+          <rect x="0" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="6" y="13" class="pad-label">.</text>
+          <rect x="74" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="80" y="13" class="pad-label">0</text>
+          <rect x="148" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="154" y="13" class="pad-label">ent</text>
+        </g>
+      </g>
+
+      <!-- ============= BANK B (top-right) ============= -->
+      <g transform="translate(264, 0)">
+        <rect x="-12" y="-10" width="244" height="276" rx="14" class="bank-frame"/>
+        <text x="0" y="8" class="bank-letter">B</text>
+        <text x="22" y="6" class="caption" font-size="11">bass</text>
+
+        <!-- row 0: 7=bass_sub, 8 empty, 9 empty -->
+        <g transform="translate(0, 16)">
+          <g transform="translate(0, 0)">
+            <rect width="68" height="56" rx="8" class="pad-bass"/>
+            <text x="6" y="13" class="pad-label">7</text>
+            <text x="6" y="30" class="pad-name">sub</text>
+            <text x="6" y="46" class="pad-bpm">134</text>
+          </g>
+          <rect x="74" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="80" y="13" class="pad-label">8</text>
+          <rect x="148" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="154" y="13" class="pad-label">9</text>
+        </g>
+
+        <!-- row 1: 4=bass_lead (stretch), 5 empty, 6 empty -->
+        <g transform="translate(0, 78)">
+          <g transform="translate(0, 0)">
+            <rect width="68" height="56" rx="8" class="pad-bass"/>
+            <text x="6" y="13" class="pad-label">4</text>
+            <text x="6" y="30" class="pad-name">lead</text>
+            <text x="6" y="46" class="pad-bpm">134</text>
+            <text x="60" y="13" class="pad-stretch" text-anchor="end">∿</text>
+          </g>
+          <rect x="74" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="80" y="13" class="pad-label">5</text>
+          <rect x="148" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="154" y="13" class="pad-label">6</text>
+        </g>
+
+        <!-- row 2: 1,2,3 empty -->
+        <g transform="translate(0, 140)">
+          <rect x="0" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="6" y="13" class="pad-label">1</text>
+          <rect x="74" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="80" y="13" class="pad-label">2</text>
+          <rect x="148" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="154" y="13" class="pad-label">3</text>
+        </g>
+
+        <!-- row 3 empty -->
+        <g transform="translate(0, 202)">
+          <rect x="0" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="6" y="13" class="pad-label">.</text>
+          <rect x="74" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="80" y="13" class="pad-label">0</text>
+          <rect x="148" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="154" y="13" class="pad-label">ent</text>
+        </g>
+      </g>
+
+      <!-- ============= BANK C (bottom-left) ============= -->
+      <g transform="translate(0, 296)">
+        <rect x="-12" y="-10" width="244" height="276" rx="14" class="bank-frame"/>
+        <text x="0" y="8" class="bank-letter">C</text>
+        <text x="22" y="6" class="caption" font-size="11">melodic</text>
+
+        <!-- row 0: 7=pad_chord (stretch), 8,9 empty -->
+        <g transform="translate(0, 16)">
+          <g transform="translate(0, 0)">
+            <rect width="68" height="56" rx="8" class="pad-melodic"/>
+            <text x="6" y="13" class="pad-label">7</text>
+            <text x="6" y="30" class="pad-name">chord</text>
+            <text x="6" y="46" class="pad-bpm">134</text>
+            <text x="60" y="13" class="pad-stretch" text-anchor="end">∿</text>
+          </g>
+          <rect x="74" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="80" y="13" class="pad-label">8</text>
+          <rect x="148" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="154" y="13" class="pad-label">9</text>
+        </g>
+
+        <!-- rows 4,5,6 / 1,2,3 / . 0 ent — all empty -->
+        <g transform="translate(0, 78)">
+          <rect x="0" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="6" y="13" class="pad-label">4</text>
+          <rect x="74" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="80" y="13" class="pad-label">5</text>
+          <rect x="148" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="154" y="13" class="pad-label">6</text>
+        </g>
+        <g transform="translate(0, 140)">
+          <rect x="0" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="6" y="13" class="pad-label">1</text>
+          <rect x="74" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="80" y="13" class="pad-label">2</text>
+          <rect x="148" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="154" y="13" class="pad-label">3</text>
+        </g>
+        <g transform="translate(0, 202)">
+          <rect x="0" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="6" y="13" class="pad-label">.</text>
+          <rect x="74" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="80" y="13" class="pad-label">0</text>
+          <rect x="148" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="154" y="13" class="pad-label">ent</text>
+        </g>
+      </g>
+
+      <!-- ============= BANK D (bottom-right) ============= -->
+      <g transform="translate(264, 296)">
+        <rect x="-12" y="-10" width="244" height="276" rx="14" class="bank-frame"/>
+        <text x="0" y="8" class="bank-letter">D</text>
+        <text x="22" y="6" class="caption" font-size="11">vocals</text>
+
+        <!-- row 0: 7=vox_lick (bpm 67 override), 8,9 empty -->
+        <g transform="translate(0, 16)">
+          <g transform="translate(0, 0)">
+            <rect width="68" height="56" rx="8" class="pad-vox"/>
+            <text x="6" y="13" class="pad-label">7</text>
+            <text x="6" y="30" class="pad-name">vox</text>
+            <text x="6" y="46" class="pad-bpm">67</text>
+          </g>
+          <rect x="74" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="80" y="13" class="pad-label">8</text>
+          <rect x="148" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="154" y="13" class="pad-label">9</text>
+        </g>
+
+        <g transform="translate(0, 78)">
+          <rect x="0" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="6" y="13" class="pad-label">4</text>
+          <rect x="74" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="80" y="13" class="pad-label">5</text>
+          <rect x="148" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="154" y="13" class="pad-label">6</text>
+        </g>
+        <g transform="translate(0, 140)">
+          <rect x="0" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="6" y="13" class="pad-label">1</text>
+          <rect x="74" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="80" y="13" class="pad-label">2</text>
+          <rect x="148" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="154" y="13" class="pad-label">3</text>
+        </g>
+        <g transform="translate(0, 202)">
+          <rect x="0" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="6" y="13" class="pad-label">.</text>
+          <rect x="74" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="80" y="13" class="pad-label">0</text>
+          <rect x="148" y="0" width="68" height="56" rx="8" class="pad-empty"/>
+          <text x="154" y="13" class="pad-label">ent</text>
+        </g>
+      </g>
+
+    </g>
+
+    <!-- callouts (right side of grid) -->
+
+    <!-- pad 7 keypad-label callout (points at A pad 7) -->
+    <g transform="translate(232, 64)">
+      <path d="M -22 -8 C -10 -16, -2 -16, 4 -10" fill="none" stroke="#666666" stroke-width="1.2" stroke-dasharray="3 2"/>
+      <text x="6" y="-12" class="annot-muted">suggested_pad: "7"</text>
+      <text x="6" y="4" class="annot-muted">— uses keypad labels</text>
+      <text x="6" y="20" class="code-xs" fill="#666">7 8 9 / 4 5 6 / 1 2 3 / . 0 ent</text>
+    </g>
+
+    <!-- stretch tag callout (points at C pad 7 stretch) -->
+    <g transform="translate(232, 360)">
+      <path d="M -174 -50 C -160 -56, -150 -52, -148 -42 L -154 -22" fill="none" stroke="#3a85ff" stroke-width="1.2" stroke-dasharray="3 2"/>
+      <text x="-150" y="0" class="annot">∿ = stretches to project tempo</text>
+    </g>
+
+    <!-- bpm 67 override callout (points at D pad 7) -->
+    <g transform="translate(420, 360)">
+      <path d="M 28 -50 C 38 -56, 38 -42, 32 -28" fill="none" stroke="#e85d3a" stroke-width="1.2" stroke-dasharray="3 2"/>
+      <text x="42" y="-32" class="annot" fill="#e85d3a">per-sample bpm 67</text>
+      <text x="42" y="-16" class="annot" fill="#e85d3a">overrides track 134</text>
+    </g>
+
+    <!-- bottom: "no suggested? next free pad" callout -->
+    <g transform="translate(0, 614)">
+      <rect x="0" y="0" width="528" height="46" rx="8" fill="#f0efe9" stroke="#c7c7c0" stroke-width="1"/>
+      <text x="14" y="20" class="body">no <tspan class="mono">suggested_group</tspan> / <tspan class="mono">suggested_pad</tspan>?</text>
+      <text x="14" y="36" class="caption">sample fills the next free pad in declaration order — useful for quick drops.</text>
+    </g>
+
+  </g>
+
+  <!-- tiny boxing glove nod -->
+  <text x="1370" y="888" font-size="12" fill="#999999" text-anchor="end">🥊</text>
+</svg>

@@ -165,12 +165,16 @@ A `.manifest.json` file alongside your WAVs:
 ```json
 {
   "version": 1,
-  "track": "summer demos",
-  "bpm": 120.0,
+  "track": "windowlicker",
+  "bpm": 134.0,
   "samples": [
-    {"file": "drums/kick.wav",  "stem": "drums",  "suggested_group": "A", "suggested_pad": "7"},
-    {"file": "bass/lead.wav",   "stem": "bass",   "suggested_group": "B", "bpm": 100.0, "playmode": "key"},
-    {"file": "vox/hook.wav",    "stem": "vocals", "suggested_group": "C", "time_mode": "bpm"}
+    {"file": "windowlicker_kick.wav",        "stem": "drums",  "suggested_group": "A", "suggested_pad": "7"},
+    {"file": "windowlicker_snare.wav",       "stem": "drums",  "suggested_group": "A", "suggested_pad": "8"},
+    {"file": "windowlicker_perc_glitch.wav", "stem": "drums",  "suggested_group": "A", "suggested_pad": "9", "time_mode": "bpm"},
+    {"file": "windowlicker_bass_sub.wav",    "stem": "bass",   "suggested_group": "B", "suggested_pad": "7", "playmode": "key"},
+    {"file": "windowlicker_bass_lead.wav",   "stem": "bass",   "suggested_group": "B", "suggested_pad": "4", "playmode": "legato", "time_mode": "bpm"},
+    {"file": "windowlicker_pad_chord.wav",   "stem": "other",  "suggested_group": "C", "suggested_pad": "7", "playmode": "key", "time_mode": "bpm"},
+    {"file": "windowlicker_vox_lick.wav",    "stem": "vocals", "suggested_group": "D", "suggested_pad": "7", "bpm": 67.0}
   ]
 }
 ```

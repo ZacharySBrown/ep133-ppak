@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" font-family="Inter, system-ui, sans-serif" text-rendering="optimizeLegibility">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3a85ff"/>
+    </marker>
+    <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#999999"/>
+    </marker>
+    <marker id="arrow-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e85d3a"/>
+    </marker>
+    <marker id="arrow-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3aaa6e"/>
+    </marker>
+    <style>
+      .title       { font-size: 28px; font-weight: 600; fill: #1a1a1a; }
+      .subhead     { font-size: 14px; fill: #666666; }
+      .col-label   { font-size: 12px; fill: #666666; letter-spacing: 0.5px; }
+      .panel-title { font-size: 18px; font-weight: 600; fill: #1a1a1a; }
+      .stage-title { font-size: 16px; font-weight: 600; fill: #1a1a1a; }
+      .box-title   { font-size: 14px; font-weight: 600; fill: #1a1a1a; }
+      .box-sub     { font-size: 12px; fill: #666666; }
+      .caption     { font-size: 12px; fill: #666666; }
+      .body        { font-size: 13px; fill: #1a1a1a; }
+      .muted       { font-size: 12px; fill: #666666; }
+
+      .mono        { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+      .code        { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 13px; fill: #1a1a1a; }
+      .code-sm     { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #1a1a1a; }
+      .code-xs     { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 11px; fill: #1a1a1a; }
+      .code-muted  { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #666666; }
+      .code-key    { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #1a1a1a; font-weight: 600; }
+      .code-accent { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 14px; fill: #3a85ff; font-weight: 600; }
+
+      .annot       { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #3a85ff; }
+      .annot-muted { font-family: "Caveat", "Kalam", cursive; font-size: 15px; fill: #666666; }
+      .annot-warn  { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #e85d3a; }
+      .annot-ok    { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #3aaa6e; }
+
+      .json-outer  { fill: #fafaf7; stroke: #1a1a1a; stroke-width: 1.5; }
+      .json-array  { fill: #fafaf7; stroke: #c7c7c0; stroke-width: 1; }
+
+      .cat-identity { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1; }
+      .cat-timing   { fill: #ffe5dc; stroke: #e85d3a; stroke-width: 1; }
+      .cat-locator  { fill: #dcf2e4; stroke: #3aaa6e; stroke-width: 1; }
+      .cat-tracks   { fill: #f0efe9; stroke: #c7c7c0; stroke-width: 1; }
+
+      .pill-a { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1; }
+      .pill-b { fill: #ffe5dc; stroke: #e85d3a; stroke-width: 1; }
+      .pill-c { fill: #dcf2e4; stroke: #3aaa6e; stroke-width: 1; }
+      .pill-d { fill: #f0efe9; stroke: #c7c7c0; stroke-width: 1; }
+
+      .scene-cell-a { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1; }
+      .scene-cell-b { fill: #ffe5dc; stroke: #e85d3a; stroke-width: 1; }
+      .scene-cell-c { fill: #dcf2e4; stroke: #3aaa6e; stroke-width: 1; }
+      .scene-cell-d { fill: #f0efe9; stroke: #c7c7c0; stroke-width: 1; }
+      .scene-cell-empty { fill: #fafaf7; stroke: #c7c7c0; stroke-width: 1; stroke-dasharray: 3 2; }
+
+      .stage-box   { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1.5; }
+      .out-box     { fill: #f0efe9; stroke: #1a1a1a; stroke-width: 1.5; }
+      .position-cell { fill: #fafaf7; stroke: #1a1a1a; stroke-width: 1.5; }
+    </style>
+  </defs>
+
+  <!-- background -->
+  <rect width="1400" height="900" fill="#fafaf7"/>
+
+  <!-- ====================================================== -->
+  <!-- title                                                   -->
+  <!-- ====================================================== -->
+  <text x="40" y="50" class="title">song-mode: arrangement + stems → scenes</text>
+  <text x="40" y="74" class="subhead">two json files in (top) → pipeline (middle) → playable scenes-and-patterns out (bottom).</text>
+
+  <!-- ====================================================== -->
+  <!-- TOP — inputs: arrangement.json (left)                   -->
+  <!-- ====================================================== -->
+  <text x="40"  y="106" class="col-label">input · timeline</text>
+  <text x="720" y="106" class="col-label">input · stems</text>
+
+  <!-- LEFT: arrangement.json -->
+  <g transform="translate(40, 118)">
+    <rect width="640" height="436" rx="12" class="json-outer"/>
+
+    <text x="20" y="26" class="box-title">arrangement.json</text>
+    <text x="172" y="26" class="caption">read by <tspan class="mono">resolve_scenes()</tspan></text>
+
+    <text x="20" y="50" class="code-muted">{</text>
+
+    <!-- tempo / time_sig / arrangement_length_sec -->
+    <g transform="translate(40, 60)">
+      <rect width="580" height="24" rx="6" class="cat-timing"/>
+      <text x="12" y="17" class="code-key">"tempo"</text>
+      <text x="86" y="17" class="code-sm">: 134.0</text>
+      <text x="200" y="17" class="caption">windowlicker · aphex twin</text>
+    </g>
+    <g transform="translate(40, 88)">
+      <rect width="580" height="24" rx="6" class="cat-timing"/>
+      <text x="12" y="17" class="code-key">"time_sig"</text>
+      <text x="106" y="17" class="code-sm">: [4, 4]</text>
+    </g>
+    <g transform="translate(40, 116)">
+      <rect width="580" height="24" rx="6" class="cat-timing"/>
+      <text x="12" y="17" class="code-key">"arrangement_length_sec"</text>
+      <text x="244" y="17" class="code-sm">: 28.36</text>
+      <text x="332" y="17" class="caption">closes the trailing scene</text>
+    </g>
+
+    <!-- locators array -->
+    <text x="40" y="158" class="code-key">"locators": [</text>
+    <g transform="translate(60, 166)">
+      <rect width="560" height="100" rx="8" class="cat-locator"/>
+      <text x="14" y="18" class="code-sm">{ "time_sec":  0.00, "name": "intro"  },</text>
+      <text x="14" y="36" class="code-sm">{ "time_sec":  3.58, "name": "drop"   },</text>
+      <text x="14" y="54" class="code-sm">{ "time_sec":  8.96, "name": "lick"   },</text>
+      <text x="14" y="72" class="code-sm">{ "time_sec": 16.12, "name": "bridge" },</text>
+      <text x="14" y="90" class="code-sm">{ "time_sec": 23.28, "name": "outro"  }</text>
+    </g>
+    <text x="40" y="282" class="code-muted">],</text>
+    <text x="80" y="282" class="annot-muted">each time_sec = scene boundary; gap to next = scene length</text>
+
+    <!-- tracks -->
+    <text x="40" y="300" class="code-key">"tracks": {</text>
+    <g transform="translate(60, 308)">
+      <!-- A -->
+      <rect width="20" height="18" rx="4" class="pill-a"/>
+      <text x="10" y="13" text-anchor="middle" class="code-sm">A</text>
+      <text x="28" y="14" class="code-xs">: [{ file_path: "windowlicker_kick.wav", start_time_sec: 0.0, length_sec: 28.36 }]</text>
+      <!-- B -->
+      <g transform="translate(0, 22)">
+        <rect width="20" height="18" rx="4" class="pill-b"/>
+        <text x="10" y="13" text-anchor="middle" class="code-sm">B</text>
+        <text x="28" y="14" class="code-xs">: [{ "windowlicker_bass_lead.wav", 3.58, 12.54 }, { ..., 23.28, 5.08 }]</text>
+      </g>
+      <!-- C -->
+      <g transform="translate(0, 44)">
+        <rect width="20" height="18" rx="4" class="pill-c"/>
+        <text x="10" y="13" text-anchor="middle" class="code-sm">C</text>
+        <text x="28" y="14" class="code-xs">: [{ "windowlicker_pad_chord.wav", 8.96, 14.32 }]</text>
+      </g>
+      <!-- D -->
+      <g transform="translate(0, 66)">
+        <rect width="20" height="18" rx="4" class="pill-d"/>
+        <text x="10" y="13" text-anchor="middle" class="code-sm">D</text>
+        <text x="28" y="14" class="code-xs">: [{ "windowlicker_vox_lick.wav", 8.96, 7.16 }]</text>
+      </g>
+    </g>
+    <text x="40" y="402" class="code-muted">}</text>
+    <text x="20" y="422" class="code-muted">}</text>
+  </g>
+
+  <!-- RIGHT: manifest.json -->
+  <g transform="translate(720, 118)">
+    <rect width="640" height="436" rx="12" class="json-outer"/>
+
+    <text x="20" y="26" class="box-title">manifest.json</text>
+    <text x="156" y="26" class="caption">read by <tspan class="mono">synthesize()</tspan></text>
+
+    <text x="20" y="50" class="code-muted">{</text>
+
+    <!-- track / bpm -->
+    <g transform="translate(40, 60)">
+      <rect width="580" height="24" rx="6" class="cat-identity"/>
+      <text x="12" y="17" class="code-key">"track"</text>
+      <text x="86" y="17" class="code-sm">: "windowlicker"</text>
+    </g>
+    <g transform="translate(40, 88)">
+      <rect width="580" height="24" rx="6" class="cat-timing"/>
+      <text x="12" y="17" class="code-key">"bpm"</text>
+      <text x="74" y="17" class="code-sm">: 134.0</text>
+      <text x="200" y="17" class="caption">source render tempo · stretch_mode = "bpm"</text>
+    </g>
+
+    <!-- session_tracks header -->
+    <text x="40" y="134" class="code-key">"session_tracks": {</text>
+
+    <!-- group A -->
+    <g transform="translate(40, 144)">
+      <rect width="580" height="48" rx="6" class="cat-tracks"/>
+      <rect x="10" y="14" width="20" height="18" rx="4" class="pill-a"/>
+      <text x="20" y="27" text-anchor="middle" class="code-sm">A</text>
+      <text x="38" y="20" class="code-xs">: [{ slot: 0, file: "windowlicker_kick.wav",       clip_length_sec: 1.79 }]</text>
+      <text x="38" y="38" class="code-xs">         start_offset_sec: 0.0,  end_offset_sec: 1.79</text>
+    </g>
+    <!-- group B -->
+    <g transform="translate(40, 196)">
+      <rect width="580" height="48" rx="6" class="cat-tracks"/>
+      <rect x="10" y="14" width="20" height="18" rx="4" class="pill-b"/>
+      <text x="20" y="27" text-anchor="middle" class="code-sm">B</text>
+      <text x="38" y="20" class="code-xs">: [{ slot: 0, file: "windowlicker_bass_lead.wav",  clip_length_sec: 3.58 },</text>
+      <text x="38" y="38" class="code-xs">    { slot: 1, file: "windowlicker_perc_glitch.wav", clip_length_sec: 1.79 }]</text>
+    </g>
+    <!-- group C -->
+    <g transform="translate(40, 248)">
+      <rect width="580" height="32" rx="6" class="cat-tracks"/>
+      <rect x="10" y="6" width="20" height="18" rx="4" class="pill-c"/>
+      <text x="20" y="19" text-anchor="middle" class="code-sm">C</text>
+      <text x="38" y="20" class="code-xs">: [{ slot: 0, file: "windowlicker_pad_chord.wav",  clip_length_sec: 7.16 }]</text>
+    </g>
+    <!-- group D -->
+    <g transform="translate(40, 284)">
+      <rect width="580" height="32" rx="6" class="cat-tracks"/>
+      <rect x="10" y="6" width="20" height="18" rx="4" class="pill-d"/>
+      <text x="20" y="19" text-anchor="middle" class="code-sm">D</text>
+      <text x="38" y="20" class="code-xs">: [{ slot: 0, file: "windowlicker_vox_lick.wav",   clip_length_sec: 3.58 }]</text>
+    </g>
+
+    <text x="40" y="338" class="code-muted">}</text>
+    <text x="20" y="356" class="code-muted">}</text>
+    <text x="20" y="396" class="annot-muted">slot 0..19 per group → device slot <tspan class="mono" font-size="12">700 + group_offset + slot</tspan></text>
+  </g>
+
+  <!-- cross-file invariant: green double-arrow between the two boxes -->
+  <g>
+    <!-- short horizontal connector centered between the two json boxes -->
+    <path d="M 686 320 L 716 320" fill="none" stroke="#3aaa6e" stroke-width="2"
+          marker-end="url(#arrow-ok)" marker-start="url(#arrow-ok)"/>
+    <!-- vertical label stack -->
+    <text x="701" y="304" text-anchor="middle" class="code-xs" fill="#3aaa6e" font-weight="600">match</text>
+    <text x="701" y="276" text-anchor="middle" class="annot-ok" transform="rotate(-90 701 276)">file_path = file</text>
+  </g>
+
+
+  <!-- ====================================================== -->
+  <!-- MIDDLE — pipeline strip                                 -->
+  <!-- ====================================================== -->
+  <g transform="translate(40, 578)">
+    <text x="0" y="0" class="col-label">pipeline · ep133.song / ep133.ppak</text>
+
+    <!-- chip 1: resolve_scenes() -->
+    <g transform="translate(120, 14)">
+      <rect width="240" height="50" rx="10" class="stage-box"/>
+      <text x="120" y="22" text-anchor="middle" class="code-accent">resolve_scenes()</text>
+      <text x="120" y="40" text-anchor="middle" class="caption">arrangement + manifest → Snapshot[]</text>
+    </g>
+
+    <!-- arrow -->
+    <path d="M 360 39 L 420 39" fill="none" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <!-- chip 2: synthesize() -->
+    <g transform="translate(420, 14)">
+      <rect width="240" height="50" rx="10" class="stage-box"/>
+      <text x="120" y="22" text-anchor="middle" class="code-accent">synthesize()</text>
+      <text x="120" y="40" text-anchor="middle" class="caption">Snapshot[] → PpakSpec</text>
+    </g>
+
+    <!-- arrow -->
+    <path d="M 660 39 L 720 39" fill="none" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <!-- chip 3: build_ppak() -->
+    <g transform="translate(720, 14)">
+      <rect width="240" height="50" rx="10" class="stage-box"/>
+      <text x="120" y="22" text-anchor="middle" class="code-accent">build_ppak()</text>
+      <text x="120" y="40" text-anchor="middle" class="caption">PpakSpec → .ppak bytes</text>
+    </g>
+
+    <!-- cli wrapper label, right-aligned -->
+    <text x="1320" y="44" text-anchor="end" class="caption">cli: <tspan class="mono" fill="#3a85ff">ppak-export-song</tspan></text>
+  </g>
+
+  <!-- ====================================================== -->
+  <!-- BOTTOM — output: scene grid + song-position playlist     -->
+  <!-- ====================================================== -->
+  <text x="40"  y="666" class="col-label">output · song-mode device state</text>
+
+  <!-- scene grid: rows = a/b/c/d, cols = scenes 1..5 -->
+  <!--
+       grid layout:
+         x origin = 80, scene-col-width = 200, group-row-height = 56
+         5 columns × 4 rows
+         total width = 5*200 = 1000, plus 80 left = 1080 right edge
+  -->
+  <g transform="translate(40, 678)">
+    <!-- panel background -->
+    <rect width="1080" height="158" rx="12" fill="#f0efe9" stroke="#e8e8e3" stroke-width="1"/>
+
+    <!-- header row: scene labels -->
+    <g transform="translate(80, 12)">
+      <text x="100" y="16" text-anchor="middle" class="box-title">scene 1</text>
+      <text x="100" y="32" text-anchor="middle" class="caption">intro · 2 bars</text>
+      <text x="300" y="16" text-anchor="middle" class="box-title">scene 2</text>
+      <text x="300" y="32" text-anchor="middle" class="caption">drop · 3 bars</text>
+      <text x="500" y="16" text-anchor="middle" class="box-title">scene 3</text>
+      <text x="500" y="32" text-anchor="middle" class="caption">lick · 4 bars</text>
+      <text x="700" y="16" text-anchor="middle" class="box-title">scene 4</text>
+      <text x="700" y="32" text-anchor="middle" class="caption">bridge · 4 bars</text>
+      <text x="900" y="16" text-anchor="middle" class="box-title">scene 5</text>
+      <text x="900" y="32" text-anchor="middle" class="caption">outro · 2 bars</text>
+    </g>
+
+    <!-- group row labels -->
+    <g transform="translate(48, 44)">
+      <text x="0" y="16"  text-anchor="middle" class="lane-label" font-weight="600" fill="#3a85ff">a</text>
+      <text x="0" y="44"  text-anchor="middle" class="lane-label" font-weight="600" fill="#e85d3a">b</text>
+      <text x="0" y="72"  text-anchor="middle" class="lane-label" font-weight="600" fill="#3aaa6e">c</text>
+      <text x="0" y="100" text-anchor="middle" class="lane-label" font-weight="600" fill="#666666">d</text>
+    </g>
+
+    <!-- grid cells: 4 rows × 5 cols -->
+    <!-- row a (kick plays in every scene) -->
+    <g transform="translate(80, 44)">
+      <!-- col layout: each cell 184 wide, 24 tall, gap 16 horiz, gap 8 vert -->
+      <!-- center within 200-wide column -->
+      <g transform="translate(8, 0)">  <rect width="184" height="24" rx="6" class="scene-cell-a"/><text x="92" y="17" text-anchor="middle" class="code-sm">a01</text></g>
+      <g transform="translate(208, 0)"><rect width="184" height="24" rx="6" class="scene-cell-a"/><text x="92" y="17" text-anchor="middle" class="code-sm">a01</text></g>
+      <g transform="translate(408, 0)"><rect width="184" height="24" rx="6" class="scene-cell-a"/><text x="92" y="17" text-anchor="middle" class="code-sm">a01</text></g>
+      <g transform="translate(608, 0)"><rect width="184" height="24" rx="6" class="scene-cell-a"/><text x="92" y="17" text-anchor="middle" class="code-sm">a01</text></g>
+      <g transform="translate(808, 0)"><rect width="184" height="24" rx="6" class="scene-cell-a"/><text x="92" y="17" text-anchor="middle" class="code-sm">a01</text></g>
+    </g>
+    <!-- row b: bass lead in scenes 2/3/4, perc glitch in scene 5, silent in scene 1 -->
+    <g transform="translate(80, 72)">
+      <g transform="translate(8, 0)">  <rect width="184" height="24" rx="6" class="scene-cell-empty"/><text x="92" y="17" text-anchor="middle" class="code-sm" fill="#999999">b99</text></g>
+      <g transform="translate(208, 0)"><rect width="184" height="24" rx="6" class="scene-cell-b"/><text x="92" y="17" text-anchor="middle" class="code-sm">b01</text></g>
+      <g transform="translate(408, 0)"><rect width="184" height="24" rx="6" class="scene-cell-b"/><text x="92" y="17" text-anchor="middle" class="code-sm">b01</text></g>
+      <g transform="translate(608, 0)"><rect width="184" height="24" rx="6" class="scene-cell-b"/><text x="92" y="17" text-anchor="middle" class="code-sm">b01</text></g>
+      <g transform="translate(808, 0)"><rect width="184" height="24" rx="6" class="scene-cell-b"/><text x="92" y="17" text-anchor="middle" class="code-sm">b02</text></g>
+    </g>
+    <!-- row c: pad chord in scenes 3/4, silent elsewhere -->
+    <g transform="translate(80, 100)">
+      <g transform="translate(8, 0)">  <rect width="184" height="24" rx="6" class="scene-cell-empty"/><text x="92" y="17" text-anchor="middle" class="code-sm" fill="#999999">c99</text></g>
+      <g transform="translate(208, 0)"><rect width="184" height="24" rx="6" class="scene-cell-empty"/><text x="92" y="17" text-anchor="middle" class="code-sm" fill="#999999">c99</text></g>
+      <g transform="translate(408, 0)"><rect width="184" height="24" rx="6" class="scene-cell-c"/><text x="92" y="17" text-anchor="middle" class="code-sm">c01</text></g>
+      <g transform="translate(608, 0)"><rect width="184" height="24" rx="6" class="scene-cell-c"/><text x="92" y="17" text-anchor="middle" class="code-sm">c01</text></g>
+      <g transform="translate(808, 0)"><rect width="184" height="24" rx="6" class="scene-cell-empty"/><text x="92" y="17" text-anchor="middle" class="code-sm" fill="#999999">c99</text></g>
+    </g>
+    <!-- row d: vox lick in scene 3 only -->
+    <g transform="translate(80, 128)">
+      <g transform="translate(8, 0)">  <rect width="184" height="24" rx="6" class="scene-cell-empty"/><text x="92" y="17" text-anchor="middle" class="code-sm" fill="#999999">d99</text></g>
+      <g transform="translate(208, 0)"><rect width="184" height="24" rx="6" class="scene-cell-empty"/><text x="92" y="17" text-anchor="middle" class="code-sm" fill="#999999">d99</text></g>
+      <g transform="translate(408, 0)"><rect width="184" height="24" rx="6" class="scene-cell-d"/><text x="92" y="17" text-anchor="middle" class="code-sm">d01</text></g>
+      <g transform="translate(608, 0)"><rect width="184" height="24" rx="6" class="scene-cell-empty"/><text x="92" y="17" text-anchor="middle" class="code-sm" fill="#999999">d99</text></g>
+      <g transform="translate(808, 0)"><rect width="184" height="24" rx="6" class="scene-cell-empty"/><text x="92" y="17" text-anchor="middle" class="code-sm" fill="#999999">d99</text></g>
+    </g>
+  </g>
+
+  <!-- annotation: empty pattern @ idx 99 (warn callout, points at one of the empty cells) -->
+  <g transform="translate(1136, 800)">
+    <text x="0" y="0" class="annot-warn">silent group →</text>
+    <text x="0" y="18" class="annot-warn">empty pattern @ idx 99</text>
+    <text x="0" y="36" class="code-xs" fill="#e85d3a">(NOT 0 — would trigger</text>
+    <text x="0" y="50" class="code-xs" fill="#e85d3a"> err pattern 189)</text>
+    <path d="M -8 14 C -28 18, -50 22, -68 22" fill="none" stroke="#e85d3a" stroke-width="1.5" stroke-dasharray="3 2" marker-end="url(#arrow-warn)"/>
+  </g>
+
+  <!-- song-position playlist -->
+  <g transform="translate(40, 850)">
+    <text x="0" y="0" class="col-label">song-position playlist · device playback order</text>
+
+    <!-- 5 cells in a horizontal strip -->
+    <g transform="translate(0, 10)">
+      <rect x="0"   y="0" width="64" height="32" rx="8" class="position-cell"/>
+      <text x="32"  y="22" text-anchor="middle" class="body" font-weight="600">1</text>
+      <path d="M 70 16 L 92 16" fill="none" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arrow-muted)"/>
+
+      <rect x="98"  y="0" width="64" height="32" rx="8" class="position-cell"/>
+      <text x="130" y="22" text-anchor="middle" class="body" font-weight="600">2</text>
+      <path d="M 168 16 L 190 16" fill="none" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arrow-muted)"/>
+
+      <rect x="196" y="0" width="64" height="32" rx="8" class="position-cell"/>
+      <text x="228" y="22" text-anchor="middle" class="body" font-weight="600">3</text>
+      <path d="M 266 16 L 288 16" fill="none" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arrow-muted)"/>
+
+      <rect x="294" y="0" width="64" height="32" rx="8" class="position-cell"/>
+      <text x="326" y="22" text-anchor="middle" class="body" font-weight="600">4</text>
+      <path d="M 364 16 L 386 16" fill="none" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arrow-muted)"/>
+
+      <rect x="392" y="0" width="64" height="32" rx="8" class="position-cell"/>
+      <text x="424" y="22" text-anchor="middle" class="body" font-weight="600">5</text>
+    </g>
+
+    <!-- annotation -->
+    <g transform="translate(486, 24)">
+      <text x="0" y="0" class="annot">device plays scenes in this order;</text>
+      <text x="0" y="18" class="annot">user can re-order on-device</text>
+    </g>
+  </g>
+
+  <!-- tiny boxing glove nod -->
+  <text x="1370" y="888" font-size="12" fill="#999999" text-anchor="end">🥊</text>
+</svg>

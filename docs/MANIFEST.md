@@ -282,7 +282,7 @@ range is reserved by convention so song-export writes don't clobber a user's
 
 ```json
 {
-  "track": "test_song",
+  "track": "windowlicker",
   "bpm": 120.0,
   "session_tracks": {
     "A": [

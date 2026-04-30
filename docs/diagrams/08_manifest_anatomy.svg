@@ -359,14 +359,14 @@
       <g transform="translate(40, 60)">
         <rect width="540" height="26" rx="6" class="cat-identity"/>
         <text x="12" y="18" class="code-key">"track"</text>
-        <text x="86" y="18" class="code-sm">: "test_song"</text>
+        <text x="86" y="18" class="code-sm">: "windowlicker"</text>
       </g>
 
       <!-- bpm -->
       <g transform="translate(40, 92)">
         <rect width="540" height="26" rx="6" class="cat-timing"/>
         <text x="12" y="18" class="code-key">"bpm"</text>
-        <text x="74" y="18" class="code-sm">: 120.0</text>
+        <text x="74" y="18" class="code-sm">: 134.0</text>
         <text x="200" y="18" class="caption">source render tempo · pads tagged stretch_mode="bpm"</text>
       </g>
 
