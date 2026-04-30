@@ -1,11 +1,17 @@
 # Verifying / extending pad-record byte offsets — the diff method
 
-The pad-record byte layout in [PROTOCOL.md §7](../PROTOCOL.md#7-pad-binary-record-27-bytes-in-project-tar)
+The pad-record byte layout in [PROTOCOL.md §7](../PROTOCOL.md#7-pad-binary-record-26-bytes-in-project-tar--see-70-erratum)
 was reverse-engineered by diffing two `.ppak` exports from the same device,
 before and after a single UI change in Sample Tool. This method is
 reproducible: anyone with an EP-133 and Sample Tool can verify the
 offsets in this doc, or extend them to fields we haven't decoded yet
-(bytes 2-7, 22, 25-26).
+(bytes 2-7, 22, 25).
+
+> **Note:** Sample Tool emits pad records padded to **27 bytes** (trailing
+> `0x00`); factory native is **26 bytes**. The diff method below works
+> the same way regardless — both forms diff cleanly. See
+> [PROTOCOL.md §7.0](../PROTOCOL.md#70-erratum-2026-04-29-pad-records-are-26-bytes-not-27)
+> for the erratum.
 
 ## What you need
 
