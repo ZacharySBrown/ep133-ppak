@@ -11,14 +11,129 @@
 
 Reverse-engineered SysEx + `.ppak` protocol library for the
 [Teenage Engineering EP-133 K.O. II](https://teenage.engineering/products/ep-133).
-
-![ep133-ppak overview](docs/diagrams/00_overview.svg)
-
 Write valid `.ppak` archives from Python — both sample-mode pads and
 full **song-mode** projects with multiple patterns, scenes, and a
-song-position playlist. Decode the EP-133's binary pad record. Read
-project files live via SysEx. Upload samples and assign pads without
-touching Sample Tool.
+song-position playlist. Built on a chain of community RE — see
+[building on prior work](#building-on-prior-work) below.
+
+## What you can build with it
+
+<table>
+<tr>
+<td width="50%" align="center">
+  <a href="docs/diagrams/09_project_layout.svg"><img src="docs/diagrams/09_project_layout.svg" alt="Sample-mode: BatchManifest → project on the device" /></a>
+  <p><sub><b>Sample-mode</b> — drop a folder of WAVs onto pads. Per-sample BPM, time-stretch mode, playmode, and routing hints. Drives <code>ppak-load-one</code> and <code>ppak-load-manifest</code>.</sub></p>
+</td>
+<td width="50%" align="center">
+  <a href="docs/diagrams/10_song_layout.svg"><img src="docs/diagrams/10_song_layout.svg" alt="Song-mode: arrangement + stems → scenes on the device" /></a>
+  <p><sub><b>Song-mode</b> — bake an Ableton-style arrangement into a multi-pattern, multi-scene project with a song-position playlist. Drives <code>ppak-export-song</code>.</sub></p>
+</td>
+</tr>
+</table>
+
+A `BatchManifest` describes which WAVs go on which pads with which settings.
+An `arrangement.json` + `manifest.json` pair describes a timeline of clips
+on tracks A/B/C/D plus the source stems they reference. The package handles
+the byte-level format (ZIP, TAR, pad records, scenes, patterns, sounds) so
+your pipeline stays in plain Python or a one-line CLI invocation.
+
+## Install
+
+```bash
+pip install -e .
+# or with MIDI backends for live device interaction:
+pip install -e ".[midi]"
+```
+
+Requires Python 3.11+. Live USB-MIDI requires `mido` + `python-rtmidi`.
+
+## Quick start
+
+Three flows, in order of complexity.
+
+### a. Single sample on a single pad
+
+One WAV, one pad. Requires the `[midi]` extra (live device I/O). See
+[`tools/load_one.py`](tools/load_one.py).
+
+```bash
+# Drop kick.wav onto Project 1, Group A, pad "7" (top-left), slot 100
+ppak-load-one windowlicker_kick.wav --project 1 --group A --pad 7 --slot 100
+
+# Tag a loop with its true BPM so time.mode=bpm stretches it cleanly
+# at any project tempo, and target pad "4" (middle-left)
+ppak-load-one windowlicker_bass_lead.wav \
+    --project 9 --group B --pad 4 --slot 220 \
+    --bpm 134.0
+```
+
+`--bpm` writes `sound.bpm` and sets `time.mode=bpm` on the slot. Pad
+labels follow the physical keypad: `7 8 9 / 4 5 6 / 1 2 3 / . 0 ENTER`.
+
+### b. Bulk-load samples from a manifest
+
+Many WAVs in one pass, BPM and group routing baked in. See
+[`docs/MANIFEST.md`](docs/MANIFEST.md) for the full schema.
+
+```jsonc
+// manifest.json
+{
+  "version": 1,
+  "track": "windowlicker",
+  "bpm": 134.0,
+  "samples": [
+    {"file": "windowlicker_kick.wav",        "stem": "drums",  "suggested_group": "A", "suggested_pad": "7"},
+    {"file": "windowlicker_snare.wav",       "stem": "drums",  "suggested_group": "A", "suggested_pad": "8"},
+    {"file": "windowlicker_perc_glitch.wav", "stem": "drums",  "suggested_group": "A", "suggested_pad": "9", "time_mode": "bpm"},
+    {"file": "windowlicker_bass_sub.wav",    "stem": "bass",   "suggested_group": "B", "suggested_pad": "7", "playmode": "key"},
+    {"file": "windowlicker_bass_lead.wav",   "stem": "bass",   "suggested_group": "B", "suggested_pad": "4", "playmode": "legato", "time_mode": "bpm"},
+    {"file": "windowlicker_pad_chord.wav",   "stem": "other",  "suggested_group": "C", "suggested_pad": "7", "playmode": "key",    "time_mode": "bpm"},
+    {"file": "windowlicker_vox_lick.wav",    "stem": "vocals", "suggested_group": "D", "suggested_pad": "7", "bpm": 67.0}
+  ]
+}
+```
+
+```bash
+ppak-load-manifest manifest.json --project 9
+```
+
+The track-level `bpm` is the default for every sample missing its own;
+per-sample `bpm` overrides. `suggested_group` / `suggested_pad` claim
+specific placements; samples without them fill remaining pads in order.
+
+### c. Build a full song-mode .ppak from an arrangement
+
+Inputs: an `arrangement.json` (locators + clip placements) and a
+`manifest.json` (WAVs + slot metadata). Output: a song-mode `.ppak`
+with multiple patterns, scenes, and a song-position playlist. See
+[`docs/MANIFEST.md`](docs/MANIFEST.md) for both schemas, and
+[`docs/diagrams/04_song_pipeline.md`](docs/diagrams/04_song_pipeline.md)
+for the pipeline narrative.
+
+```bash
+# Synthesize a minimal device-default template (no capture needed)
+ppak-export-song \
+    --arrangement snapshot.json \
+    --manifest stems.json \
+    --out song.ppak
+
+# Use a captured reference .ppak for byte-accurate per-pad metadata
+ppak-export-song \
+    --arrangement snapshot.json \
+    --manifest stems.json \
+    --reference-template tests/fixtures/reference.ppak \
+    --project 3 \
+    --out out/song.ppak
+```
+
+Pull a reference template off your own device with
+[`tools/ep133_capture_reference.py`](tools/ep133_capture_reference.py).
+
+### Driving the device live (no Chrome)
+
+Want to drive the device live without going through the WebMIDI Sample
+Tool? See [`docs/LOADING_SAMPLES.md`](docs/LOADING_SAMPLES.md) for the
+`EP133Client` Python API.
 
 ## What this gives you
 
@@ -73,124 +188,6 @@ touching Sample Tool.
   Ableton Live arrangement-export flow is the original consumer of
   `ppak-export-song`.
 
-## Building on prior work
-
-This project stands on a chain of community reverse-engineering:
-
-- [**phones24**](https://github.com/phones24) — the original `.ppak`
-  archive parser. Their work is the reason any of this was tractable;
-  their RE bootstrapped the broad protocol shape, including the
-  pad-record fields.
-- [**ep133-krate**](https://github.com/icherniukh/ep133-krate) — extensive
-  live SysEx capture-based protocol RE + a polished sample-manager TUI.
-  Complementary surface area to this project: krate covers the live
-  SysEx path with capture-backed depth; this repo covers the on-disk
-  `.ppak` archive format and the in-TAR binary pad record.
-- [**garrettjwilke/ep_133_sysex_thingy**](https://github.com/garrettjwilke/ep_133_sysex_thingy),
-  [**benjaminr/mcp-koii**](https://github.com/benjaminr/mcp-koii), and
-  **abrilstudios/rcy** — earlier or adjacent community efforts cited by
-  the projects above.
-
-[ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md) has the full breakdown of what
-each project contributed and where to use their work today.
-
-## Install
-
-```bash
-pip install -e .
-# or with MIDI backends for live device interaction:
-pip install -e ".[midi]"
-```
-
-Requires Python 3.11+. Live USB-MIDI requires `mido` + `python-rtmidi`.
-
-## Quick start
-
-Three flows, in order of complexity.
-
-### a. Single sample on a single pad
-
-One WAV, one pad. Requires the `[midi]` extra (live device I/O). See
-[`tools/load_one.py`](tools/load_one.py).
-
-```bash
-# Drop kick.wav onto Project 1, Group A, pad "7" (top-left), slot 100
-ppak-load-one kick.wav --project 1 --group A --pad 7 --slot 100
-
-# Tag a loop with its true BPM so time.mode=bpm stretches it cleanly
-# at any project tempo, and target pad "." (bottom-left)
-ppak-load-one loop.wav \
-    --project 9 --group C --pad . --slot 220 \
-    --bpm 107.666
-```
-
-`--bpm` writes `sound.bpm` and sets `time.mode=bpm` on the slot. Pad
-labels follow the physical keypad: `7 8 9 / 4 5 6 / 1 2 3 / . 0 ENTER`.
-
-### b. Bulk-load samples from a manifest
-
-Many WAVs in one pass, BPM and group routing baked in. See
-[`tools/load_from_manifest.py`](tools/load_from_manifest.py) for the
-full schema (the `BatchManifest` form below is preferred; a legacy
-stems-grouped form is also accepted).
-
-```jsonc
-// manifest.json
-{
-  "version": 1,
-  "track": "imagine_dragons_demo",
-  "bpm": 107.666,
-  "samples": [
-    {"file": "drums_001.wav", "stem": "drums",  "suggested_group": "A", "suggested_pad": "7"},
-    {"file": "bass_001.wav",  "stem": "bass",   "suggested_group": "B", "suggested_pad": "7"},
-    {"file": "vox_chorus.wav","stem": "vocals", "suggested_group": "C", "playmode": "oneshot"}
-  ]
-}
-```
-
-```bash
-ppak-load-manifest manifest.json \
-    --project 9 \
-    --groups A=drums B=bass C=vocals D=other \
-    --start-slot 300
-```
-
-The batch-level `bpm` is written to every slot's `sound.bpm` (per-sample
-`bpm` overrides). `suggested_group` / `suggested_pad` claim specific
-placements; samples without them fill remaining bar-indices in order.
-
-### c. Build a full song-mode .ppak from an arrangement
-
-Inputs: an `arrangement.json` (locators + clip placements) and a
-`manifest.json` (WAVs + slot metadata). Output: a song-mode `.ppak`
-with multiple patterns, scenes, and a song-position playlist. See
-[`docs/MANIFEST.md`](docs/MANIFEST.md) for both schemas.
-
-```bash
-# Synthesize a minimal device-default template (no capture needed)
-ppak-export-song \
-    --arrangement snapshot.json \
-    --manifest stems.json \
-    --out song.ppak
-
-# Use a captured reference .ppak for byte-accurate per-pad metadata
-ppak-export-song \
-    --arrangement snapshot.json \
-    --manifest stems.json \
-    --reference-template tests/fixtures/reference.ppak \
-    --project 3 \
-    --out out/song.ppak
-```
-
-Pull a reference template off your own device with
-[`tools/ep133_capture_reference.py`](tools/ep133_capture_reference.py).
-
-### Driving the device live (no Chrome)
-
-Want to drive the device live without Chrome? See
-[`docs/LOADING_SAMPLES.md`](docs/LOADING_SAMPLES.md) for the
-`EP133Client` Python API.
-
 ## Repository layout
 
 ```
@@ -227,7 +224,9 @@ tools/                       CLI utilities (5 entry points)
 tests/                       pytest suite (319+ tests, all passing)
 
 docs/
-  diagrams/                  Illustrated docs (8 SVGs + companion .md)
+  diagrams/                  Illustrated docs (10 SVGs + companion .md)
+  MANIFEST.md                Both manifest shapes, annotated
+  LOADING_SAMPLES.md         Sample-mode walkthrough (CLI + Python API)
   validation-guide.md        What to expect when validating a generated .ppak
   verifying-byte-offsets.md  The diff method for verifying pad-record bytes
   PORT_PLAN.md               Architectural notes for the song-mode port
@@ -235,6 +234,27 @@ docs/
 PROTOCOL.md                  Complete protocol + format specification
 LICENSE                      MIT
 ```
+
+## Building on prior work
+
+This project stands on a chain of community reverse-engineering:
+
+- [**phones24**](https://github.com/phones24) — the original `.ppak`
+  archive parser. Their work is the reason any of this was tractable;
+  their RE bootstrapped the broad protocol shape, including the
+  pad-record fields.
+- [**ep133-krate**](https://github.com/icherniukh/ep133-krate) — extensive
+  live SysEx capture-based protocol RE + a polished sample-manager TUI.
+  Complementary surface area to this project: krate covers the live
+  SysEx path with capture-backed depth; this repo covers the on-disk
+  `.ppak` archive format and the in-TAR binary pad record.
+- [**garrettjwilke/ep_133_sysex_thingy**](https://github.com/garrettjwilke/ep_133_sysex_thingy),
+  [**benjaminr/mcp-koii**](https://github.com/benjaminr/mcp-koii), and
+  **abrilstudios/rcy** — earlier or adjacent community efforts cited by
+  the projects above.
+
+[ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md) has the full breakdown of what
+each project contributed and where to use their work today.
 
 ## See also
 
