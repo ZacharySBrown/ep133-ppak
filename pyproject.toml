@@ -1,6 +1,6 @@
 [project]
 name = "ep133-ppak"
-version = "0.1.0"
+version = "0.2.0"
 description = "Reverse-engineered SysEx + .ppak protocol library for the Teenage Engineering EP-133 K.O. II"
 readme = "README.md"
 license = { text = "MIT" }
@@ -20,6 +20,7 @@ dependencies = [
     "numpy>=1.24",
     "soundfile>=0.12",
     "pydantic>=2.6",
+    "librosa>=0.11.0",
 ]
 
 [project.optional-dependencies]
@@ -37,6 +38,7 @@ ppak-writer = "tools.ppak_writer:main"
 ppak-bpm-matrix = "tools.bpm_matrix:main"
 ppak-load-manifest = "tools.load_from_manifest:main"
 ppak-load-one = "tools.load_one:main"
+ppak-export-song = "tools.export_song:main"
 
 [project.urls]
 Homepage = "https://github.com/zacharysbrown/ep133-ppak"

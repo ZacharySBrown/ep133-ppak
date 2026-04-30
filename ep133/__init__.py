@@ -3,7 +3,7 @@ ep133 — SysEx + .ppak protocol library for the Teenage Engineering EP-133 K.O.
 
 Exports:
 - `EP133Client`   — high-level SysEx client over USB-MIDI
-- `pad_record`    — decode 27-byte pad records inside project TARs
+- `pad_record`    — decode 26-byte pad records inside project TARs
 - `project_reader`— read a project TAR from the device live via SysEx
 - `payloads`      — `PadParams`, `SampleParams`, payload builders
 - `audio`         — WAV → 46875 Hz mono PCM transcode

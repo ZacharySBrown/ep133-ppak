@@ -6,8 +6,10 @@ TAR-like archive. Each pad lives at a 512-byte-aligned block with a header
 naming it ``pads/{a|b|c|d}/p{NN}`` (though TAR names can be slightly mangled
 by the device's internal formatting — null bytes interspersed).
 
-The 27-byte pad record starts 512 bytes into each pad block. Byte offsets
+The 26-byte pad record starts 512 bytes into each pad block. Byte offsets
 below are relative to the **record start** (i.e., ``block_offset + 512``).
+The 26-byte form is factory-native; see PROTOCOL.md erratum (Sample Tool's
+27-byte variant is non-canonical and corrupts on scene-switch iteration).
 
 Per-pad BPM encodings observed 2026-04-24
 -----------------------------------------
@@ -61,7 +63,7 @@ from typing import Optional
 
 PAD_BLOCK_SIZE = 1024              # TAR header (512) + data area (≤512)
 TAR_HEADER_SIZE = 512
-PAD_RECORD_SIZE = 27               # phones24: pad records are ~27 bytes
+PAD_RECORD_SIZE = 26               # factory-native: pad records are 26 bytes
 
 OVERRIDE_FLAG_BYTE_OFFSET = 13     # +13 == 0x80 means override encoding
 OVERRIDE_VALUE_BYTE_OFFSET = 14

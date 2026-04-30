@@ -29,13 +29,17 @@ from datetime import datetime, timezone
 from io import BytesIO
 from typing import Dict, Tuple
 
-PAD_RECORD_SIZE = 27
+PAD_RECORD_SIZE = 26
 TAR_BLOCK = 512
 
 
 # Real default-blank pad bytes (verbatim from a fresh Sample Tool backup).
 # Used to reset all pads before applying the spec — guarantees the output
 # contains exactly what was specified, not stray bindings from the base.
+#
+# Factory-native size is 26 bytes. Sample Tool's 27-byte form is non-canonical
+# (the device tolerates it on import but corrupts during scene-switch iteration:
+# off-by-one stride → ERR PATTERN 189). See PROTOCOL.md erratum.
 DEFAULT_BLANK_PAD = bytes([
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x42,   # bytes 12-15: float32 LE 120.0
@@ -45,7 +49,7 @@ DEFAULT_BLANK_PAD = bytes([
     0x00, 0x00,                                        # bytes 21-22
     0x00,                                              # byte 23: playMode = oneshot
     0x3c,                                              # byte 24: rootNote = 60
-    0x00, 0x00,                                        # bytes 25-26
+    0x00,                                              # byte 25
 ])
 assert len(DEFAULT_BLANK_PAD) == PAD_RECORD_SIZE
 
@@ -71,7 +75,7 @@ def patch_pad_record(
     bpm_override: bool = False,
     time_mode: str = "off",
 ) -> bytes:
-    """Patch a 27-byte pad record using verified offsets.
+    """Patch a 26-byte pad record using verified offsets.
 
     Byte layout (verified by diffing two real Sample Tool backups):
       +1     : slot u8 (sample-library slot 1..255)
@@ -105,7 +109,7 @@ def patch_pad_record(
 def find_pad_record_offsets(tar_bytes: bytes) -> Dict[Tuple[str, int], int]:
     """Scan the TAR and return {(group, pad_num): data_offset}.
 
-    The data offset is where the 27-byte pad record starts (right after
+    The data offset is where the 26-byte pad record starts (right after
     the 512-byte TAR header block).
 
     pad_num here uses the TAR's pNN convention (bottom-up, left-right):

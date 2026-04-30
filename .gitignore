@@ -23,5 +23,10 @@ htmlcov/
 
 # Working files
 *.ppak
+*.pak
 !tests/fixtures/*.ppak
+# Small reference capture (177KB) shipped for integration tests.
+# factory_default.pak (26MB) and smack_song.ppak (22MB) stay ignored
+# even when present — drop them in tests/fixtures/captures/ for golden tests.
+!tests/fixtures/captures/reference_minimal.ppak
 /tmp/
