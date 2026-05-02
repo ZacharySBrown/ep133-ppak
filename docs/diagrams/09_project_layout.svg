@@ -398,19 +398,15 @@
     <text x="20" y="722" class="code-muted">}</text>
   </g>
 
-  <!-- callouts on the manifest side -->
-  <!-- bpm 134 callout -->
-  <g transform="translate(682, 240)">
-    <path d="M 0 0 C -10 0, -28 0, -38 -2" fill="none" stroke="#3a85ff" stroke-width="1.5" stroke-dasharray="3 2"/>
-    <text x="6" y="-8" class="annot" font-size="11">track default;</text>
-    <text x="6" y="6" class="annot" font-size="11">pads override</text>
-  </g>
-
-  <!-- time_mode bpm callout -->
-  <g transform="translate(682, 504)">
-    <path d="M 0 0 C -10 0, -28 0, -38 -2" fill="none" stroke="#3a85ff" stroke-width="1.5" stroke-dasharray="3 2"/>
-    <text x="6" y="-8" class="annot" font-size="11">auto-stretch</text>
-    <text x="6" y="6" class="annot" font-size="11">project bpm</text>
+  <!-- annotation panel below the manifest (replaces cramped side callouts) -->
+  <g transform="translate(40, 836)">
+    <rect width="640" height="48" rx="6" fill="#fffaf7" stroke="#e85d3a" stroke-width="1" stroke-dasharray="3 2"/>
+    <text x="14" y="20" font-size="12" fill="#1a1a1a">
+      <tspan class="mono" font-weight="600">"bpm"</tspan> at top = track default. per-sample <tspan class="mono" font-weight="600">"bpm"</tspan> overrides per pad.
+    </text>
+    <text x="14" y="38" font-size="12" fill="#1a1a1a">
+      <tspan class="mono" font-weight="600">"time_mode": "bpm"</tspan> = device stretches the sample to the project tempo on play.
+    </text>
   </g>
 
   <!-- ====================================================== -->
