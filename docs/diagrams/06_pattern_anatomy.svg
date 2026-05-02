@@ -327,41 +327,6 @@
   <!-- CALLOUTS region              -->
   <!-- ============================ -->
 
-  <!-- callout: header[1] = bars (regression) -->
-  <g transform="translate(0, 0)">
-    <path d="M 120 268 Q 110 320 220 360" fill="none" stroke="#e85d3a" stroke-width="1.5" stroke-dasharray="3 2" marker-start="url(#arrow-warn)"/>
-    <text x="60" y="378" class="annot-warn">header[1] = bars (uint8).</text>
-    <text x="60" y="396" class="annot-warn">not a constant 0x01 — was a real</text>
-    <text x="60" y="414" class="annot-warn">regression in early ports. must</text>
-    <text x="60" y="432" class="annot-warn">equal scene length or playback skews.</text>
-  </g>
-
-  <!-- callout: pad indicator = (pad-1)*8 -->
-  <g transform="translate(0, 0)">
-    <path d="M 304 222 Q 320 320 440 360" fill="none" stroke="#3a85ff" stroke-width="1.5" stroke-dasharray="3 2" marker-start="url(#arrow)"/>
-    <text x="380" y="378" class="annot">pad indicator = (pad − 1) × 8.</text>
-    <text x="380" y="396" class="annot">pad 1 → 0x08, pad 12 → 0x58.</text>
-    <text x="380" y="414" class="annot">file paths are 1-indexed;</text>
-    <text x="380" y="432" class="annot">event encoding 0-indexed × 8.</text>
-  </g>
-
-  <!-- callout: bytes 5..6 duration (warn — was wrong upstream) -->
-  <g transform="translate(0, 0)">
-    <path d="M 412 222 Q 500 300 760 360" fill="none" stroke="#e85d3a" stroke-width="1.5" stroke-dasharray="3 2" marker-start="url(#arrow-warn)"/>
-    <text x="700" y="378" class="annot-warn">duration_ticks (uint16 le).</text>
-    <text x="700" y="396" class="annot-warn">not "flag bytes" — danny</text>
-    <text x="700" y="414" class="annot-warn">desert's ppak.py had it wrong;</text>
-    <text x="700" y="432" class="annot-warn">test_song_format.py guards.</text>
-  </g>
-
-  <!-- callout: byte 7 flag -->
-  <g transform="translate(0, 0)">
-    <path d="M 1180 222 Q 1130 300 1080 360" fill="none" stroke="#3a85ff" stroke-width="1.5" stroke-dasharray="3 2" marker-start="url(#arrow)"/>
-    <text x="1180" y="378" text-anchor="end" class="annot">flag byte. usually 0x00;</text>
-    <text x="1180" y="396" text-anchor="end" class="annot">0x08 has been observed</text>
-    <text x="1180" y="414" text-anchor="end" class="annot">on last events, but its</text>
-    <text x="1180" y="432" text-anchor="end" class="annot">meaning isn't fully clear.</text>
-  </g>
 
   <!-- ============================ -->
   <!-- BOTTOM LEFT: position math panel -->

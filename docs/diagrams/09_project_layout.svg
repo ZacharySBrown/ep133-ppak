@@ -398,17 +398,6 @@
     <text x="20" y="722" class="code-muted">}</text>
   </g>
 
-  <!-- annotation panel below the manifest (replaces cramped side callouts) -->
-  <g transform="translate(40, 836)">
-    <rect width="640" height="48" rx="6" fill="#fffaf7" stroke="#e85d3a" stroke-width="1" stroke-dasharray="3 2"/>
-    <text x="14" y="20" font-size="12" fill="#1a1a1a">
-      <tspan class="mono" font-weight="600">"bpm"</tspan> at top = track default. per-sample <tspan class="mono" font-weight="600">"bpm"</tspan> overrides per pad.
-    </text>
-    <text x="14" y="38" font-size="12" fill="#1a1a1a">
-      <tspan class="mono" font-weight="600">"time_mode": "bpm"</tspan> = device stretches the sample to the project tempo on play.
-    </text>
-  </g>
-
   <!-- ====================================================== -->
   <!-- CENTER: flow arrow                                      -->
   <!-- ====================================================== -->
@@ -645,49 +634,6 @@
         </g>
       </g>
 
-    </g>
-
-    <!-- callouts (right side of grid) -->
-
-    <!-- pad 7 keypad-label callout (above bank A) -->
-    <g transform="translate(0, -78)">
-      <!-- mini 4x3 keypad grid (visually shows label → physical layout) -->
-      <rect width="76" height="56" rx="4" fill="#fafaf7" stroke="#c7c7c0" stroke-width="1"/>
-      <g font-family="'IBM Plex Mono', Menlo, monospace" font-size="10" fill="#666">
-        <text x="10" y="14" text-anchor="middle">7</text>
-        <text x="28" y="14" text-anchor="middle">8</text>
-        <text x="46" y="14" text-anchor="middle">9</text>
-        <text x="10" y="26" text-anchor="middle">4</text>
-        <text x="28" y="26" text-anchor="middle">5</text>
-        <text x="46" y="26" text-anchor="middle">6</text>
-        <text x="10" y="38" text-anchor="middle">1</text>
-        <text x="28" y="38" text-anchor="middle">2</text>
-        <text x="46" y="38" text-anchor="middle">3</text>
-        <text x="10" y="50" text-anchor="middle">.</text>
-        <text x="28" y="50" text-anchor="middle">0</text>
-        <text x="60" y="50" text-anchor="middle">ent</text>
-      </g>
-      <!-- highlight the "7" cell since suggested_pad: "7" → top-left -->
-      <rect x="2" y="3" width="16" height="13" rx="2" fill="none" stroke="#3a85ff" stroke-width="1.2"/>
-      <!-- inline caption to the right of grid -->
-      <text x="86" y="20" class="annot-muted" font-size="11">suggested_pad uses</text>
-      <text x="86" y="34" class="annot-muted" font-size="11">keypad labels:</text>
-      <text x="86" y="50" class="annot-muted" font-size="11">"7" = top-left pad</text>
-      <!-- arrow from grid down to bank A pad 7 -->
-      <path d="M 10 60 C 6 72, 4 78, 4 88" fill="none" stroke="#3a85ff" stroke-width="1.2" stroke-dasharray="3 2" marker-end="url(#arrow)"/>
-    </g>
-
-    <!-- stretch tag callout (above bank B, points down at ∿ on B7) -->
-    <g transform="translate(330, -10)">
-      <text x="0" y="0" class="annot" font-size="13">∿ = stretches to project bpm</text>
-      <path d="M 8 6 C 6 16, -4 24, -8 38" fill="none" stroke="#3a85ff" stroke-width="1.2" stroke-dasharray="3 2" marker-end="url(#arrow)"/>
-    </g>
-
-    <!-- bpm 67 override callout (points at D pad 7) -->
-    <g transform="translate(420, 360)">
-      <path d="M 28 -50 C 38 -56, 38 -42, 32 -28" fill="none" stroke="#e85d3a" stroke-width="1.2" stroke-dasharray="3 2"/>
-      <text x="42" y="-30" class="annot" fill="#e85d3a" font-size="13">bpm 67 overrides</text>
-      <text x="42" y="-14" class="annot" fill="#e85d3a" font-size="13">track default 134</text>
     </g>
 
     <!-- bottom: "no suggested? next free pad" callout -->

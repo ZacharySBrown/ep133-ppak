@@ -248,7 +248,8 @@
     </g>
 
     <!-- hand-feel callout near pair 4 (off-by-one drag) -->
-    <text x="591" y="215" text-anchor="middle" class="annot-muted">~50ms of drag-slop still snaps clean</text>
+    <text x="500" y="124" class="annot-muted">~50ms of drag-slop still snaps clean</text>
+    <path d="M 568 120 C 580 116, 588 110, 591 102" fill="none" stroke="#999999" stroke-width="1" marker-end="url(#arrow-muted)"/>
   </g>
 
   <!-- ========================================================== -->
@@ -351,8 +352,8 @@
     </g>
 
     <!-- hand callout: trailing scene -->
-    <text x="935" y="200" text-anchor="end" class="annot-ok">trailing gap closes vs. arrangement_length</text>
-    <path d="M 950 188 C 985 178, 988 165, 972 152" fill="none" stroke="#3aaa6e" stroke-width="1" marker-end="url(#arrow-ok)"/>
+    <text x="850" y="200" class="annot-ok">trailing gap closes vs. arrangement_length</text>
+    <path d="M 940 196 C 945 188, 947 180, 945 165" fill="none" stroke="#3aaa6e" stroke-width="1" marker-end="url(#arrow-ok)"/>
   </g>
 
   <!-- ========================================================== -->
@@ -362,19 +363,12 @@
 
   <!-- edge cases card (left) -->
   <g transform="translate(40, 830)">
-    <rect width="715" height="55" rx="8" fill="#fafaf7" stroke="#e8e8e3" stroke-width="1"/>
+    <rect width="700" height="55" rx="8" fill="#fafaf7" stroke="#e8e8e3" stroke-width="1"/>
     <text x="14" y="20" class="caption" font-weight="600" fill="#1a1a1a">edge cases</text>
     <text x="14" y="38" class="code-sm">— single locator, no length → defaults to 2 bars</text>
     <text x="14" y="50" class="code-sm">— trailing gap ≤ 0 → median of preceding gaps</text>
-    <text x="380" y="38" class="code-sm">— non-pow-of-2 gaps preserved (3-bar = take five)</text>
+    <text x="380" y="38" class="code-sm">— non-pow-of-2 gaps preserved (3-bar = take five says hi)</text>
     <text x="380" y="50" class="code-sm">— result clamped to 1..255 (uint8 pattern-bars)</text>
-  </g>
-
-  <!-- slice-vs-scene callout (right, warn) -->
-  <g transform="translate(760, 830)">
-    <rect width="400" height="55" rx="8" fill="#ffe5dc" stroke="#e85d3a" stroke-width="1.5"/>
-    <text x="14" y="22" class="annot-warn">scene length ≠ slice length.</text>
-    <text x="14" y="38" class="code-sm" fill="#e85d3a"><tspan x="14" dy="0">a 1-bar slice in a 4-bar scene tiles 4× —</tspan><tspan x="14" dy="1.1em">see 06_pattern_anatomy.svg</tspan></text>
   </g>
 
   <!-- tiny boxing glove nod -->
