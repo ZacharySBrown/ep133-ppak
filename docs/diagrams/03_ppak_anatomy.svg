@@ -23,8 +23,8 @@
       .code-muted  { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 12px; fill: #666; }
       .code-accent { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 13px; fill: #3a85ff; font-weight: 600; }
       .code-warn   { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 13px; fill: #e85d3a; font-weight: 600; }
-      .annot       { font-family: "Caveat", "Kalam", cursive; font-size: 18px; fill: #3a85ff; }
-      .annot-warn  { font-family: "Caveat", "Kalam", cursive; font-size: 18px; fill: #e85d3a; }
+      .annot       { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 18px; fill: #3a85ff; }
+      .annot-warn  { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 18px; fill: #e85d3a; }
       .warn-text   { font-size: 13px; fill: #e85d3a; font-weight: 600; }
       .panel       { fill: #f0efe9; stroke: #e8e8e3; stroke-width: 1; }
       .zip-entry   { fill: #fafaf7; stroke: #1a1a1a; stroke-width: 1.5; }

@@ -17,7 +17,7 @@
       .panel-title { font-size: 18px; font-weight: 600; fill: #1a1a1a; }
       .caption { font-size: 14px; fill: #666; }
       .mono { font-family: "IBM Plex Mono", Menlo, monospace; }
-      .annot { font-family: "Caveat", "Kalam", cursive; font-size: 18px; fill: #3a85ff; }
+      .annot { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 18px; fill: #3a85ff; }
       .warn-text { font-size: 13px; fill: #e85d3a; font-weight: 600; }
     </style>
   </defs>

@@ -28,9 +28,9 @@
       .code-key    { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 11px; fill: #1a1a1a; font-weight: 600; }
       .code-key-md { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #1a1a1a; font-weight: 600; }
 
-      .annot       { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #3a85ff; }
-      .annot-muted { font-family: "Caveat", "Kalam", cursive; font-size: 15px; fill: #666666; }
-      .annot-ok    { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #3aaa6e; }
+      .annot       { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 16px; fill: #3a85ff; }
+      .annot-muted { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 15px; fill: #666666; }
+      .annot-ok    { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 16px; fill: #3aaa6e; }
 
       .json-outer  { fill: #fafaf7; stroke: #1a1a1a; stroke-width: 1.5; }
       .json-array  { fill: #fafaf7; stroke: #c7c7c0; stroke-width: 1; }
@@ -402,19 +402,15 @@
   <!-- bpm 134 callout -->
   <g transform="translate(682, 240)">
     <path d="M 0 0 C -10 0, -28 0, -38 -2" fill="none" stroke="#3a85ff" stroke-width="1.5" stroke-dasharray="3 2"/>
-    <text x="6" y="-26" class="annot">track-level</text>
-    <text x="6" y="-10" class="annot">default —</text>
-    <text x="6" y="6" class="annot">per-sample</text>
-    <text x="6" y="22" class="annot">bpm overrides</text>
+    <text x="6" y="-8" class="annot" font-size="11">track default;</text>
+    <text x="6" y="6" class="annot" font-size="11">pads override</text>
   </g>
 
   <!-- time_mode bpm callout -->
   <g transform="translate(682, 504)">
     <path d="M 0 0 C -10 0, -28 0, -38 -2" fill="none" stroke="#3a85ff" stroke-width="1.5" stroke-dasharray="3 2"/>
-    <text x="6" y="-26" class="annot">time_mode</text>
-    <text x="6" y="-10" class="annot">bpm →</text>
-    <text x="6" y="6" class="annot">stretches to</text>
-    <text x="6" y="22" class="annot">project tempo</text>
+    <text x="6" y="-8" class="annot" font-size="11">auto-stretch</text>
+    <text x="6" y="6" class="annot" font-size="11">project bpm</text>
   </g>
 
   <!-- ====================================================== -->
@@ -658,25 +654,44 @@
     <!-- callouts (right side of grid) -->
 
     <!-- pad 7 keypad-label callout (above bank A) -->
-    <g transform="translate(0, -54)">
-      <path d="M 2 -22 C 0 -22, 0 22, 2 22" fill="none" stroke="#666666" stroke-width="1.2" stroke-dasharray="3 2"/>
-      <text x="6" y="-12" class="annot-muted">suggested_pad: "7"</text>
-      <text x="6" y="4" class="annot-muted">— uses keypad labels</text>
-      <text x="6" y="20" class="code-xs" fill="#666">7 8 9 / 4 5 6 / 1 2 3 / . 0 ent</text>
+    <g transform="translate(0, -78)">
+      <!-- mini 4x3 keypad grid (visually shows label → physical layout) -->
+      <rect width="76" height="56" rx="4" fill="#fafaf7" stroke="#c7c7c0" stroke-width="1"/>
+      <g font-family="'IBM Plex Mono', Menlo, monospace" font-size="10" fill="#666">
+        <text x="10" y="14" text-anchor="middle">7</text>
+        <text x="28" y="14" text-anchor="middle">8</text>
+        <text x="46" y="14" text-anchor="middle">9</text>
+        <text x="10" y="26" text-anchor="middle">4</text>
+        <text x="28" y="26" text-anchor="middle">5</text>
+        <text x="46" y="26" text-anchor="middle">6</text>
+        <text x="10" y="38" text-anchor="middle">1</text>
+        <text x="28" y="38" text-anchor="middle">2</text>
+        <text x="46" y="38" text-anchor="middle">3</text>
+        <text x="10" y="50" text-anchor="middle">.</text>
+        <text x="28" y="50" text-anchor="middle">0</text>
+        <text x="60" y="50" text-anchor="middle">ent</text>
+      </g>
+      <!-- highlight the "7" cell since suggested_pad: "7" → top-left -->
+      <rect x="2" y="3" width="16" height="13" rx="2" fill="none" stroke="#3a85ff" stroke-width="1.2"/>
+      <!-- inline caption to the right of grid -->
+      <text x="86" y="20" class="annot-muted" font-size="11">suggested_pad uses</text>
+      <text x="86" y="34" class="annot-muted" font-size="11">keypad labels:</text>
+      <text x="86" y="50" class="annot-muted" font-size="11">"7" = top-left pad</text>
+      <!-- arrow from grid down to bank A pad 7 -->
+      <path d="M 10 60 C 6 72, 4 78, 4 88" fill="none" stroke="#3a85ff" stroke-width="1.2" stroke-dasharray="3 2" marker-end="url(#arrow)"/>
     </g>
 
-    <!-- stretch tag callout (right margin, beside bank B) -->
-    <g transform="translate(498, 130)">
-      <path d="M -2 -2 C -8 -4, -12 -4, -16 2" fill="none" stroke="#3a85ff" stroke-width="1.2" stroke-dasharray="3 2"/>
-      <text x="0" y="-8" class="annot">∿ = stretches</text>
-      <text x="0" y="8" class="annot">to project tempo</text>
+    <!-- stretch tag callout (above bank B, points down at ∿ on B7) -->
+    <g transform="translate(330, -10)">
+      <text x="0" y="0" class="annot" font-size="13">∿ = stretches to project bpm</text>
+      <path d="M 8 6 C 6 16, -4 24, -8 38" fill="none" stroke="#3a85ff" stroke-width="1.2" stroke-dasharray="3 2" marker-end="url(#arrow)"/>
     </g>
 
     <!-- bpm 67 override callout (points at D pad 7) -->
     <g transform="translate(420, 360)">
       <path d="M 28 -50 C 38 -56, 38 -42, 32 -28" fill="none" stroke="#e85d3a" stroke-width="1.2" stroke-dasharray="3 2"/>
-      <text x="42" y="-32" class="annot" fill="#e85d3a">per-sample bpm 67</text>
-      <text x="42" y="-16" class="annot" fill="#e85d3a">overrides track 134</text>
+      <text x="42" y="-30" class="annot" fill="#e85d3a" font-size="13">bpm 67 overrides</text>
+      <text x="42" y="-14" class="annot" fill="#e85d3a" font-size="13">track default 134</text>
     </g>
 
     <!-- bottom: "no suggested? next free pad" callout -->

@@ -27,10 +27,10 @@
       .code-sm     { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 11px; fill: #666666; }
       .code-accent { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 13px; fill: #3a85ff; font-weight: 600; }
       .code-ok     { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #3aaa6e; font-weight: 600; }
-      .annot       { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #3a85ff; }
-      .annot-muted { font-family: "Caveat", "Kalam", cursive; font-size: 15px; fill: #666666; }
-      .annot-ok    { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #3aaa6e; }
-      .annot-warn  { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #e85d3a; }
+      .annot       { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 16px; fill: #3a85ff; }
+      .annot-muted { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 15px; fill: #666666; }
+      .annot-ok    { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 16px; fill: #3aaa6e; }
+      .annot-warn  { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 16px; fill: #e85d3a; }
       .locator-line  { stroke: #3a85ff; stroke-width: 2; }
       .locator-flag  { fill: #3a85ff; }
       .grid-line     { stroke: #c8c8c0; stroke-width: 1; stroke-dasharray: 2 3; }

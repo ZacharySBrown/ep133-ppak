@@ -26,9 +26,9 @@
       .code-muted  { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #666666; }
       .code-accent { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 14px; fill: #3a85ff; font-weight: 600; }
       .code-warn   { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #e85d3a; font-weight: 600; }
-      .annot       { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #3a85ff; }
-      .annot-muted { font-family: "Caveat", "Kalam", cursive; font-size: 15px; fill: #666666; }
-      .annot-warn  { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #e85d3a; }
+      .annot       { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 16px; fill: #3a85ff; }
+      .annot-muted { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 15px; fill: #666666; }
+      .annot-warn  { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 16px; fill: #e85d3a; }
       .input-box   { fill: #fafaf7; stroke: #1a1a1a; stroke-width: 1.5; }
       .stage-box   { fill: #dbeaff; stroke: #3a85ff; stroke-width: 1.5; }
       .out-box     { fill: #f0efe9; stroke: #1a1a1a; stroke-width: 1.5; }
