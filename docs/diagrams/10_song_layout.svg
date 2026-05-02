@@ -217,7 +217,7 @@
           marker-end="url(#arrow-ok)" marker-start="url(#arrow-ok)"/>
     <!-- vertical label stack -->
     <text x="701" y="304" text-anchor="middle" class="code-xs" fill="#3aaa6e" font-weight="600">match</text>
-    <text x="701" y="276" text-anchor="middle" class="annot-ok" transform="rotate(-90 701 276)">file_path = file</text>
+    <text x="701" y="230" text-anchor="middle" class="annot-ok" transform="rotate(-90 701 230)">file_path = file</text>
   </g>
 
 
