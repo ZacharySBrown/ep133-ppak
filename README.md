@@ -18,24 +18,25 @@ song-position playlist. Built on a chain of community RE — see
 
 ## What you can build with it
 
-<table>
-<tr>
-<td width="50%" align="center">
-  <a href="docs/diagrams/09_project_layout.svg"><img src="docs/diagrams/09_project_layout.svg" alt="Sample-mode: BatchManifest → project on the device" /></a>
-  <p><sub><b>Sample-mode</b> — drop a folder of WAVs onto pads. Per-sample BPM, time-stretch mode, playmode, and routing hints. Drives <code>ppak-load-one</code> and <code>ppak-load-manifest</code>.</sub></p>
-</td>
-<td width="50%" align="center">
-  <a href="docs/diagrams/10_song_layout.svg"><img src="docs/diagrams/10_song_layout.svg" alt="Song-mode: arrangement + stems → scenes on the device" /></a>
-  <p><sub><b>Song-mode</b> — bake an Ableton-style arrangement into a multi-pattern, multi-scene project with a song-position playlist. Drives <code>ppak-export-song</code>.</sub></p>
-</td>
-</tr>
-</table>
+### Sample-mode — load samples onto pads
 
-A `BatchManifest` describes which WAVs go on which pads with which settings.
-An `arrangement.json` + `manifest.json` pair describes a timeline of clips
-on tracks A/B/C/D plus the source stems they reference. The package handles
-the byte-level format (ZIP, TAR, pad records, scenes, patterns, sounds) so
-your pipeline stays in plain Python or a one-line CLI invocation.
+A `BatchManifest` describes which WAVs go on which pads with which settings —
+per-sample BPM, time-stretch mode, playmode, and routing hints. The package
+handles the byte-level `.ppak` format so your pipeline stays in plain Python
+or a one-line CLI invocation. Drives [`ppak-load-one`](#a-single-sample-on-a-single-pad)
+and [`ppak-load-manifest`](#b-bulk-load-samples-from-a-manifest).
+
+![Sample-mode: BatchManifest → project on the device](docs/diagrams/09_project_layout.svg)
+
+### Song-mode — bake an arrangement into a multi-scene project
+
+An `arrangement.json` + `manifest.json` pair describes a timeline of clips on
+tracks A/B/C/D plus the source stems those clips reference. The package
+turns it into a song-mode `.ppak` with multiple patterns, multiple scenes,
+and a song-position playlist that plays without touching the front panel.
+Drives [`ppak-export-song`](#c-build-a-full-song-mode-ppak-from-an-arrangement).
+
+![Song-mode: arrangement + stems → scenes on the device](docs/diagrams/10_song_layout.svg)
 
 ## Install
 

@@ -31,10 +31,10 @@
       .code-muted  { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #666666; }
       .code-key    { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #1a1a1a; font-weight: 600; }
 
-      .annot       { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #3a85ff; }
-      .annot-muted { font-family: "Caveat", "Kalam", cursive; font-size: 15px; fill: #666666; }
-      .annot-warn  { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #e85d3a; }
-      .annot-ok    { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #3aaa6e; }
+      .annot       { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 16px; fill: #3a85ff; }
+      .annot-muted { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 15px; fill: #666666; }
+      .annot-warn  { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 16px; fill: #e85d3a; }
+      .annot-ok    { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 16px; fill: #3aaa6e; }
 
       /* container shapes — rounded JSON-ish boxes */
       .json-outer  { fill: #fafaf7; stroke: #1a1a1a; stroke-width: 1.5; }

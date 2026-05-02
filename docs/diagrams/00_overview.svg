@@ -14,7 +14,7 @@
       .box-title { font-size: 14px; font-weight: 600; fill: #1a1a1a; }
       .box-sub { font-size: 12px; fill: #666666; }
       .caption { font-size: 13px; fill: #666666; }
-      .annot { font-family: "Caveat", "Kalam", cursive; font-size: 16px; fill: #666666; }
+      .annot { font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 16px; fill: #666666; }
       .mono { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
       .mono-cli { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 14px; fill: #1a1a1a; font-weight: 500; }
       .mono-mod { font-family: "IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 13px; fill: #1a1a1a; }

@@ -24,9 +24,8 @@ palette so we're not impersonating their materials.
 ## Type
 
 - **All lowercase** for headings, body, labels. Numbers stay numerals.
-- **Sans (labels, body)**: `Inter, system-ui, -apple-system, sans-serif`
+- **Sans (labels, body, callouts)**: `Inter, system-ui, -apple-system, sans-serif`
 - **Mono (code, byte values, SysEx)**: `"IBM Plex Mono", "JetBrains Mono", Menlo, Consolas, monospace`
-- **Hand-feel callouts** (sparingly): `"Caveat", "Kalam", cursive` — for arrows-with-words like "←—— here's the gotcha"
 
 Type sizes (in SVG units, viewBox-relative; scale via CSS):
 
@@ -35,7 +34,7 @@ Type sizes (in SVG units, viewBox-relative; scale via CSS):
 - Body / description: 14px, 400
 - Code / byte values: 13px, mono
 - Caption / annotation: 12px, 400, often italic
-- Hand callouts: 14px, cursive
+- Inline annotation (arrow-with-words): 13–14px, sans, color-coded (accent/warn/ok)
 
 ## Geometry
 
