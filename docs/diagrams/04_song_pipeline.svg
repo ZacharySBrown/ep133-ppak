@@ -114,7 +114,7 @@
     <text x="20" y="92" class="code-sm">→ PpakSpec</text>
     <text x="20" y="110" class="caption">patterns, scenes, pads,</text>
   </g>
-  <text x="720" y="416" class="caption">sounds, song_positions, slot_slices</text>
+  <text x="720" y="416" class="caption">sounds, slot_slices, song_pos</text>
 
   <!-- stage 3: build_ppak -->
   <g transform="translate(980, 280)">
@@ -184,7 +184,7 @@
 
   <!-- manifest also feeds synthesize (long curve under stage 1) -->
   <path d="M 360 360 C 540 480, 660 480, 700 380" fill="none" stroke="#999999" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow-muted)"/>
-  <text x="500" y="500" class="annot-muted">manifest feeds synthesize too — slot/pad/wav lookup</text>
+  <text x="60" y="540" class="annot-muted">manifest feeds synthesize too — slot/pad/wav lookup</text>
 
   <!-- reference.ppak (right edge x=360, y=470) feeds build_ppak (long muted curve) -->
   <path d="M 360 470 C 700 600, 940 600, 1000 400" fill="none" stroke="#999999" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow-muted)"/>
@@ -205,20 +205,20 @@
     <text x="14" y="22" class="annot">scene length comes from</text>
     <text x="14" y="42" class="annot">locator gaps, not slice length</text>
   </g>
-  <path d="M 670 256 C 670 280, 670 300, 670 320" fill="none" stroke="#3a85ff" stroke-width="1" stroke-dasharray="3 3"/>
+  <path d="M 670 256 C 670 270, 670 285, 670 304" fill="none" stroke="#3a85ff" stroke-width="1" stroke-dasharray="3 3"/>
 
   <!-- synthesize → build_ppak -->
   <path d="M 920 340 C 950 340, 960 340, 980 340" fill="none" stroke="#3a85ff" stroke-width="2" marker-end="url(#arrow)"/>
   <text x="930" y="328" class="code-muted">PpakSpec</text>
 
   <!-- callout BELOW synth→writer arrow: empty pattern at idx 99 -->
-  <g transform="translate(810, 460)">
-    <rect width="280" height="76" rx="8" class="warn-box"/>
+  <g transform="translate(580, 460)">
+    <rect width="250" height="76" rx="8" class="warn-box"/>
     <text x="14" y="22" class="annot-warn">silent groups → empty pattern</text>
     <text x="14" y="42" class="annot-warn">at idx 99 (NOT 0 — would trigger</text>
     <text x="14" y="62" class="code-warn">err pattern 189)</text>
   </g>
-  <path d="M 950 460 C 950 420, 950 380, 950 360" fill="none" stroke="#e85d3a" stroke-width="1" stroke-dasharray="3 3"/>
+  <path d="M 695 460 C 695 440, 695 420, 695 400" fill="none" stroke="#e85d3a" stroke-width="1" stroke-dasharray="3 3"/>
 
   <!-- callout ABOVE the writer: patches template's meta + pad bytes -->
   <g transform="translate(960, 160)">
